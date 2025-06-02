@@ -1,0 +1,560 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Assistant', sans-serif !important;
+}
+
+:root {
+  --primary-color: #FF8E53;
+  --secondary-color: #FE6B8B;
+  --accent-color: #F96295;
+  --background-light: #FFF8E1;
+  --background-gradient: linear-gradient(135deg, #FFF8E1 0%, #FFFFFF 100%);
+  --text-primary: #4A4A4A;
+  --text-secondary: #666666;
+  --success-color: #66BB6A;
+  --warning-color: #FFA726;
+  --shadow-color: rgba(255, 142, 83, 0.2);
+  --hover-shadow: rgba(255, 142, 83, 0.3);
+}
+
+body {
+  direction: rtl;
+  background: var(--background-gradient);
+  min-height: 100vh;
+  color: var(--text-primary);
+}
+
+/* MUI Component Overrides */
+.MuiTypography-root,
+.MuiButton-root,
+.MuiInputLabel-root,
+.MuiInput-root,
+.MuiOutlinedInput-root,
+.MuiTableCell-root {
+  font-family: 'Assistant', sans-serif !important;
+  direction: rtl;
+}
+
+/* RTL Support */
+.MuiInputLabel-root {
+  right: 16px !important;
+  left: auto !important;
+  transform-origin: right !important;
+}
+
+.MuiOutlinedInput-root {
+  text-align: right !important;
+}
+
+.MuiTableCell-root {
+  text-align: right !important;
+}
+
+.MuiDialog-paper {
+  direction: rtl !important;
+}
+
+/* Table Styles */
+.MuiTableContainer-root {
+  direction: rtl !important;
+}
+
+.MuiTable-root {
+  direction: rtl !important;
+}
+
+.MuiTableHead-root {
+  background-color: #f5f5f5;
+}
+
+.MuiTableCell-head {
+  font-weight: 600 !important;
+}
+
+/* Form Styles */
+.MuiFormControl-root {
+  direction: rtl !important;
+}
+
+.MuiInputBase-root {
+  direction: rtl !important;
+}
+
+/* Dialog Styles */
+.MuiDialogTitle-root {
+  font-weight: 600 !important;
+}
+
+/* Button Styles */
+.MuiButton-root {
+  font-weight: 500 !important;
+}
+
+.MuiButton-contained {
+  font-weight: 600 !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-light);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  border-radius: 8px;
+  border: 2px solid var(--background-light);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+}
+
+/* Global Styles */
+:root {
+  --primary-color: #FF8E53;
+  --secondary-color: #FE6B8B;
+  --accent-color: #F96295;
+  --background-light: #FFF8E1;
+  --text-primary: #4A4A4A;
+  --text-secondary: #666666;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Component Animations */
+.page-enter {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.table-row-enter {
+  animation: slideIn 0.4s ease-out forwards;
+}
+
+.dialog-enter {
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+/* WhatsApp Button Animation */
+.MuiFab-root {
+  animation: pulse 2s infinite;
+}
+
+/* Table Row Hover Effect */
+.MuiTableRow-root {
+  transition: all 0.3s ease !important;
+}
+
+.MuiTableRow-root:hover {
+  background-color: rgba(255, 142, 83, 0.05) !important;
+  transform: scale(1.01) !important;
+}
+
+/* Form Field Animations */
+.MuiTextField-root {
+  transition: transform 0.2s ease;
+}
+
+.MuiTextField-root:focus-within {
+  transform: translateY(-2px);
+}
+
+/* Button Hover Effects */
+.MuiButton-contained {
+  transition: all 0.3s ease !important;
+}
+
+.MuiButton-contained:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 16px var(--hover-shadow) !important;
+  background: linear-gradient(45deg, var(--secondary-color), var(--accent-color)) !important;
+}
+
+/* Card Hover Effects */
+.MuiPaper-root {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 16px !important;
+}
+
+.MuiPaper-root:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 24px var(--shadow-color) !important;
+}
+
+/* Checkbox Animation */
+.MuiCheckbox-root {
+  transition: all 0.2s ease;
+}
+
+.MuiCheckbox-root:hover {
+  background-color: rgba(33, 150, 243, 0.1);
+  transform: scale(1.1);
+}
+
+/* Loading Shimmer Effect */
+.shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.2) 50%,
+    rgba(255,255,255,0) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Snackbar Animation */
+.MuiSnackbar-root {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Typography Animation */
+.MuiTypography-root {
+  transition: color 0.3s ease;
+}
+
+.MuiTypography-root:hover {
+  color: #1976d2;
+}
+
+/* Icon Button Animation */
+.MuiIconButton-root {
+  transition: all 0.2s ease;
+}
+
+.MuiIconButton-root:hover {
+  transform: rotate(8deg) scale(1.1);
+}
+
+/* Container Entrance Animation */
+.MuiContainer-root {
+  animation: fadeIn 0.5s ease-out;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+/* Form Submit Button Pulse */
+.submit-button {
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.submit-button::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 4px;
+  background: #2196f3;
+  z-index: -1;
+  animation: pulse 1.5s infinite;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.2) !important;
+}
+
+/* Table Loading Animation */
+.table-loading {
+  position: relative;
+  overflow: hidden;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.table-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.2) 50%,
+    transparent 100%);
+  animation: shimmer 1.5s infinite;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+/* Form Styles */
+.form-field {
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.form-field:hover {
+  transform: translateY(-2px);
+}
+
+.form-field label {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid rgba(100, 181, 246, 0.2);
+  border-radius: 12px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 20px rgba(100, 181, 246, 0.15);
+  background: #ffffff;
+}
+
+/* Button Styles */
+.submit-button {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(100, 181, 246, 0.2);
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(100, 181, 246, 0.3);
+}
+
+/* Table Styles */
+.table-container {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(100, 181, 246, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.table-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(100, 181, 246, 0.15);
+}
+
+.table-header {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  font-weight: 600;
+}
+
+.table-row {
+  transition: all 0.3s ease;
+}
+
+.table-row:hover {
+  background: rgba(100, 181, 246, 0.05);
+}
+
+/* Loading Animation */
+.table-loading {
+  position: relative;
+  opacity: 0.7;
+}
+
+.table-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Dialog Styles */
+.dialog-content {
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+  backdrop-filter: blur(10px);
+}
+
+.dialog-title {
+  color: var(--primary-color);
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(100, 181, 246, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .form-field input,
+  .form-field textarea {
+    font-size: 1rem;
+    padding: 10px 14px;
+  }
+
+  .submit-button {
+    width: 100%;
+    padding: 10px 24px;
+  }
+
+  .dialog-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .form-field input,
+[dir="rtl"] .form-field textarea {
+  text-align: right;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+
+  .table-container {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
+
+/* Icons and Emoji Animations */
+.emoji {
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+} 
