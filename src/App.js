@@ -1043,21 +1043,10 @@ function NotificationSystem() {
     const interval = setInterval(() => {
       if (!isSubscribed) return;
       const now = new Date();
-      
-           events.forEach(event => {
-        const eventDate = new Date(event.date);
-        const timeDiff = eventDate - now;
-        const hoursDiff = timeDiff / (1000 * 60 * 60);
-        
-               events.forEach(event => {
+
+        events.forEach(event => {
           // (Temporarily disabled event reminders and feedback requests due to missing function definitions)
         });
-
-  return null;
-}
-
-// Lazy load components
-const LazyFeedbackForm = React.lazy(() => import('./components/FeedbackForm'));
 const LazyEventDashboard = React.lazy(() => import('./components/EventDashboard'));
 
 // Utils
