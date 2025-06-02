@@ -607,7 +607,7 @@ const FeedbackDialog = ({ open, onClose, event }) => {
 
 // EventDashboard Component
 function EventDashboard() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState(() => loadFromLocalStorage('yjccEvents', []));
   const [openDialog, setOpenDialog] = useState(false);
   const [openParticipantsDialog, setOpenParticipantsDialog] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -618,10 +618,19 @@ function EventDashboard() {
     location: '',
     price: '',
     maxParticipants: '',
+    description: '',
   });
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
+    severity: 'success'
+  });
+  const [participantFormData, setParticipantFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    priceType: PRICE_TYPES.REGULAR,
+    notes: ''
   });
 
   useEffect(() => {
@@ -632,6 +641,7 @@ function EventDashboard() {
         location: selectedEvent.location || '',
         price: selectedEvent.price || '',
         maxParticipants: selectedEvent.maxParticipants || '',
+        description: selectedEvent.description || '',
       });
     } else {
       setFormData({
@@ -640,9 +650,15 @@ function EventDashboard() {
         location: '',
         price: '',
         maxParticipants: '',
+        description: '',
       });
     }
   }, [selectedEvent]);
+
+  // Save events to localStorage whenever they change
+  useEffect(() => {
+    saveToLocalStorage('yjccEvents', events);
+  }, [events]);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -700,9 +716,58 @@ function EventDashboard() {
     });
   };
 
-  useEffect(() => {
-    localStorage.setItem('yjccEvents', JSON.stringify(events));
-  }, [events]);
+  const handleParticipantFormChange = (e) => {
+    const { name, value } = e.target;
+    setParticipantFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleParticipantSubmit = () => {
+    if (!participantFormData.name || !participantFormData.phone) {
+      setSnackbar({
+        open: true,
+        message: 'נא למלא שם וטלפון',
+        severity: 'error'
+      });
+      return;
+    }
+
+    const newParticipant = {
+      ...participantFormData,
+      id: Date.now(),
+      registeredAt: new Date().toISOString(),
+      paid: false,
+      confirmed: false,
+      attended: false
+    };
+
+    setEvents(prevEvents => 
+      prevEvents.map(event => 
+        event.id === selectedParticipantEvent.id
+          ? {
+              ...event,
+              participants: [...(event.participants || []), newParticipant]
+            }
+          : event
+      )
+    );
+
+    setParticipantFormData({
+      name: '',
+      phone: '',
+      email: '',
+      priceType: PRICE_TYPES.REGULAR,
+      notes: ''
+    });
+
+    setSnackbar({
+      open: true,
+      message: 'המשתתף נוסף בהצלחה! 🎉',
+      severity: 'success'
+    });
+  };
 
   const handleDelete = (eventId) => {
     setEvents(events.filter(event => event.id !== eventId));
@@ -733,7 +798,7 @@ function EventDashboard() {
         </Fab>
       </Box>
 
-      <TableContainer component={Paper} sx={{ direction: 'rtl' }}>
+      <TableContainer component={Paper} sx={{ direction: 'rtl', mb: 4 }}>
         <Table dir="rtl">
           <TableHead>
             <TableRow>
@@ -884,104 +949,204 @@ function EventDashboard() {
         </DialogActions>
       </Dialog>
 
-      {/* Participants Dialog */}
+      {/* Enhanced Participants Dialog */}
       <Dialog
         open={openParticipantsDialog}
         onClose={() => {
           setOpenParticipantsDialog(false);
           setSelectedParticipantEvent(null);
+          setParticipantFormData({
+            name: '',
+            phone: '',
+            email: '',
+            priceType: PRICE_TYPES.REGULAR,
+            notes: ''
+          });
         }}
         maxWidth="md"
         fullWidth
         dir="rtl"
       >
-        <DialogTitle sx={{ textAlign: 'right' }}>
-          משתתפים - {selectedParticipantEvent?.name}
+        <DialogTitle sx={{ 
+          textAlign: 'right',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+          mb: 2
+        }}>
+          <Typography variant="h5" component="div" sx={{ fontWeight: 600 }}>
+            ניהול משתתפים - {selectedParticipantEvent?.name}
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1 }}>
+            {selectedParticipantEvent?.participants?.length || 0} / {selectedParticipantEvent?.maxParticipants || '∞'} משתתפים
+          </Typography>
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ mb: 3, display: 'flex', gap: 2, justifyContent: 'flex-start' }}>
-            <TextField
-              label="שם משתתף"
-              required
-              size="small"
-              InputProps={{
-                sx: { textAlign: 'right' }
-              }}
-              sx={{ direction: 'rtl' }}
-            />
-            <TextField
-              label="מספר טלפון"
-              required
-              size="small"
-              InputProps={{
-                sx: { textAlign: 'right' }
-              }}
-              sx={{ direction: 'rtl' }}
-            />
-            <Button
-              variant="contained"
-              onClick={() => {
-                const nameInput = document.querySelector('input[label="שם משתתף"]');
-                const phoneInput = document.querySelector('input[label="מספר טלפון"]');
-                if (nameInput && phoneInput && nameInput.value && phoneInput.value) {
-                  handleParticipantUpdate(selectedParticipantEvent.id, {
-                    name: nameInput.value,
-                    phone: phoneInput.value,
-                    paid: false,
-                    confirmed: false,
-                    attended: false,
-                  });
-                  nameInput.value = '';
-                  phoneInput.value = '';
-                }
-              }}
-            >
-              הוסף משתתף
-            </Button>
-          </Box>
+          <Paper sx={{ p: 3, mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 2 }}>הוספת משתתף חדש</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="שם מלא"
+                  name="name"
+                  value={participantFormData.name}
+                  onChange={handleParticipantFormChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="טלפון"
+                  name="phone"
+                  value={participantFormData.phone}
+                  onChange={handleParticipantFormChange}
+                  required
+                  helperText="פורמט: 05X-XXXXXXX"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="אימייל"
+                  name="email"
+                  type="email"
+                  value={participantFormData.email}
+                  onChange={handleParticipantFormChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>סוג מחיר</InputLabel>
+                  <Select
+                    name="priceType"
+                    value={participantFormData.priceType}
+                    onChange={handleParticipantFormChange}
+                    label="סוג מחיר"
+                  >
+                    <MenuItem value={PRICE_TYPES.REGULAR}>מחיר רגיל</MenuItem>
+                    <MenuItem value={PRICE_TYPES.DISCOUNT}>הנחה</MenuItem>
+                    <MenuItem value={PRICE_TYPES.FULL_SUBSIDY_EXPLAIN}>סבסוד מלא - הסברה</MenuItem>
+                    <MenuItem value={PRICE_TYPES.FULL_SUBSIDY_STAFF}>סבסוד מלא - צוות</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="הערות"
+                  name="notes"
+                  multiline
+                  rows={2}
+                  value={participantFormData.notes}
+                  onChange={handleParticipantFormChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  onClick={handleParticipantSubmit}
+                  startIcon={<AddIcon />}
+                  sx={{ mt: 1 }}
+                >
+                  הוסף משתתף
+                </Button>
+              </Grid>
+            </Grid>
+          </Paper>
 
-          <TableContainer>
-            <Table dir="rtl">
+          <TableContainer component={Paper}>
+            <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell align="right">שם</TableCell>
-                  <TableCell align="right">טלפון</TableCell>
-                  <TableCell align="right">שילם</TableCell>
-                  <TableCell align="right">אישר הגעה</TableCell>
-                  <TableCell align="right">הגיע</TableCell>
+                  <TableCell>שם</TableCell>
+                  <TableCell>טלפון</TableCell>
+                  <TableCell>אימייל</TableCell>
+                  <TableCell>סוג מחיר</TableCell>
+                  <TableCell>סטטוס</TableCell>
+                  <TableCell>פעולות</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {selectedParticipantEvent?.participants?.map((participant) => (
-                  <TableRow key={participant.phone}>
-                    <TableCell align="right">{participant.name}</TableCell>
-                    <TableCell align="right">{participant.phone}</TableCell>
-                    <TableCell align="right">
-                      <Checkbox
-                        checked={participant.paid}
-                        onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
-                          ...participant,
-                          paid: !participant.paid,
-                        })}
-                      />
+                  <TableRow key={participant.id}>
+                    <TableCell>{participant.name}</TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        {participant.phone}
+                        <IconButton
+                          size="small"
+                          onClick={() => sendWhatsAppMessage(participant.phone, `היי ${participant.name}, `)}
+                        >
+                          <WhatsAppIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
                     </TableCell>
-                    <TableCell align="right">
-                      <Checkbox
-                        checked={participant.confirmed}
-                        onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
-                          ...participant,
-                          confirmed: !participant.confirmed,
-                        })}
-                      />
+                    <TableCell>{participant.email}</TableCell>
+                    <TableCell>
+                      {participant.priceType === PRICE_TYPES.REGULAR ? 'רגיל' :
+                       participant.priceType === PRICE_TYPES.DISCOUNT ? 'הנחה' :
+                       participant.priceType === PRICE_TYPES.FULL_SUBSIDY_EXPLAIN ? 'סבסוד מלא - הסברה' :
+                       'סבסוד מלא - צוות'}
                     </TableCell>
-                    <TableCell align="right">
-                      <Checkbox
-                        checked={participant.attended}
-                        onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
-                          ...participant,
-                          attended: !participant.attended,
-                        })}
-                      />
+                    <TableCell>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Checkbox
+                          checked={participant.paid}
+                          onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
+                            ...participant,
+                            paid: !participant.paid,
+                          })}
+                          color="success"
+                          size="small"
+                        />
+                        <Typography variant="caption" sx={{ mr: 1 }}>שילם</Typography>
+                        <Checkbox
+                          checked={participant.confirmed}
+                          onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
+                            ...participant,
+                            confirmed: !participant.confirmed,
+                          })}
+                          color="info"
+                          size="small"
+                        />
+                        <Typography variant="caption" sx={{ mr: 1 }}>אישר</Typography>
+                        <Checkbox
+                          checked={participant.attended}
+                          onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
+                            ...participant,
+                            attended: !participant.attended,
+                          })}
+                          color="warning"
+                          size="small"
+                        />
+                        <Typography variant="caption">הגיע</Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        color="error"
+                        onClick={() => {
+                          if (window.confirm('האם אתה בטוח שברצונך למחוק משתתף זה?')) {
+                            setEvents(prevEvents =>
+                              prevEvents.map(event =>
+                                event.id === selectedParticipantEvent.id
+                                  ? {
+                                      ...event,
+                                      participants: event.participants.filter(p => p.id !== participant.id)
+                                    }
+                                  : event
+                              )
+                            );
+                            setSnackbar({
+                              open: true,
+                              message: 'המשתתף הוסר בהצלחה',
+                              severity: 'success'
+                            });
+                          }
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -989,37 +1154,62 @@ function EventDashboard() {
             </Table>
           </TableContainer>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'flex-start' }}>
-          <Button onClick={() => {
-            setOpenParticipantsDialog(false);
-            setSelectedParticipantEvent(null);
-          }}>
+        <DialogActions sx={{ justifyContent: 'space-between', p: 2 }}>
+          <Button
+            onClick={() => {
+              setOpenParticipantsDialog(false);
+              setSelectedParticipantEvent(null);
+            }}
+          >
             סגור
           </Button>
+          {selectedParticipantEvent?.participants?.length > 0 && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                // Export participants to CSV
+                const headers = ['שם', 'טלפון', 'אימייל', 'סוג מחיר', 'שילם', 'אישר', 'הגיע', 'הערות'];
+                const csvContent = [
+                  headers.join(','),
+                  ...selectedParticipantEvent.participants.map(p => [
+                    p.name,
+                    p.phone,
+                    p.email || '',
+                    p.priceType,
+                    p.paid ? 'כן' : 'לא',
+                    p.confirmed ? 'כן' : 'לא',
+                    p.attended ? 'כן' : 'לא',
+                    p.notes || ''
+                  ].join(','))
+                ].join('\n');
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `משתתפים_${selectedParticipantEvent.name}_${new Date().toLocaleDateString()}.csv`;
+                link.click();
+              }}
+            >
+              ייצוא לאקסל
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
 
-      <Snackbar
+      <CustomSnackbar
         open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
         message={snackbar.message}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
 
-      <Fab
-        color="primary"
-        sx={{
-          position: 'fixed',
-          bottom: 16,
-          right: 16,
-          bgcolor: '#25D366',
-          '&:hover': { bgcolor: '#128C7E' },
-        }}
+      {/* WhatsApp Contact Button */}
+      <StyledFab
         onClick={() => window.open('https://wa.me/+972542230342', '_blank')}
       >
         <WhatsAppIcon />
-      </Fab>
+      </StyledFab>
     </Container>
   );
 }
@@ -1044,32 +1234,11 @@ const validatePhone = (phone) => {
 
 const sendWhatsAppMessage = (phone, message) => {
   try {
-    // Add basic rate limiting using localStorage
-    const lastSentTime = localStorage.getItem('lastWhatsAppSent');
-    const now = Date.now();
-    if (lastSentTime && now - parseInt(lastSentTime) < 1000) { // 1 second delay between messages
-      console.log('Rate limit: Please wait before sending another message');
-      return;
-    }
-    
     const formattedPhone = phone.startsWith('+') ? phone : `+972${phone.substring(1)}`;
-    localStorage.setItem('lastWhatsAppSent', now.toString());
-    
-    // Use a timeout to prevent rapid successive openings
-    setTimeout(() => {
-      window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
-    }, 100);
+    window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
   } catch (error) {
     console.error('Error sending WhatsApp message:', error);
   }
-};
-
-const generateEventReminder = (event) => {
-  return `שלום! תזכורת לאירוע "${event.name}" שיתקיים ב-${formatDate(event.date)} ב${event.location}. נשמח לראותך!`;
-};
-
-const generateFeedbackRequest = (event) => {
-  return `תודה שהשתתפת באירוע "${event.name}"! נשמח אם תוכל/י למלא משוב קצר על חווית האירוע.`;
 };
 
 // Local Storage Functions
@@ -1091,72 +1260,6 @@ const loadFromLocalStorage = (key, defaultValue = null) => {
     console.error('Error loading from localStorage:', error);
     return defaultValue;
   }
-};
-
-// Event Management Functions
-const createEvent = (eventData) => {
-  return {
-    id: Date.now(),
-    ...eventData,
-    participants: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-};
-
-const updateEvent = (event, updates) => {
-  return {
-    ...event,
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-};
-
-const addParticipant = (event, participant) => {
-  const existingParticipant = event.participants.find(p => p.phone === participant.phone);
-  if (existingParticipant) {
-    return {
-      ...event,
-      participants: event.participants.map(p => 
-        p.phone === participant.phone ? { ...p, ...participant } : p
-      ),
-      updatedAt: new Date().toISOString(),
-    };
-  }
-  return {
-    ...event,
-    participants: [...event.participants, { ...participant, addedAt: new Date().toISOString() }],
-    updatedAt: new Date().toISOString(),
-  };
-};
-
-// Notification System
-const scheduleNotifications = (events) => {
-  const now = new Date();
-  
-  events.forEach(event => {
-    const eventDate = new Date(event.date);
-    const timeDiff = eventDate - now;
-    const hoursDiff = timeDiff / (1000 * 60 * 60);
-    
-    // Send reminder 24 hours before event
-    if (hoursDiff <= 24 && hoursDiff > 23) {
-      event.participants
-        .filter(p => p.confirmed)
-        .forEach(participant => {
-          sendWhatsAppMessage(participant.phone, generateEventReminder(event));
-        });
-    }
-    
-    // Send feedback request 12 hours after event
-    if (hoursDiff <= -12 && hoursDiff > -13) {
-      event.participants
-        .filter(p => p.attended)
-        .forEach(participant => {
-          sendWhatsAppMessage(participant.phone, generateFeedbackRequest(event));
-        });
-    }
-  });
 };
 
 // Form Validation
