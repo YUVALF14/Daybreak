@@ -56,6 +56,9 @@ import {
   Check as CheckIcon,
   Close as CloseIcon,
   RateReview as RateReviewIcon,
+  ExitToApp as ExitToAppIcon,
+  FilterList as FilterListIcon,
+  Search as SearchIcon,
 } from '@mui/icons-material';
 import './App.css';
 
@@ -606,12 +609,14 @@ const FeedbackDialog = ({ open, onClose, event }) => {
 };
 
 // EventDashboard Component
-function EventDashboard() {
+function EventDashboard({ onLogout }) {
   const [events, setEvents] = useState(() => loadFromLocalStorage('yjccEvents', []));
   const [openDialog, setOpenDialog] = useState(false);
   const [openParticipantsDialog, setOpenParticipantsDialog] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedParticipantEvent, setSelectedParticipantEvent] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all'); // 'all', 'upcoming', 'past'
   const [formData, setFormData] = useState({
     name: '',
     date: '',
@@ -631,6 +636,24 @@ function EventDashboard() {
     email: '',
     priceType: PRICE_TYPES.REGULAR,
     notes: ''
+  });
+
+  // Filter events based on search and status
+  const filteredEvents = events.filter(event => {
+    const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         event.location.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const eventDate = new Date(event.date);
+    const now = new Date();
+    
+    switch (filterStatus) {
+      case 'upcoming':
+        return matchesSearch && eventDate > now;
+      case 'past':
+        return matchesSearch && eventDate <= now;
+      default:
+        return matchesSearch;
+    }
   });
 
   useEffect(() => {
@@ -789,67 +812,201 @@ function EventDashboard() {
 
   return (
     <Container dir="rtl">
-      <Box sx={{ my: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h4" component="h1" sx={{ fontWeight: 600, textAlign: 'right' }}>
+      {/* Header with Search, Filter and Logout */}
+      <Box sx={{ 
+        my: 4, 
+        display: 'flex', 
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: 2,
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <Typography variant="h4" component="h1" sx={{ 
+          fontWeight: 600, 
+          textAlign: { xs: 'center', md: 'right' },
+          background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}>
           אירועי YJCC
         </Typography>
-        <Fab color="primary" onClick={() => setOpenDialog(true)}>
-          <AddIcon />
-        </Fab>
+
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 2, 
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          {/* Search Box */}
+          <TextField
+            size="small"
+            placeholder="חיפוש אירועים..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />,
+            }}
+            sx={{ minWidth: 200 }}
+          />
+
+          {/* Filter Button */}
+          <FormControl size="small" sx={{ minWidth: 120 }}>
+            <Select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              startAdornment={<FilterListIcon sx={{ mr: 1, color: 'text.secondary' }} />}
+            >
+              <MenuItem value="all">כל האירועים</MenuItem>
+              <MenuItem value="upcoming">אירועים עתידיים</MenuItem>
+              <MenuItem value="past">אירועים שהסתיימו</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* Add Event Button */}
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setOpenDialog(true)}
+            sx={{
+              background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+              color: 'white',
+              '&:hover': {
+                background: `linear-gradient(45deg, ${YJCC_COLORS.secondary}, ${YJCC_COLORS.accent})`,
+              }
+            }}
+          >
+            אירוע חדש
+          </Button>
+
+          {/* Logout Button */}
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={onLogout}
+            startIcon={<ExitToAppIcon />}
+            sx={{
+              borderColor: YJCC_COLORS.text,
+              color: YJCC_COLORS.text,
+              '&:hover': {
+                borderColor: YJCC_COLORS.primary,
+                color: YJCC_COLORS.primary,
+                backgroundColor: 'rgba(255, 142, 83, 0.1)',
+              }
+            }}
+          >
+            יציאה
+          </Button>
+        </Box>
       </Box>
 
-      <TableContainer component={Paper} sx={{ direction: 'rtl', mb: 4 }}>
-        <Table dir="rtl">
-          <TableHead>
-            <TableRow>
-              <TableCell align="right">שם האירוע</TableCell>
-              <TableCell align="right">תאריך</TableCell>
-              <TableCell align="right">מיקום</TableCell>
-              <TableCell align="right">מחיר</TableCell>
-              <TableCell align="right">משתתפים</TableCell>
-              <TableCell align="right">פעולות</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {events.map((event) => (
-              <TableRow key={event.id}>
-                <TableCell align="right">{event.name}</TableCell>
-                <TableCell align="right">
-                  {new Date(event.date).toLocaleDateString('he-IL', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </TableCell>
-                <TableCell align="right">{event.location}</TableCell>
-                <TableCell align="right">{event.price} CZK</TableCell>
-                <TableCell align="right">
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={() => {
-                      setSelectedParticipantEvent(event);
-                      setOpenParticipantsDialog(true);
-                    }}
-                  >
-                    {event.participants?.length || 0} / {event.maxParticipants || '∞'}
-                  </Button>
-                </TableCell>
-                <TableCell align="right">
-                  <IconButton onClick={() => setOpenDialog(true)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(event.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+      {/* Events Summary */}
+      <Box sx={{ mb: 4, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Paper sx={{ 
+          p: 2, 
+          flex: 1, 
+          minWidth: 200,
+          background: `linear-gradient(135deg, ${YJCC_COLORS.primary}15, ${YJCC_COLORS.secondary}15)`,
+        }}>
+          <Typography variant="h6">סה"כ אירועים</Typography>
+          <Typography variant="h4">{events.length}</Typography>
+        </Paper>
+        <Paper sx={{ 
+          p: 2, 
+          flex: 1, 
+          minWidth: 200,
+          background: 'rgba(100, 181, 246, 0.1)',
+        }}>
+          <Typography variant="h6">אירועים עתידיים</Typography>
+          <Typography variant="h4">
+            {events.filter(event => new Date(event.date) > new Date()).length}
+          </Typography>
+        </Paper>
+        <Paper sx={{ 
+          p: 2, 
+          flex: 1, 
+          minWidth: 200,
+          background: 'rgba(255, 167, 38, 0.1)',
+        }}>
+          <Typography variant="h6">סה"כ משתתפים</Typography>
+          <Typography variant="h4">
+            {events.reduce((sum, event) => sum + (event.participants?.length || 0), 0)}
+          </Typography>
+        </Paper>
+      </Box>
+
+      {/* No Events Message */}
+      {filteredEvents.length === 0 && (
+        <Paper sx={{ p: 4, textAlign: 'center', mb: 4 }}>
+          <Typography variant="h6" color="text.secondary">
+            {searchTerm ? 'לא נמצאו אירועים התואמים את החיפוש' : 'אין אירועים להצגה'}
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setOpenDialog(true)}
+            sx={{ mt: 2 }}
+          >
+            הוסף אירוע חדש
+          </Button>
+        </Paper>
+      )}
+
+      {/* Events Table */}
+      {filteredEvents.length > 0 && (
+        <TableContainer component={Paper} sx={{ direction: 'rtl', mb: 4 }}>
+          <Table dir="rtl">
+            <TableHead>
+              <TableRow>
+                <TableCell align="right">שם האירוע</TableCell>
+                <TableCell align="right">תאריך</TableCell>
+                <TableCell align="right">מיקום</TableCell>
+                <TableCell align="right">מחיר</TableCell>
+                <TableCell align="right">משתתפים</TableCell>
+                <TableCell align="right">פעולות</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {filteredEvents.map((event) => (
+                <TableRow key={event.id}>
+                  <TableCell align="right">{event.name}</TableCell>
+                  <TableCell align="right">
+                    {new Date(event.date).toLocaleDateString('he-IL', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </TableCell>
+                  <TableCell align="right">{event.location}</TableCell>
+                  <TableCell align="right">{event.price} CZK</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => {
+                        setSelectedParticipantEvent(event);
+                        setOpenParticipantsDialog(true);
+                      }}
+                    >
+                      {event.participants?.length || 0} / {event.maxParticipants || '∞'}
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton onClick={() => setOpenDialog(true)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(event.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
 
       {/* Event Form Dialog */}
       <Dialog 
@@ -1620,6 +1777,10 @@ function App() {
     return false;
   };
 
+  const handleLogout = () => {
+    setView('landing');
+  };
+
   const renderView = () => {
     switch (view) {
       case 'landing':
@@ -1632,7 +1793,7 @@ function App() {
       case 'admin-login':
         return <AdminLogin onLogin={handleAdminLogin} />;
       case 'admin':
-        return <EventDashboard />;
+        return <EventDashboard onLogout={handleLogout} />;
       case 'participant':
         return <ParticipantDashboard />;
       default:
@@ -1658,4 +1819,3 @@ function App() {
 }
 
 export default App; 
-
