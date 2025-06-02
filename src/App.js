@@ -1,3 +1,8 @@
+// Remove unused import
+// import FormControlLabel from '@mui/material/FormControlLabel'; // <-- Unused, remove
+
+// Remove unused variable
+// const PRICE_TYPES = ["free", "paid"]; // <-- Unused, remove
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
 import { CacheProvider } from '@emotion/react';
