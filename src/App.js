@@ -1044,21 +1044,21 @@ function NotificationSystem() {
       if (!isSubscribed) return;
       const now = new Date();
       
-      events.forEach(event => {
-         const eventDate = new Date(event.date);
-         const timeDiff = eventDate - now;
-         
-         // (Temporarily disabled event reminders and feedback requests due to missing function definitions)
-         // if (hoursDiff <= 24 && hoursDiff > 23) {
-         //   sendEventReminders(event);
-         // }
-         // if (hoursDiff <= -12 && hoursDiff > -13) {
-         //   sendFeedbackRequests(event);
-         // }
-    
-    return () => {
-      isSubscribed = false;
-      clearInterval(interval);
+           events.forEach(event => {
+        const eventDate = new Date(event.date);
+        const timeDiff = eventDate - now;
+        const hoursDiff = timeDiff / (1000 * 60 * 60);
+        
+        // Send reminder 24 hours before event
+        // if (hoursDiff <= 24 && hoursDiff > 23) {
+        //   sendEventReminders(event);
+        // }
+        
+        // Send feedback request 12 hours after event
+        // if (hoursDiff <= -12 && hoursDiff > -13) {
+        //   sendFeedbackRequests(event);
+        // }
+      });
       window.removeEventListener('storage', handleStorageChange);
     };
   }, [events]);
