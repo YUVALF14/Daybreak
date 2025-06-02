@@ -1019,35 +1019,6 @@ function EventDashboard() {
 }
 
 // NotificationSystem Component
-function NotificationSystem() {
-  const [events, setEvents] = useState(() => {
-    const savedEvents = localStorage.getItem('yjccEvents');
-    return savedEvents ? JSON.parse(savedEvents) : [];
-  });
-  
-  useEffect(() => {
-    let isSubscribed = true;
-    
-    // Update events from localStorage when they change
-    const handleStorageChange = () => {
-      if (!isSubscribed) return;
-      const savedEvents = localStorage.getItem('yjccEvents');
-      if (savedEvents) {
-        setEvents(JSON.parse(savedEvents));
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    
-    // Check for upcoming events every minute
-    const interval = setInterval(() => {
-      if (!isSubscribed) return;
-      const now = new Date();
-
-        events.forEach(event => {
-          // (Temporarily disabled event reminders and feedback requests due to missing function definitions)
-        });
-const LazyEventDashboard = React.lazy(() => import('./components/EventDashboard'));
 
 // Utils
 const formatDate = (date) => {
