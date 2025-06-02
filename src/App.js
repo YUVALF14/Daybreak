@@ -1395,7 +1395,19 @@ function ParticipantDashboard() {
 
     const updatedEvents = events.map(event => {
       if (event.id === selectedEvent.id) {
-        return addParticipant(event, formData);
+        // Add new participant directly
+        const newParticipant = {
+          ...formData,
+          id: Date.now(),
+          registeredAt: new Date().toISOString(),
+          paid: false,
+          confirmed: false,
+          attended: false
+        };
+        return {
+          ...event,
+          participants: [...(event.participants || []), newParticipant]
+        };
       }
       return event;
     });
@@ -1646,3 +1658,4 @@ function App() {
 }
 
 export default App; 
+
