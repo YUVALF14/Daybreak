@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // Remove unused import
 // import FormControlLabel from '@mui/material/FormControlLabel'; // <-- Unused, remove
 
