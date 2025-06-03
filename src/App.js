@@ -629,6 +629,63 @@ const FeedbackDialog = ({ open, onClose, event }) => {
   );
 };
 
+// Add statistics utilities
+const calculateEventStats = (events) => {
+  const now = new Date();
+  const stats = {
+    totalEvents: events.length,
+    upcomingEvents: 0,
+    pastEvents: 0,
+    totalParticipants: 0,
+    averageAttendance: 0,
+    mostPopularLocation: '',
+    locationStats: {},
+    monthlyStats: {},
+    participationRate: 0,
+  };
+
+  events.forEach(event => {
+    const eventDate = new Date(event.date);
+    const participants = event.participants?.length || 0;
+    
+    // Count events
+    if (eventDate > now) {
+      stats.upcomingEvents++;
+    } else {
+      stats.pastEvents++;
+    }
+
+    // Track participants
+    stats.totalParticipants += participants;
+
+    // Location stats
+    stats.locationStats[event.location] = (stats.locationStats[event.location] || 0) + 1;
+
+    // Monthly stats
+    const monthKey = eventDate.toLocaleString('he-IL', { month: 'long', year: 'numeric' });
+    if (!stats.monthlyStats[monthKey]) {
+      stats.monthlyStats[monthKey] = { events: 0, participants: 0 };
+    }
+    stats.monthlyStats[monthKey].events++;
+    stats.monthlyStats[monthKey].participants += participants;
+  });
+
+  // Calculate averages and most popular location
+  stats.averageAttendance = stats.totalParticipants / events.length;
+  stats.mostPopularLocation = Object.entries(stats.locationStats)
+    .sort(([,a], [,b]) => b - a)[0]?.[0] || '';
+  
+  // Calculate participation rate
+  const eventsWithMax = events.filter(e => e.maxParticipants);
+  if (eventsWithMax.length > 0) {
+    const totalCapacity = eventsWithMax.reduce((sum, event) => sum + parseInt(event.maxParticipants), 0);
+    const actualParticipants = eventsWithMax.reduce((sum, event) => sum + (event.participants?.length || 0), 0);
+    stats.participationRate = (actualParticipants / totalCapacity) * 100;
+  }
+
+  return stats;
+};
+
 // EventDashboard Component
 function EventDashboard({ onLogout }) {
   const [events, setEvents] = useState(() => loadFromLocalStorage('yjccEvents', []));
@@ -2433,5 +2490,3 @@ function App() {
 }
 
 export default App; 
-
-
