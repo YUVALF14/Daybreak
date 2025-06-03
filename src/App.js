@@ -1065,17 +1065,21 @@ function EventDashboard({ onLogout }) {
     setSnackbar({ open: true, message: 'האירוע נמחק בהצלחה' });
   };
 
-  const handleParticipantUpdate = (eventId, participant) => {
-    setEvents(events.map(event => {
-      if (event.id === eventId) {
-        const existingParticipantIndex = event.participants.findIndex(p => p.phone === participant.phone);
-        const updatedParticipants = existingParticipantIndex >= 0
-          ? event.participants.map((p, index) => index === existingParticipantIndex ? participant : p)
-          : [...event.participants, participant];
-        return { ...event, participants: updatedParticipants };
-      }
-      return event;
-    }));
+  const handleParticipantUpdate = (eventId, updatedParticipant) => {
+    setEvents(prevEvents => 
+      prevEvents.map(event => {
+        if (event.id === eventId) {
+          const updatedParticipants = event.participants.map(p => 
+            p.id === updatedParticipant.id ? updatedParticipant : p
+          );
+          return { ...event, participants: updatedParticipants };
+        }
+        return event;
+      })
+    );
+
+    // Save to storage after update
+    saveToLocalStorage('yjccEvents', events);
   };
 
   // Add export/import functions
@@ -2158,21 +2162,11 @@ function EventDashboard({ onLogout }) {
                         color="error"
                         onClick={() => {
                           if (window.confirm('האם אתה בטוח שברצונך למחוק משתתף זה?')) {
-                            setEvents(prevEvents =>
-                              prevEvents.map(event =>
-                                event.id === selectedParticipantEvent.id
-                                  ? {
-                                      ...event,
-                                      participants: event.participants.filter(p => p.id !== participant.id)
-                                    }
-                                  : event
-                              )
-                            );
-                            setSnackbar({
-                              open: true,
-                              message: 'המשתתף הוסר בהצלחה',
-                              severity: 'success'
-                            });
+                            const updatedEvent = {
+                              ...selectedParticipantEvent,
+                              participants: selectedParticipantEvent.participants.filter(p => p.id !== participant.id)
+                            };
+                            handleParticipantUpdate(selectedParticipantEvent.id, updatedEvent);
                           }
                         }}
                       >
@@ -2275,18 +2269,37 @@ const sendWhatsAppMessage = (phone, message) => {
 // Local Storage Functions
 const saveToLocalStorage = (key, data) => {
   try {
+    // First try to sync with server
+    syncDataWithServer(data);
+    
+    // Then save to local storage
     const serializedData = JSON.stringify(data);
-    localStorage.setItem(key, serializedData);
+    
+    // Try to use localStorage first
+    try {
+      localStorage.setItem(key, serializedData);
+    } catch (e) {
+      // If localStorage fails (Safari private mode), use sessionStorage as fallback
+      sessionStorage.setItem(key, serializedData);
+    }
+    
     return true;
   } catch (error) {
-    console.error('Error saving to localStorage:', error);
+    console.error('Error saving data:', error);
     return false;
   }
 };
 
 const loadFromLocalStorage = (key, defaultValue = null) => {
   try {
-    const item = localStorage.getItem(key);
+    // Try localStorage first
+    let item = localStorage.getItem(key);
+    
+    // If not found in localStorage, try sessionStorage
+    if (!item) {
+      item = sessionStorage.getItem(key);
+    }
+    
     if (!item) return defaultValue;
 
     const parsedData = JSON.parse(item);
@@ -2294,7 +2307,7 @@ const loadFromLocalStorage = (key, defaultValue = null) => {
     // Ensure budget structure exists for all events
     if (key === 'yjccEvents') {
       return parsedData.map(event => ({
-    ...event,
+        ...event,
         budget: event.budget || {
           fullPrice: '',
           subsidyAmount: '',
@@ -2307,7 +2320,7 @@ const loadFromLocalStorage = (key, defaultValue = null) => {
 
     return parsedData;
   } catch (error) {
-    console.error('Error loading from localStorage:', error);
+    console.error('Error loading data:', error);
     return defaultValue;
   }
 };
@@ -3186,6 +3199,31 @@ const loadDataFromFile = async () => {
   } catch (error) {
     console.error('Error loading data:', error);
     return null;
+  }
+};
+
+// Add function to sync with server
+const syncDataWithServer = async (data) => {
+  try {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(data, null, 2));
+    
+    const response = await fetch('/api/sync', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to sync data');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error syncing data:', error);
+    return false;
   }
 };
 
