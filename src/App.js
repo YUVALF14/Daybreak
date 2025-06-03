@@ -2230,60 +2230,123 @@ const validateParticipantForm = (formData) => {
 // LandingPage Component
 function LandingPage({ onAdminClick, onParticipantClick }) {
   return (
-    <Container maxWidth="sm" sx={{ textAlign: 'center', mt: 8 }}>
-      <Paper 
-        elevation={3} 
-        sx={{ 
-          p: 6,
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '8px',
-            background: 'linear-gradient(90deg, #64B5F6, #90CAF9, #42A5F5, #1E88E5)',
+    <Container maxWidth="md" sx={{ textAlign: 'center', mt: 8 }}>
+      <Box sx={{
+        position: 'relative',
+        minHeight: '80vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: `radial-gradient(circle at top right, ${YJCC_COLORS.light}, transparent),
+                      radial-gradient(circle at bottom left, ${YJCC_COLORS.secondary}20, transparent)`,
+          zIndex: -1,
+        }
+      }}>
+        <Paper 
+          elevation={3} 
+          sx={{ 
+            p: { xs: 4, md: 6 },
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            position: 'relative',
+            overflow: 'hidden',
+            backdropFilter: 'blur(10px)',
+            maxWidth: 600,
+            width: '100%',
+            borderRadius: 4,
           }}
-        />
-        <YJCCLogo />
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={onAdminClick}
-            startIcon={<LockOutlinedIcon />}
+        >
+          <Box
             sx={{
-              py: 2,
-              fontSize: '1.1rem',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '8px',
+              background: `linear-gradient(90deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary}, ${YJCC_COLORS.accent})`,
             }}
-          >
-            כניסת מנהל
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            size="large"
-            onClick={onParticipantClick}
-            sx={{
-              py: 2,
-              fontSize: '1.1rem',
-            }}
-          >
-            הרשמה לאירועים
-          </Button>
+          />
+          <YJCCLogo />
+          
+          <Typography variant="h6" sx={{ mb: 4, color: 'text.secondary', fontWeight: 400 }}>
+            ברוכים הבאים למערכת ניהול האירועים של הקהילה הישראלית הצעירה בפראג
+          </Typography>
+
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Paper
+                elevation={2}
+                sx={{
+                  p: 3,
+                  height: '100%',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: 6,
+                  },
+                }}
+                onClick={onAdminClick}
+              >
+                <LockOutlinedIcon sx={{ fontSize: 40, color: 'primary.main', mb: 2 }} />
+                <Typography variant="h5" gutterBottom>
+                  כניסת מנהל
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  ניהול אירועים, משתתפים ותקציב
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper
+                elevation={2}
+                sx={{
+                  p: 3,
+                  height: '100%',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: 6,
+                  },
+                }}
+                onClick={onParticipantClick}
+              >
+                <EventIcon sx={{ fontSize: 40, color: 'secondary.main', mb: 2 }} />
+                <Typography variant="h5" gutterBottom>
+                  הרשמה לאירועים
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  צפייה באירועים והרשמה
+                </Typography>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Paper>
+
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography variant="body2" color="text.secondary">
+            © {new Date().getFullYear()} YJCC - Young Israeli Community in Prague
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            Made with ❤️ for our community
+          </Typography>
         </Box>
-      </Paper>
+      </Box>
     </Container>
   );
 }
 
 // ParticipantDashboard Component
-function ParticipantDashboard() {
+function ParticipantDashboard({ onExit }) {
   const [events, setEvents] = useState(() => loadFromLocalStorage('yjccEvents', []));
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [registrationOpen, setRegistrationOpen] = useState(false);
@@ -2449,15 +2512,32 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
 
   return (
     <Container>
-      {/* Hero Section */}
+      {/* Hero Section with Exit Button */}
       <Box sx={{
-          textAlign: 'center',
+        textAlign: 'center',
         py: 6,
         px: 2,
         mb: 4,
         background: `linear-gradient(135deg, ${YJCC_COLORS.light}, rgba(144, 202, 249, 0.2))`,
         borderRadius: 4,
+        position: 'relative',
       }}>
+        <IconButton
+          onClick={onExit}
+          sx={{
+            position: 'absolute',
+            top: 16,
+            left: 16,
+            color: YJCC_COLORS.text,
+            '&:hover': {
+              color: YJCC_COLORS.primary,
+              bgcolor: 'rgba(100, 181, 246, 0.1)',
+            }
+          }}
+        >
+          <ExitToAppIcon />
+        </IconButton>
+
         <Typography variant="h3" sx={{
           fontWeight: 700,
           mb: 2,
@@ -2470,6 +2550,34 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
         <Typography variant="h6" sx={{ color: 'text.secondary', mb: 4 }}>
           הצטרפו אלינו לחוויות מדהימות בקהילה הישראלית בפראג 🌟
         </Typography>
+
+        {/* Add sync status indicator */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          gap: 1,
+          mt: 2,
+        }}>
+          <SyncIcon 
+            sx={{ 
+              animation: syncStatus === 'syncing' ? 'spin 1s linear infinite' : 'none',
+              color: syncStatus === 'error' ? 'error.main' : 
+                     syncStatus === 'syncing' ? 'primary.main' : 'success.main',
+              '@keyframes spin': {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' }
+              },
+              fontSize: '1rem',
+            }} 
+          />
+          <Typography variant="caption" color="text.secondary">
+            {syncStatus === 'error' ? 'שגיאת סנכרון' :
+             syncStatus === 'syncing' ? 'מעדכן נתונים...' :
+             lastSyncTime ? `עודכן לאחרונה: ${new Date(lastSyncTime).toLocaleTimeString('he-IL')}` :
+             'טוען נתונים...'}
+          </Typography>
+        </Box>
       </Box>
 
       {/* Search and Filters */}
@@ -2992,7 +3100,7 @@ function App() {
       case 'admin':
         return <EventDashboard onLogout={handleLogout} />;
       case 'participant':
-        return <ParticipantDashboard />;
+        return <ParticipantDashboard onExit={() => setView('landing')} />;
       default:
         return <LandingPage />;
     }
