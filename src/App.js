@@ -774,6 +774,7 @@ function EventDashboard({ onLogout }) {
   const [statsData, setStatsData] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [syncStatus, setSyncStatus] = useState('idle'); // 'idle', 'syncing', 'error'
 
   // Filter events based on search and status
   const filteredEvents = events.filter(event => {
@@ -1266,6 +1267,79 @@ function EventDashboard({ onLogout }) {
     }
   };
 
+  const syncWithServer = async () => {
+    if (syncStatus === 'syncing') return;
+    
+    setSyncStatus('syncing');
+    try {
+      // Get latest data from server
+      const response = await fetch('/api/events.json');
+      if (!response.ok) {
+        throw new Error('Failed to load data');
+      }
+      const serverData = await response.json();
+      
+      // Compare server data with local data
+      const localData = loadFromLocalStorage('yjccEvents', []);
+      const mergedData = mergeEventsData(serverData, localData);
+      
+      // Update server if there are local changes
+      if (JSON.stringify(mergedData) !== JSON.stringify(serverData)) {
+        const formData = new FormData();
+        formData.append('data', JSON.stringify(mergedData, null, 2));
+        
+        const syncResponse = await fetch('/api/sync', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!syncResponse.ok) {
+          throw new Error('Failed to sync data');
+        }
+      }
+      
+      // Update local state and storage
+      setEvents(mergedData);
+      saveToLocalStorage('yjccEvents', mergedData);
+      setLastSyncTime(new Date());
+      setSyncStatus('idle');
+    } catch (error) {
+      console.error('Error syncing with server:', error);
+      setSyncStatus('error');
+    }
+  };
+
+  // Add merge function to handle conflicts
+  const mergeEventsData = (serverData, localData) => {
+    const mergedMap = new Map();
+    
+    // Add all server data first
+    serverData.forEach(event => {
+      mergedMap.set(event.id, event);
+    });
+    
+    // Merge local data, keeping the most recent version based on timestamps
+    localData.forEach(localEvent => {
+      const serverEvent = mergedMap.get(localEvent.id);
+      if (!serverEvent || new Date(localEvent.updatedAt) > new Date(serverEvent.updatedAt)) {
+        mergedMap.set(localEvent.id, localEvent);
+      }
+    });
+    
+    return Array.from(mergedMap.values());
+  };
+
+  // Add periodic sync
+  useEffect(() => {
+    const syncInterval = setInterval(syncWithServer, 30000); // Sync every 30 seconds
+    return () => clearInterval(syncInterval);
+  }, []);
+
+  // Add sync on mount
+  useEffect(() => {
+    syncWithServer();
+  }, []);
+
   return (
     <Container dir="rtl">
       {/* Header with Search, Filter and Logout */}
@@ -1569,57 +1643,85 @@ function EventDashboard({ onLogout }) {
       {/* Events Table */}
       {filteredEvents.length > 0 && (
         <TableContainer component={Paper} sx={{ direction: 'rtl', mb: 4 }}>
-          <Table dir="rtl">
-            <TableHead>
-              <TableRow>
-                <TableCell align="right">שם האירוע</TableCell>
-                <TableCell align="right">תאריך</TableCell>
-                <TableCell align="right">מיקום</TableCell>
-                <TableCell align="right">מחיר</TableCell>
-                <TableCell align="right">משתתפים</TableCell>
-                <TableCell align="right">פעולות</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredEvents.map((event) => (
-                <TableRow key={event.id}>
-                  <TableCell align="right">{event.name}</TableCell>
-                  <TableCell align="right">
-                    {new Date(event.date).toLocaleDateString('he-IL', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </TableCell>
-                  <TableCell align="right">{event.location}</TableCell>
-                  <TableCell align="right">{event.price} CZK</TableCell>
-                  <TableCell align="right">
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() => {
-                        setSelectedParticipantEvent(event);
-                        setOpenParticipantsDialog(true);
-                      }}
-                    >
-                      {event.participants?.length || 0} / {event.maxParticipants || '∞'}
-                    </Button>
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton onClick={() => setOpenDialog(true)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(event.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Table dir="rtl">
+          <TableHead>
+            <TableRow>
+              <TableCell align="right">שם האירוע</TableCell>
+              <TableCell align="right">תאריך</TableCell>
+              <TableCell align="right">מיקום</TableCell>
+              <TableCell align="right">מחיר</TableCell>
+              <TableCell align="right">משתתפים</TableCell>
+              <TableCell align="right">תקציב</TableCell>
+              <TableCell align="right">פעולות</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+              {filteredEvents.map((event) => {
+                const budget = calculateEventBudget(event);
+                return (
+                  <TableRow key={event.id}>
+                    <TableCell align="right">{event.name}</TableCell>
+                    <TableCell align="right">
+                      {new Date(event.date).toLocaleDateString('he-IL', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </TableCell>
+                    <TableCell align="right">{event.location}</TableCell>
+                    <TableCell align="right">{event.price} CZK</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => {
+                          setSelectedParticipantEvent(event);
+                          setOpenParticipantsDialog(true);
+                        }}
+                      >
+                        {event.participants?.length || 0} / {event.maxParticipants || '∞'}
+                      </Button>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                        <Typography variant="body2" color={budget.profitLoss >= 0 ? 'success.main' : 'error.main'}>
+                          רווח/הפסד: {budget.profitLoss.toLocaleString()} CZK
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
+                          <Chip
+                            size="small"
+                            label={`הכנסות: ${budget.totalIncome.toLocaleString()} CZK`}
+                            color="primary"
+                            variant="outlined"
+                          />
+                          <Chip
+                            size="small"
+                            label={`הוצאות: ${budget.totalExpenses.toLocaleString()} CZK`}
+                            color="error"
+                            variant="outlined"
+                          />
+                        </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton onClick={() => {
+                        setSelectedEvent(event);
+                        setOpenDialog(true);
+                      }}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleDelete(event.id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+          </TableBody>
+        </Table>
+      </TableContainer>
       )}
 
       {/* Event Form Dialog */}
@@ -1758,23 +1860,23 @@ function EventDashboard({ onLogout }) {
             <Typography variant="h6" sx={{ mb: 2 }}>הוספת משתתף חדש</Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <TextField
+            <TextField
                   fullWidth
                   label="שם מלא"
                   name="name"
                   value={participantFormData.name}
                   onChange={handleParticipantFormChange}
-                  required
-                />
+              required
+            />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
+            <TextField
                   fullWidth
                   label="טלפון"
                   name="phone"
                   value={participantFormData.phone}
                   onChange={handleParticipantFormChange}
-                  required
+              required
                   helperText="פורמט: 05X-XXXXXXX"
                 />
               </Grid>
@@ -1816,14 +1918,14 @@ function EventDashboard({ onLogout }) {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button
-                  variant="contained"
+            <Button
+              variant="contained"
                   onClick={handleParticipantSubmit}
                   startIcon={<AddIcon />}
                   sx={{ mt: 1 }}
-                >
-                  הוסף משתתף
-                </Button>
+            >
+              הוסף משתתף
+            </Button>
               </Grid>
             </Grid>
           </Paper>
@@ -1864,32 +1966,32 @@ function EventDashboard({ onLogout }) {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Checkbox
-                          checked={participant.paid}
-                          onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
-                            ...participant,
-                            paid: !participant.paid,
-                          })}
+                      <Checkbox
+                        checked={participant.paid}
+                        onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
+                          ...participant,
+                          paid: !participant.paid,
+                        })}
                           color="success"
                           size="small"
-                        />
+                      />
                         <Typography variant="caption" sx={{ mr: 1 }}>שילם</Typography>
-                        <Checkbox
-                          checked={participant.confirmed}
-                          onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
-                            ...participant,
-                            confirmed: !participant.confirmed,
-                          })}
+                      <Checkbox
+                        checked={participant.confirmed}
+                        onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
+                          ...participant,
+                          confirmed: !participant.confirmed,
+                        })}
                           color="info"
                           size="small"
-                        />
+                      />
                         <Typography variant="caption" sx={{ mr: 1 }}>אישר</Typography>
-                        <Checkbox
-                          checked={participant.attended}
-                          onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
-                            ...participant,
-                            attended: !participant.attended,
-                          })}
+                      <Checkbox
+                        checked={participant.attended}
+                        onChange={() => handleParticipantUpdate(selectedParticipantEvent.id, {
+                          ...participant,
+                          attended: !participant.attended,
+                        })}
                           color="warning"
                           size="small"
                         />
@@ -1931,8 +2033,8 @@ function EventDashboard({ onLogout }) {
         <DialogActions sx={{ justifyContent: 'space-between', p: 2 }}>
           <Button
             onClick={() => {
-              setOpenParticipantsDialog(false);
-              setSelectedParticipantEvent(null);
+            setOpenParticipantsDialog(false);
+            setSelectedParticipantEvent(null);
             }}
           >
             סגור
@@ -1984,6 +2086,39 @@ function EventDashboard({ onLogout }) {
       >
         <WhatsAppIcon />
       </StyledFab>
+
+      {/* Add sync status indicator */}
+      <Box sx={{ 
+        position: 'fixed', 
+        bottom: 16, 
+        left: 16, 
+        display: 'flex', 
+        alignItems: 'center',
+        gap: 1,
+        bgcolor: 'background.paper',
+        padding: 1,
+        borderRadius: 2,
+        boxShadow: 1,
+        zIndex: 1000
+      }}>
+        <SyncIcon 
+          sx={{ 
+            animation: syncStatus === 'syncing' ? 'spin 1s linear infinite' : 'none',
+            color: syncStatus === 'error' ? 'error.main' : 
+                   syncStatus === 'syncing' ? 'primary.main' : 'success.main',
+            '@keyframes spin': {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' }
+            }
+          }} 
+        />
+        <Typography variant="caption" color="text.secondary">
+          {syncStatus === 'error' ? 'שגיאת סנכרון' :
+           syncStatus === 'syncing' ? 'מסנכרן...' :
+           lastSyncTime ? `סונכרן לאחרונה: ${new Date(lastSyncTime).toLocaleTimeString('he-IL')}` :
+           'טוען נתונים...'}
+        </Typography>
+      </Box>
     </Container>
   );
 }
@@ -2009,7 +2144,7 @@ const validatePhone = (phone) => {
 const sendWhatsAppMessage = (phone, message) => {
   try {
     const formattedPhone = phone.startsWith('+') ? phone : `+972${phone.substring(1)}`;
-    window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
   } catch (error) {
     console.error('Error sending WhatsApp message:', error);
   }
@@ -2037,7 +2172,7 @@ const loadFromLocalStorage = (key, defaultValue = null) => {
     // Ensure budget structure exists for all events
     if (key === 'yjccEvents') {
       return parsedData.map(event => ({
-        ...event,
+    ...event,
         budget: event.budget || {
           fullPrice: '',
           subsidyAmount: '',
@@ -2166,6 +2301,7 @@ function ParticipantDashboard() {
     anonymous: false
   });
   const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [syncStatus, setSyncStatus] = useState('idle'); // 'idle', 'syncing', 'error'
 
   // Filter and sort events
   const filteredEvents = events
@@ -2315,7 +2451,7 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
     <Container>
       {/* Hero Section */}
       <Box sx={{
-        textAlign: 'center',
+          textAlign: 'center',
         py: 6,
         px: 2,
         mb: 4,
@@ -2376,7 +2512,7 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
 
       {/* Events Grid */}
       {viewMode === 'grid' && (
-        <Grid container spacing={3}>
+      <Grid container spacing={3}>
           {filteredEvents.map(event => {
             const eventDate = new Date(event.date);
             const isPast = eventDate < new Date();
@@ -2387,13 +2523,13 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
 
             return (
               <Grid item xs={12} sm={6} md={4} key={event.id}>
-                <Paper
-                  sx={{
+              <Paper
+                sx={{
                     p: 3,
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    position: 'relative',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  position: 'relative',
                     opacity: isPast ? 0.7 : 1,
                     transition: 'transform 0.2s, box-shadow 0.2s',
                     '&:hover': {
@@ -2406,7 +2542,7 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
                   {/* Favorite Button */}
                   <IconButton
                     onClick={() => toggleFavorite(event.id)}
-                    sx={{
+                  sx={{ 
                       position: 'absolute',
                       top: 8,
                       right: 8,
@@ -2429,22 +2565,22 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
                   </IconButton>
 
                   <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, pr: 4 }}>
-                    {event.name}
-                  </Typography>
+                  {event.name}
+                </Typography>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <TimeIcon sx={{ mr: 1, color: 'primary.main' }} />
                     <Typography>
-                      {formatDate(event.date)}
-                    </Typography>
-                  </Box>
+                    {formatDate(event.date)}
+                  </Typography>
+                </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <LocationIcon sx={{ mr: 1, color: 'primary.main' }} />
                     <Typography>
-                      {event.location}
-                    </Typography>
-                  </Box>
+                    {event.location}
+                  </Typography>
+                </Box>
 
                   {event.price && (
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -2463,7 +2599,7 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
                     </Typography>
                   </Box>
 
-                  {event.description && (
+                {event.description && (
                     <Typography
                       variant="body2"
                       color="text.secondary"
@@ -2478,9 +2614,9 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
                     >
                       {event.description}
                     </Typography>
-                  )}
+                )}
 
-                  <Box sx={{ mt: 'auto' }}>
+                <Box sx={{ mt: 'auto' }}>
                     {!isPast && (
                       <Button
                         variant="contained"
@@ -2527,21 +2663,21 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
                             />
                             <Typography variant="body2" color="text.secondary">
                               ({event.feedback.length} משובים)
-                            </Typography>
-                          </Box>
+                    </Typography>
+                  </Box>
                         </Box>
                       ) : null}
 
                       {!hasGivenFeedback && (
-                        <Button
-                          fullWidth
+                    <Button
+                      fullWidth
                           variant="outlined"
                           startIcon={<RateReviewIcon />}
                           onClick={() => {
                             setSelectedEventForFeedback(event);
                             setFeedbackDialogOpen(true);
                           }}
-                          sx={{
+                      sx={{ 
                             mt: 1,
                             borderColor: 'primary.main',
                             color: 'primary.main',
@@ -2552,15 +2688,15 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
                           }}
                         >
                           שתפו את החוויה שלכם
-                        </Button>
-                      )}
-                    </Box>
+                    </Button>
                   )}
-                </Paper>
-              </Grid>
+                </Box>
+                  )}
+              </Paper>
+            </Grid>
             );
           })}
-        </Grid>
+      </Grid>
       )}
 
       {/* Calendar View - Coming soon message */}
@@ -2599,8 +2735,8 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
       )}
 
       {/* Registration Dialog */}
-      <Dialog
-        open={registrationOpen}
+      <Dialog 
+        open={registrationOpen} 
         onClose={handleRegistrationClose}
         maxWidth="sm"
         fullWidth
@@ -2617,7 +2753,7 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
         </DialogTitle>
         
         {selectedEvent && (
-          <DialogContent>
+        <DialogContent>
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle1" sx={{ mb: 2, color: 'text.secondary' }}>
                 פרטי האירוע:
@@ -2648,23 +2784,23 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
             
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField
-                  autoFocus
-                  name="name"
-                  label="השם שלך"
-                  fullWidth
-                  value={formData.name}
-                  onChange={handleFormChange}
+          <TextField
+            autoFocus
+            name="name"
+            label="השם שלך"
+            fullWidth
+            value={formData.name}
+            onChange={handleFormChange}
                   required
-                />
+          />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  name="phone"
-                  label="מספר טלפון"
-                  fullWidth
-                  value={formData.phone}
-                  onChange={handleFormChange}
+          <TextField
+            name="phone"
+            label="מספר טלפון"
+            fullWidth
+            value={formData.phone}
+            onChange={handleFormChange}
                   required
                   helperText="נשלח לך הודעת אישור בוואטסאפ"
                   InputProps={{
@@ -2677,14 +2813,14 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
                 />
               </Grid>
             </Grid>
-          </DialogContent>
+        </DialogContent>
         )}
         
         <DialogActions sx={{ p: 2, gap: 1 }}>
           <Button onClick={handleRegistrationClose} color="inherit">
             ביטול
           </Button>
-          <Button
+          <Button 
             onClick={handleRegistrationSubmit}
             variant="contained"
             sx={{
@@ -2764,7 +2900,7 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
           <Button onClick={() => setFeedbackDialogOpen(false)} color="inherit">
             ביטול
           </Button>
-          <Button
+          <Button 
             onClick={handleFeedbackSubmit}
             variant="contained"
             disabled={!feedbackForm.rating || !feedbackForm.comment}
@@ -2880,4 +3016,3 @@ function App() {
 }
 
 export default App; 
-
