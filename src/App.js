@@ -52,6 +52,7 @@ import {
   Chip,
   InputAdornment,
   Divider,
+  Avatar,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -483,80 +484,182 @@ function AdminLogin({ onLogin }) {
   return (
     <Fade in timeout={800}>
       <Container component="main" maxWidth="xs">
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            mt: 8,
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            borderRadius: 2,
-          }}
-          className="page-enter"
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, width: '100%' }}>
-            <Grow in timeout={600}>
-              <LockOutlinedIcon sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
-            </Grow>
-            <Typography 
-              component="h1" 
-              variant="h5"
+        <Box sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `radial-gradient(circle at top right, ${YJCC_COLORS.light}, transparent),
+                        radial-gradient(circle at bottom left, ${YJCC_COLORS.secondary}20, transparent)`,
+            zIndex: -1,
+          }
+        }}>
+          <Paper
+            elevation={3}
+            sx={{
+              p: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: 2,
+              position: 'relative',
+              overflow: 'hidden',
+              width: '100%',
+            }}
+          >
+            <Box
               sx={{
-                fontFamily: 'Heebo',
-                fontWeight: 600,
-                letterSpacing: '0.02em',
-                mb: 3,
-                color: 'text.primary',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '4px',
+                background: `linear-gradient(90deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary}, ${YJCC_COLORS.accent})`,
               }}
-            >
-              כניסת מנהל YJCC
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                type="password"
-                label="קוד מנהל"
-                value={code}
-                onChange={(e) => {
-                  setCode(e.target.value);
-                  setError(false);
-                }}
-                error={error}
-                helperText={error ? 'קוד שגוי' : ''}
+            />
+            
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              gap: 2, 
+              width: '100%',
+              position: 'relative',
+            }}>
+              <IconButton
+                onClick={() => window.history.back()}
                 sx={{
-                  '& .MuiInputLabel-root': {
-                    fontFamily: 'Assistant',
-                    fontSize: '1.1rem',
-                  },
-                  '& .MuiInputBase-input': {
-                    fontFamily: 'Assistant',
-                    fontSize: '1.1rem',
-                  },
+                  position: 'absolute',
+                  top: -16,
+                  left: -16,
+                  color: YJCC_COLORS.text,
+                  '&:hover': {
+                    color: YJCC_COLORS.primary,
+                    bgcolor: 'rgba(100, 181, 246, 0.1)',
+                  }
                 }}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ 
-                  mt: 3, 
-                  mb: 2,
-                  py: 1.5,
-                  fontSize: '1.1rem',
-                  fontFamily: 'Assistant',
-                  fontWeight: 600,
-                }}
-                className="submit-button"
               >
-                כניסה
-              </Button>
+                <ExitToAppIcon />
+              </IconButton>
+
+              <Grow in timeout={600}>
+                <Avatar sx={{ 
+                  m: 1, 
+                  bgcolor: 'primary.main',
+                  width: 56,
+                  height: 56,
+                  boxShadow: 2,
+                }}>
+                  <LockOutlinedIcon sx={{ fontSize: 32 }} />
+                </Avatar>
+              </Grow>
+
+              <Typography 
+                component="h1" 
+                variant="h5"
+                sx={{
+                  fontFamily: 'Heebo',
+                  fontWeight: 600,
+                  letterSpacing: '0.02em',
+                  mb: 3,
+                  color: 'text.primary',
+                  background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.accent})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                כניסת מנהל YJCC
+              </Typography>
+
+              <Box 
+                component="form" 
+                onSubmit={handleSubmit} 
+                sx={{ 
+                  mt: 1, 
+                  width: '100%',
+                  '& .MuiTextField-root': {
+                    mb: 2,
+                    '& .MuiOutlinedInput-root': {
+                      '&:hover fieldset': {
+                        borderColor: YJCC_COLORS.primary,
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: YJCC_COLORS.primary,
+                      },
+                    },
+                  },
+                }}
+              >
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  type="password"
+                  label="קוד מנהל"
+                  value={code}
+                  onChange={(e) => {
+                    setCode(e.target.value);
+                    setError(false);
+                  }}
+                  error={error}
+                  helperText={error ? 'קוד שגוי' : ''}
+                  sx={{
+                    '& .MuiInputLabel-root': {
+                      fontFamily: 'Assistant',
+                      fontSize: '1.1rem',
+                    },
+                    '& .MuiInputBase-input': {
+                      fontFamily: 'Assistant',
+                      fontSize: '1.1rem',
+                      textAlign: 'center',
+                      letterSpacing: '0.2em',
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockOutlinedIcon color={error ? 'error' : 'primary'} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ 
+                    mt: 3, 
+                    mb: 2,
+                    py: 1.5,
+                    fontSize: '1.1rem',
+                    fontFamily: 'Assistant',
+                    fontWeight: 600,
+                    background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      background: `linear-gradient(45deg, ${YJCC_COLORS.secondary}, ${YJCC_COLORS.accent})`,
+                      transform: 'translateY(-2px)',
+                      boxShadow: 4,
+                    },
+                  }}
+                >
+                  כניסה
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Paper>
+          </Paper>
+        </Box>
       </Container>
     </Fade>
   );
@@ -1342,91 +1445,143 @@ function EventDashboard({ onLogout }) {
 
   return (
     <Container dir="rtl">
-      {/* Header with Search, Filter and Logout */}
+      {/* Enhanced Header */}
       <Box sx={{ 
-        my: 4, 
-        display: 'flex', 
-        flexDirection: { xs: 'column', md: 'row' },
-        gap: 2,
-        alignItems: 'center',
-        justifyContent: 'space-between'
+        position: 'relative',
+        mt: 4,
+        mb: 6,
+        p: 4,
+        borderRadius: 4,
+        background: `linear-gradient(135deg, ${YJCC_COLORS.light}, rgba(144, 202, 249, 0.2))`,
+        backdropFilter: 'blur(10px)',
+        boxShadow: '0 8px 32px rgba(100, 181, 246, 0.1)',
       }}>
-        <Typography variant="h4" component="h1" sx={{ 
-          fontWeight: 600, 
-          textAlign: { xs: 'center', md: 'right' },
-          background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-        }}>
-          אירועי YJCC
-        </Typography>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item xs={12} md={6}>
+            <Typography variant="h4" sx={{ 
+              fontWeight: 700,
+              background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.accent})`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              mb: { xs: 2, md: 0 },
+            }}>
+              ניהול אירועי YJCC
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1 }}>
+              ברוכים הבאים למערכת ניהול האירועים 👋
+            </Typography>
+          </Grid>
+          
+          <Grid item xs={12} md={6}>
+            <Box sx={{ 
+              display: 'flex', 
+              gap: 2, 
+              flexWrap: 'wrap',
+              justifyContent: { xs: 'center', md: 'flex-end' },
+            }}>
+              <TextField
+                size="small"
+                placeholder="חיפוש אירועים..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                InputProps={{
+                  startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />,
+                }}
+                sx={{ 
+                  minWidth: 200,
+                  '& .MuiOutlinedInput-root': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 1)',
+                    },
+                  },
+                }}
+              />
 
+              <FormControl size="small" sx={{ minWidth: 120 }}>
+                <Select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  startAdornment={<FilterListIcon sx={{ mr: 1, color: 'text.secondary' }} />}
+                  sx={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 1)',
+                    },
+                  }}
+                >
+                  <MenuItem value="all">כל האירועים</MenuItem>
+                  <MenuItem value="upcoming">אירועים עתידיים</MenuItem>
+                  <MenuItem value="past">אירועים שהסתיימו</MenuItem>
+                </Select>
+              </FormControl>
+
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setOpenDialog(true)}
+                sx={{
+                  background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+                  color: 'white',
+                  '&:hover': {
+                    background: `linear-gradient(45deg, ${YJCC_COLORS.secondary}, ${YJCC_COLORS.accent})`,
+                    transform: 'translateY(-2px)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                אירוע חדש
+              </Button>
+
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={onLogout}
+                startIcon={<ExitToAppIcon />}
+                sx={{
+                  borderColor: YJCC_COLORS.text,
+                  color: YJCC_COLORS.text,
+                  '&:hover': {
+                    borderColor: YJCC_COLORS.primary,
+                    color: YJCC_COLORS.primary,
+                    backgroundColor: 'rgba(100, 181, 246, 0.1)',
+                    transform: 'translateY(-2px)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                יציאה
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+
+        {/* Sync Status */}
         <Box sx={{ 
           display: 'flex', 
-          gap: 2, 
-          flexWrap: 'wrap',
+          alignItems: 'center', 
+          gap: 1,
+          mt: 2,
           justifyContent: 'center',
-          alignItems: 'center'
         }}>
-          {/* Search Box */}
-          <TextField
-            size="small"
-            placeholder="חיפוש אירועים..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />,
-            }}
-            sx={{ minWidth: 200 }}
+          <SyncIcon 
+            sx={{ 
+              animation: syncStatus === 'syncing' ? 'spin 1s linear infinite' : 'none',
+              color: syncStatus === 'error' ? 'error.main' : 
+                     syncStatus === 'syncing' ? 'primary.main' : 'success.main',
+              '@keyframes spin': {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' }
+              },
+              fontSize: '1rem',
+            }} 
           />
-
-          {/* Filter Button */}
-          <FormControl size="small" sx={{ minWidth: 120 }}>
-            <Select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              startAdornment={<FilterListIcon sx={{ mr: 1, color: 'text.secondary' }} />}
-            >
-              <MenuItem value="all">כל האירועים</MenuItem>
-              <MenuItem value="upcoming">אירועים עתידיים</MenuItem>
-              <MenuItem value="past">אירועים שהסתיימו</MenuItem>
-            </Select>
-          </FormControl>
-
-          {/* Add Event Button */}
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setOpenDialog(true)}
-            sx={{
-              background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
-              color: 'white',
-              '&:hover': {
-                background: `linear-gradient(45deg, ${YJCC_COLORS.secondary}, ${YJCC_COLORS.accent})`,
-              }
-            }}
-          >
-            אירוע חדש
-          </Button>
-
-          {/* Logout Button */}
-          <Button
-            variant="outlined"
-            color="inherit"
-            onClick={onLogout}
-            startIcon={<ExitToAppIcon />}
-            sx={{
-              borderColor: YJCC_COLORS.text,
-              color: YJCC_COLORS.text,
-              '&:hover': {
-                borderColor: YJCC_COLORS.primary,
-                color: YJCC_COLORS.primary,
-                backgroundColor: 'rgba(255, 142, 83, 0.1)',
-              }
-            }}
-          >
-            יציאה
-          </Button>
+          <Typography variant="caption" color="text.secondary">
+            {syncStatus === 'error' ? 'שגיאת סנכרון' :
+             syncStatus === 'syncing' ? 'מסנכרן נתונים...' :
+             lastSyncTime ? `סונכרן לאחרונה: ${new Date(lastSyncTime).toLocaleTimeString('he-IL')}` :
+             'טוען נתונים...'}
+          </Typography>
         </Box>
       </Box>
 
@@ -2086,39 +2241,6 @@ function EventDashboard({ onLogout }) {
       >
         <WhatsAppIcon />
       </StyledFab>
-
-      {/* Add sync status indicator */}
-      <Box sx={{ 
-        position: 'fixed', 
-        bottom: 16, 
-        left: 16, 
-        display: 'flex', 
-        alignItems: 'center',
-        gap: 1,
-        bgcolor: 'background.paper',
-        padding: 1,
-        borderRadius: 2,
-        boxShadow: 1,
-        zIndex: 1000
-      }}>
-        <SyncIcon 
-          sx={{ 
-            animation: syncStatus === 'syncing' ? 'spin 1s linear infinite' : 'none',
-            color: syncStatus === 'error' ? 'error.main' : 
-                   syncStatus === 'syncing' ? 'primary.main' : 'success.main',
-            '@keyframes spin': {
-              '0%': { transform: 'rotate(0deg)' },
-              '100%': { transform: 'rotate(360deg)' }
-            }
-          }} 
-        />
-        <Typography variant="caption" color="text.secondary">
-          {syncStatus === 'error' ? 'שגיאת סנכרון' :
-           syncStatus === 'syncing' ? 'מסנכרן...' :
-           lastSyncTime ? `סונכרן לאחרונה: ${new Date(lastSyncTime).toLocaleTimeString('he-IL')}` :
-           'טוען נתונים...'}
-        </Typography>
-      </Box>
     </Container>
   );
 }
