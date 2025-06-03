@@ -75,6 +75,11 @@ import {
   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
   GridView as GridViewIcon,
+  BarChart as BarChartIcon,
+  PieChart as PieChartIcon,
+  CloudUpload as CloudUploadIcon,
+  CloudDownload as CloudDownloadIcon,
+  Assessment as AssessmentIcon,
 } from '@mui/icons-material';
 import './App.css';
 
@@ -653,6 +658,8 @@ function EventDashboard({ onLogout }) {
     priceType: PRICE_TYPES.REGULAR,
     notes: ''
   });
+  const [showStats, setShowStats] = useState(false);
+  const [statsData, setStatsData] = useState(null);
 
   // Filter events based on search and status
   const filteredEvents = events.filter(event => {
@@ -697,6 +704,10 @@ function EventDashboard({ onLogout }) {
   // Save events to localStorage whenever they change
   useEffect(() => {
     saveToLocalStorage('yjccEvents', events);
+  }, [events]);
+
+  useEffect(() => {
+    setStatsData(calculateEventStats(events));
   }, [events]);
 
   const handleFormChange = (e) => {
@@ -826,6 +837,71 @@ function EventDashboard({ onLogout }) {
     }));
   };
 
+  // Add export/import functions
+  const exportData = (format) => {
+    let content;
+    const fileName = `yjcc_events_${new Date().toISOString().split('T')[0]}`;
+
+    if (format === 'json') {
+      content = JSON.stringify(events, null, 2);
+      const blob = new Blob([content], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${fileName}.json`;
+      link.click();
+    } else if (format === 'csv') {
+      const headers = ['שם האירוע', 'תאריך', 'מיקום', 'מחיר', 'משתתפים', 'מקסימום משתתפים', 'תיאור'];
+      content = [
+        headers.join(','),
+        ...events.map(event => [
+          event.name,
+          event.date,
+          event.location,
+          event.price,
+          event.participants?.length || 0,
+          event.maxParticipants || '',
+          event.description || ''
+        ].join(','))
+      ].join('\n');
+      
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${fileName}.csv`;
+      link.click();
+    }
+  };
+
+  const importData = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedEvents = JSON.parse(e.target.result);
+        if (Array.isArray(importedEvents)) {
+          setEvents(importedEvents);
+          saveToLocalStorage('yjccEvents', importedEvents);
+          setSnackbar({
+            open: true,
+            message: 'הנתונים יובאו בהצלחה!',
+            severity: 'success'
+          });
+        }
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: 'שגיאה בייבוא הנתונים',
+          severity: 'error'
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <Container dir="rtl">
       {/* Header with Search, Filter and Logout */}
@@ -915,6 +991,140 @@ function EventDashboard({ onLogout }) {
           </Button>
         </Box>
       </Box>
+
+      {/* Data Management and Stats Buttons */}
+      <Box sx={{ mb: 4, display: 'flex', gap: 2, justifyContent: 'center' }}>
+        <Button
+          variant="outlined"
+          startIcon={<CloudDownloadIcon />}
+          onClick={() => exportData('json')}
+        >
+          ייצוא נתונים (JSON)
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<CloudDownloadIcon />}
+          onClick={() => exportData('csv')}
+        >
+          ייצוא לאקסל
+        </Button>
+        <Button
+          component="label"
+          variant="outlined"
+          startIcon={<CloudUploadIcon />}
+        >
+          ייבוא נתונים
+          <input
+            type="file"
+            hidden
+            accept=".json"
+            onChange={importData}
+          />
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<AssessmentIcon />}
+          onClick={() => setShowStats(!showStats)}
+        >
+          {showStats ? 'הסתר סטטיסטיקות' : 'הצג סטטיסטיקות'}
+        </Button>
+      </Box>
+
+      {/* Statistics Section */}
+      {showStats && statsData && (
+        <Paper sx={{ p: 3, mb: 4 }}>
+          <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <BarChartIcon /> סטטיסטיקות
+          </Typography>
+          
+          <Grid container spacing={3}>
+            {/* General Stats */}
+            <Grid item xs={12} md={6}>
+              <Paper sx={{ p: 2, background: `linear-gradient(135deg, ${YJCC_COLORS.light}, rgba(144, 202, 249, 0.2))` }}>
+                <Typography variant="h6" gutterBottom>נתונים כלליים</Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Typography>סה"כ אירועים: {statsData.totalEvents}</Typography>
+                  <Typography>אירועים עתידיים: {statsData.upcomingEvents}</Typography>
+                  <Typography>אירועים שהסתיימו: {statsData.pastEvents}</Typography>
+                  <Typography>סה"כ משתתפים: {statsData.totalParticipants}</Typography>
+                  <Typography>ממוצע משתתפים: {statsData.averageAttendance.toFixed(1)}</Typography>
+                  <Typography>אחוז תפוסה: {statsData.participationRate.toFixed(1)}%</Typography>
+                </Box>
+              </Paper>
+            </Grid>
+
+            {/* Location Stats */}
+            <Grid item xs={12} md={6}>
+              <Paper sx={{ p: 2, background: 'rgba(144, 202, 249, 0.1)' }}>
+                <Typography variant="h6" gutterBottom>סטטיסטיקת מיקומים</Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Typography>המיקום הפופולרי ביותר: {statsData.mostPopularLocation}</Typography>
+                  {Object.entries(statsData.locationStats).map(([location, count]) => (
+                    <Box key={location} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography>{location}:</Typography>
+                      <Box sx={{ flexGrow: 1, height: 8, bgcolor: 'background.paper', borderRadius: 1 }}>
+                        <Box
+                          sx={{
+                            width: `${(count / statsData.totalEvents) * 100}%`,
+                            height: '100%',
+                            bgcolor: YJCC_COLORS.primary,
+                            borderRadius: 1,
+                          }}
+                        />
+                      </Box>
+                      <Typography>{count} אירועים</Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+            </Grid>
+
+            {/* Monthly Stats */}
+            <Grid item xs={12}>
+              <Paper sx={{ p: 2, background: 'rgba(144, 202, 249, 0.05)' }}>
+                <Typography variant="h6" gutterBottom>סטטיסטיקה חודשית</Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {Object.entries(statsData.monthlyStats).map(([month, data]) => (
+                    <Box key={month}>
+                      <Typography variant="subtitle1">{month}</Typography>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography variant="body2">אירועים:</Typography>
+                          <Box sx={{ flexGrow: 1, height: 8, bgcolor: 'background.paper', borderRadius: 1 }}>
+                            <Box
+                              sx={{
+                                width: `${(data.events / statsData.totalEvents) * 100}%`,
+                                height: '100%',
+                                bgcolor: YJCC_COLORS.primary,
+                                borderRadius: 1,
+                              }}
+                            />
+                          </Box>
+                          <Typography variant="body2">{data.events}</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography variant="body2">משתתפים:</Typography>
+                          <Box sx={{ flexGrow: 1, height: 8, bgcolor: 'background.paper', borderRadius: 1 }}>
+                            <Box
+                              sx={{
+                                width: `${(data.participants / statsData.totalParticipants) * 100}%`,
+                                height: '100%',
+                                bgcolor: YJCC_COLORS.secondary,
+                                borderRadius: 1,
+                              }}
+                            />
+                          </Box>
+                          <Typography variant="body2">{data.participants}</Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Paper>
+      )}
 
       {/* Events Summary */}
       <Box sx={{ mb: 4, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
