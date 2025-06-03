@@ -87,13 +87,13 @@ const cacheRtl = createCache({
 
 // Add YJCC branding colors and logo component
 const YJCC_COLORS = {
-  primary: '#FF8E53',
-  secondary: '#FE6B8B',
-  accent: '#F96295',
-  light: '#FFF3E0',
-  background: '#FFF8E1',
-  text: '#4A4A4A',
-  success: '#66BB6A',
+  primary: '#64B5F6',    // Light Blue
+  secondary: '#90CAF9',  // Lighter Blue
+  accent: '#42A5F5',     // Medium Blue
+  light: '#E3F2FD',      // Very Light Blue
+  background: '#F5F9FF', // Almost White Blue
+  text: '#2C3E50',       // Dark Blue Gray
+  success: '#4CAF50',
   warning: '#FFA726',
 };
 
@@ -165,7 +165,7 @@ const theme = createTheme({
     primary: {
       light: YJCC_COLORS.light,
       main: YJCC_COLORS.primary,
-      dark: YJCC_COLORS.secondary,
+      dark: YJCC_COLORS.accent,
     },
     secondary: {
       light: YJCC_COLORS.light,
@@ -178,7 +178,7 @@ const theme = createTheme({
     },
     text: {
       primary: YJCC_COLORS.text,
-      secondary: '#666666',
+      secondary: '#546E7A',
     },
   },
   typography: {
@@ -203,7 +203,7 @@ const theme = createTheme({
           direction: rtl;
           margin: 0;
           padding: 0;
-          background: linear-gradient(135deg, #E3F2FD 0%, #FFFFFF 100%);
+          background: linear-gradient(135deg, ${YJCC_COLORS.light} 0%, #FFFFFF 100%);
           min-height: 100vh;
           font-family: 'Assistant', sans-serif !important;
         }
@@ -275,11 +275,11 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          boxShadow: '0 8px 32px rgba(255, 142, 83, 0.1)',
+          boxShadow: '0 8px 32px rgba(100, 181, 246, 0.1)',
           transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
           '&:hover': {
             transform: 'translateY(-4px)',
-            boxShadow: '0 12px 48px rgba(255, 142, 83, 0.2)',
+            boxShadow: '0 12px 48px rgba(100, 181, 246, 0.2)',
           },
         },
       },
@@ -1698,13 +1698,13 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
         py: 6,
         px: 2,
         mb: 4,
-        background: `linear-gradient(135deg, ${YJCC_COLORS.primary}15, ${YJCC_COLORS.secondary}15)`,
+        background: `linear-gradient(135deg, ${YJCC_COLORS.light}, rgba(144, 202, 249, 0.2))`,
         borderRadius: 4,
       }}>
         <Typography variant="h3" sx={{
           fontWeight: 700,
           mb: 2,
-          background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+          background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.accent})`,
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
         }}>
@@ -1777,8 +1777,9 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
                     transition: 'transform 0.2s, box-shadow 0.2s',
                     '&:hover': {
                       transform: 'translateY(-4px)',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                      boxShadow: '0 8px 24px rgba(100, 181, 246, 0.15)',
                     },
+                    background: 'linear-gradient(135deg, #FFFFFF 0%, rgba(227, 242, 253, 0.5) 100%)',
                   }}
                 >
                   {/* Favorite Button */}
