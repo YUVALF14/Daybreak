@@ -4,7 +4,7 @@
 
 // Remove unused variable
 // const PRICE_TYPES = ["free", "paid"]; // <-- Unused, remove
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
@@ -1267,7 +1267,7 @@ function EventDashboard({ onLogout }) {
     }
   };
 
-  const syncWithServer = async () => {
+  const syncWithServer = useCallback(async () => {
     if (syncStatus === 'syncing') return;
     
     setSyncStatus('syncing');
@@ -1307,7 +1307,18 @@ function EventDashboard({ onLogout }) {
       console.error('Error syncing with server:', error);
       setSyncStatus('error');
     }
-  };
+  }, [syncStatus]); // Add syncStatus as dependency
+
+  // Add periodic sync
+  useEffect(() => {
+    const syncInterval = setInterval(syncWithServer, 30000); // Sync every 30 seconds
+    return () => clearInterval(syncInterval);
+  }, [syncWithServer]); // Add syncWithServer as dependency
+
+  // Add sync on mount
+  useEffect(() => {
+    syncWithServer();
+  }, [syncWithServer]); // Add syncWithServer as dependency
 
   // Add merge function to handle conflicts
   const mergeEventsData = (serverData, localData) => {
@@ -1328,17 +1339,6 @@ function EventDashboard({ onLogout }) {
     
     return Array.from(mergedMap.values());
   };
-
-  // Add periodic sync
-  useEffect(() => {
-    const syncInterval = setInterval(syncWithServer, 30000); // Sync every 30 seconds
-    return () => clearInterval(syncInterval);
-  }, []);
-
-  // Add sync on mount
-  useEffect(() => {
-    syncWithServer();
-  }, []);
 
   return (
     <Container dir="rtl">
