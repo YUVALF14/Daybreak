@@ -80,6 +80,7 @@ import {
   CloudUpload as CloudUploadIcon,
   CloudDownload as CloudDownloadIcon,
   Assessment as AssessmentIcon,
+  Sync as SyncIcon,
 } from '@mui/icons-material';
 import './App.css';
 
@@ -337,6 +338,13 @@ const PRICE_TYPES = {
   DISCOUNT: 'discount',
   FULL_SUBSIDY_EXPLAIN: 'full_subsidy_explain',
   FULL_SUBSIDY_STAFF: 'full_subsidy_staff'
+};
+
+// Add budget constants
+const BUDGET_TYPES = {
+  FULL: 'full',
+  SUBSIDIZED: 'subsidized',
+  EXPENSES: 'expenses'
 };
 
 // Add custom styled components for form elements
@@ -686,6 +694,46 @@ const calculateEventStats = (events) => {
   return stats;
 };
 
+// Add budget calculation utilities
+const calculateEventBudget = (event) => {
+  const budget = {
+    totalIncome: 0,
+    totalExpenses: 0,
+    totalSubsidy: 0,
+    profitLoss: 0,
+    averageCostPerParticipant: 0
+  };
+
+  if (!event.participants) return budget;
+
+  // Calculate income
+  event.participants.forEach(participant => {
+    if (participant.priceType === PRICE_TYPES.REGULAR) {
+      budget.totalIncome += Number(event.price) || 0;
+    } else if (participant.priceType === PRICE_TYPES.DISCOUNT) {
+      budget.totalIncome += (Number(event.price) * 0.7) || 0; // 30% discount
+      budget.totalSubsidy += (Number(event.price) * 0.3) || 0;
+    } else if ([PRICE_TYPES.FULL_SUBSIDY_EXPLAIN, PRICE_TYPES.FULL_SUBSIDY_STAFF].includes(participant.priceType)) {
+      budget.totalSubsidy += Number(event.price) || 0;
+    }
+  });
+
+  // Calculate expenses
+  const fixedExpenses = Number(event.budget?.fixedExpenses) || 0;
+  const variableExpenses = (Number(event.budget?.variableExpenses) || 0) * (event.participants.length || 0);
+  budget.totalExpenses = fixedExpenses + variableExpenses;
+
+  // Calculate profit/loss
+  budget.profitLoss = budget.totalIncome - budget.totalExpenses;
+
+  // Calculate average cost per participant
+  if (event.participants.length > 0) {
+    budget.averageCostPerParticipant = budget.totalExpenses / event.participants.length;
+  }
+
+  return budget;
+};
+
 // EventDashboard Component
 function EventDashboard({ onLogout }) {
   const [events, setEvents] = useState(() => loadFromLocalStorage('yjccEvents', []));
@@ -702,6 +750,13 @@ function EventDashboard({ onLogout }) {
     price: '',
     maxParticipants: '',
     description: '',
+    budget: {
+      fullPrice: '',        // מחיר מלא למשתתף
+      subsidyAmount: '',    // גובה הסבסוד למשתתף
+      fixedExpenses: '',    // הוצאות קבועות
+      variableExpenses: '', // הוצאות משתנות פר משתתף
+      notes: ''            // הערות לגבי התקציב
+    }
   });
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -717,6 +772,8 @@ function EventDashboard({ onLogout }) {
   });
   const [showStats, setShowStats] = useState(false);
   const [statsData, setStatsData] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState(null);
 
   // Filter events based on search and status
   const filteredEvents = events.filter(event => {
@@ -745,15 +802,13 @@ function EventDashboard({ onLogout }) {
         price: selectedEvent.price || '',
         maxParticipants: selectedEvent.maxParticipants || '',
         description: selectedEvent.description || '',
-      });
-    } else {
-      setFormData({
-        name: '',
-        date: '',
-        location: '',
-        price: '',
-        maxParticipants: '',
-        description: '',
+        budget: {
+          fullPrice: selectedEvent.budget?.fullPrice || '',
+          subsidyAmount: selectedEvent.budget?.subsidyAmount || '',
+          fixedExpenses: selectedEvent.budget?.fixedExpenses || '',
+          variableExpenses: selectedEvent.budget?.variableExpenses || '',
+          notes: selectedEvent.budget?.notes || ''
+        }
       });
     }
   }, [selectedEvent]);
@@ -780,6 +835,7 @@ function EventDashboard({ onLogout }) {
       setSnackbar({
         open: true,
         message: 'נא למלא את כל השדות הנדרשים',
+        severity: 'error'
       });
       return;
     }
@@ -787,28 +843,44 @@ function EventDashboard({ onLogout }) {
     const eventData = {
       ...formData,
       participants: [],
+      budget: {
+        ...formData.budget,
+        fullPrice: Number(formData.budget.fullPrice) || 0,
+        subsidyAmount: Number(formData.budget.subsidyAmount) || 0,
+        fixedExpenses: Number(formData.budget.fixedExpenses) || 0,
+        variableExpenses: Number(formData.budget.variableExpenses) || 0,
+      }
     };
 
     if (selectedEvent) {
+      // Update existing event while preserving participants
       const updatedEvents = events.map(event => 
-        event.id === selectedEvent.id ? { ...event, ...eventData } : event
+        event.id === selectedEvent.id 
+          ? { ...event, ...eventData, participants: event.participants || [] }
+          : event
       );
       setEvents(updatedEvents);
+      saveToLocalStorage('yjccEvents', updatedEvents);
       setSnackbar({
         open: true,
         message: 'האירוע עודכן בהצלחה',
+        severity: 'success'
       });
     } else {
+      // Create new event
       const newEvent = {
         ...eventData,
         id: Date.now(),
         participants: [],
         createdAt: new Date().toISOString(),
       };
-      setEvents([...events, newEvent]);
+      const updatedEvents = [...events, newEvent];
+      setEvents(updatedEvents);
+      saveToLocalStorage('yjccEvents', updatedEvents);
       setSnackbar({
         open: true,
         message: `האירוע "${eventData.name}" נוצר בהצלחה! 🎉`,
+        severity: 'success'
       });
     }
     
@@ -820,6 +892,14 @@ function EventDashboard({ onLogout }) {
       location: '',
       price: '',
       maxParticipants: '',
+      description: '',
+      budget: {
+        fullPrice: '',
+        subsidyAmount: '',
+        fixedExpenses: '',
+        variableExpenses: '',
+        notes: ''
+      }
     });
   };
 
@@ -959,6 +1039,233 @@ function EventDashboard({ onLogout }) {
     reader.readAsText(file);
   };
 
+  // Add budget summary to statistics section
+  const calculateTotalBudgetStats = (events) => {
+    const stats = {
+      totalIncome: 0,
+      totalExpenses: 0,
+      totalSubsidy: 0,
+      totalProfit: 0,
+      eventsBudgets: []
+    };
+
+    events.forEach(event => {
+      const eventBudget = calculateEventBudget(event);
+      stats.totalIncome += eventBudget.totalIncome;
+      stats.totalExpenses += eventBudget.totalExpenses;
+      stats.totalSubsidy += eventBudget.totalSubsidy;
+      stats.totalProfit += eventBudget.profitLoss;
+      stats.eventsBudgets.push({
+        eventName: event.name,
+        ...eventBudget
+      });
+    });
+
+    return stats;
+  };
+
+  // Add budget stats to the statistics section
+  const renderBudgetStats = () => {
+    const budgetStats = calculateTotalBudgetStats(events);
+    
+    return (
+      <Grid item xs={12}>
+        <Paper sx={{ p: 2, background: 'rgba(144, 202, 249, 0.08)' }}>
+          <Typography variant="h6" gutterBottom>סיכום תקציבי</Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography>
+                  הכנסות כוללות: {budgetStats.totalIncome.toLocaleString()} CZK
+                </Typography>
+                <Typography>
+                  הוצאות כוללות: {budgetStats.totalExpenses.toLocaleString()} CZK
+                </Typography>
+                <Typography>
+                  סך הסבסוד: {budgetStats.totalSubsidy.toLocaleString()} CZK
+                </Typography>
+                <Typography color={budgetStats.totalProfit >= 0 ? 'success.main' : 'error.main'}>
+                  רווח/הפסד: {budgetStats.totalProfit.toLocaleString()} CZK
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom sx={{ mt: 2 }}>
+                פירוט לפי אירועים
+              </Typography>
+              <TableContainer>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>שם האירוע</TableCell>
+                      <TableCell align="right">הכנסות</TableCell>
+                      <TableCell align="right">הוצאות</TableCell>
+                      <TableCell align="right">סבסוד</TableCell>
+                      <TableCell align="right">רווח/הפסד</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {budgetStats.eventsBudgets.map((eventBudget) => (
+                      <TableRow key={eventBudget.eventName}>
+                        <TableCell>{eventBudget.eventName}</TableCell>
+                        <TableCell align="right">{eventBudget.totalIncome.toLocaleString()} CZK</TableCell>
+                        <TableCell align="right">{eventBudget.totalExpenses.toLocaleString()} CZK</TableCell>
+                        <TableCell align="right">{eventBudget.totalSubsidy.toLocaleString()} CZK</TableCell>
+                        <TableCell 
+                          align="right"
+                          sx={{ color: eventBudget.profitLoss >= 0 ? 'success.main' : 'error.main' }}
+                        >
+                          {eventBudget.profitLoss.toLocaleString()} CZK
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
+    );
+  };
+
+  // Update the event dialog to include budget section
+  const renderBudgetSection = () => (
+    <Box sx={{ mt: 3, borderTop: 1, borderColor: 'divider', pt: 3 }}>
+      <Typography variant="h6" gutterBottom>
+        ניהול תקציב
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="מחיר מלא למשתתף"
+            type="number"
+            value={formData.budget.fullPrice}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              budget: { ...prev.budget, fullPrice: e.target.value }
+            }))}
+            fullWidth
+            InputProps={{
+              startAdornment: <InputAdornment position="start">CZK</InputAdornment>
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="גובה הסבסוד למשתתף"
+            type="number"
+            value={formData.budget.subsidyAmount}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              budget: { ...prev.budget, subsidyAmount: e.target.value }
+            }))}
+            fullWidth
+            InputProps={{
+              startAdornment: <InputAdornment position="start">CZK</InputAdornment>
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="הוצאות קבועות"
+            type="number"
+            value={formData.budget.fixedExpenses}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              budget: { ...prev.budget, fixedExpenses: e.target.value }
+            }))}
+            fullWidth
+            InputProps={{
+              startAdornment: <InputAdornment position="start">CZK</InputAdornment>
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="הוצאות משתנות למשתתף"
+            type="number"
+            value={formData.budget.variableExpenses}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              budget: { ...prev.budget, variableExpenses: e.target.value }
+            }))}
+            fullWidth
+            InputProps={{
+              startAdornment: <InputAdornment position="start">CZK</InputAdornment>
+            }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="הערות תקציב"
+            multiline
+            rows={2}
+            value={formData.budget.notes}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              budget: { ...prev.budget, notes: e.target.value }
+            }))}
+            fullWidth
+          />
+        </Grid>
+      </Grid>
+    </Box>
+  );
+
+  // Add sync functions
+  const handleSync = async () => {
+    setIsSyncing(true);
+    try {
+      const success = await syncDataWithFile(events);
+      if (success) {
+        setSnackbar({
+          open: true,
+          message: 'הנתונים סונכרנו בהצלחה!',
+          severity: 'success'
+        });
+        setLastSyncTime(new Date());
+      } else {
+        throw new Error('Sync failed');
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: 'שגיאה בסנכרון הנתונים',
+        severity: 'error'
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  const handleLoadFromFile = async () => {
+    setIsSyncing(true);
+    try {
+      const data = await loadDataFromFile();
+      if (data) {
+        setEvents(data);
+        saveToLocalStorage('yjccEvents', data);
+        setSnackbar({
+          open: true,
+          message: 'הנתונים נטענו בהצלחה!',
+          severity: 'success'
+        });
+        setLastSyncTime(new Date());
+      } else {
+        throw new Error('Load failed');
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: 'שגיאה בטעינת הנתונים',
+        severity: 'error'
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   return (
     <Container dir="rtl">
       {/* Header with Search, Filter and Logout */}
@@ -1049,8 +1356,29 @@ function EventDashboard({ onLogout }) {
         </Box>
       </Box>
 
-      {/* Data Management and Stats Buttons */}
-      <Box sx={{ mb: 4, display: 'flex', gap: 2, justifyContent: 'center' }}>
+      {/* Update Data Management and Stats Buttons */}
+      <Box sx={{ mb: 4, display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+        <Button
+          variant="outlined"
+          startIcon={isSyncing ? <CircularProgress size={20} /> : <SyncIcon />}
+          onClick={handleSync}
+          disabled={isSyncing}
+        >
+          סנכרון נתונים
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={isSyncing ? <CircularProgress size={20} /> : <CloudDownloadIcon />}
+          onClick={handleLoadFromFile}
+          disabled={isSyncing}
+        >
+          טען נתונים מהשרת
+        </Button>
+        {lastSyncTime && (
+          <Typography variant="caption" sx={{ alignSelf: 'center', color: 'text.secondary' }}>
+            סנכרון אחרון: {new Date(lastSyncTime).toLocaleString('he-IL')}
+          </Typography>
+        )}
         <Button
           variant="outlined"
           startIcon={<CloudDownloadIcon />}
@@ -1180,6 +1508,9 @@ function EventDashboard({ onLogout }) {
               </Paper>
             </Grid>
           </Grid>
+          
+          {/* Add Budget Stats */}
+          {renderBudgetStats()}
         </Paper>
       )}
 
@@ -1369,6 +1700,9 @@ function EventDashboard({ onLogout }) {
               sx={{ direction: 'rtl' }}
             />
           </Box>
+          
+          {/* Add Budget Section */}
+          {renderBudgetSection()}
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'flex-start' }}>
           <Button onClick={() => {
@@ -1684,7 +2018,8 @@ const sendWhatsAppMessage = (phone, message) => {
 // Local Storage Functions
 const saveToLocalStorage = (key, data) => {
   try {
-    localStorage.setItem(key, JSON.stringify(data));
+    const serializedData = JSON.stringify(data);
+    localStorage.setItem(key, serializedData);
     return true;
   } catch (error) {
     console.error('Error saving to localStorage:', error);
@@ -1695,7 +2030,25 @@ const saveToLocalStorage = (key, data) => {
 const loadFromLocalStorage = (key, defaultValue = null) => {
   try {
     const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : defaultValue;
+    if (!item) return defaultValue;
+
+    const parsedData = JSON.parse(item);
+    
+    // Ensure budget structure exists for all events
+    if (key === 'yjccEvents') {
+      return parsedData.map(event => ({
+        ...event,
+        budget: event.budget || {
+          fullPrice: '',
+          subsidyAmount: '',
+          fixedExpenses: '',
+          variableExpenses: '',
+          notes: ''
+        }
+      }));
+    }
+
+    return parsedData;
   } catch (error) {
     console.error('Error loading from localStorage:', error);
     return defaultValue;
@@ -1812,6 +2165,7 @@ function ParticipantDashboard() {
     comment: '',
     anonymous: false
   });
+  const [lastSyncTime, setLastSyncTime] = useState(null);
 
   // Filter and sort events
   const filteredEvents = events
@@ -2436,6 +2790,42 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
   );
 }
 
+// Add these utility functions before the App component
+const syncDataWithFile = async (events) => {
+  try {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(events, null, 2));
+    
+    const response = await fetch('/api/sync', {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to sync data');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error syncing data:', error);
+    return false;
+  }
+};
+
+const loadDataFromFile = async () => {
+  try {
+    const response = await fetch('/api/events.json');
+    if (!response.ok) {
+      throw new Error('Failed to load data');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error loading data:', error);
+    return null;
+  }
+};
+
 // Main App Component
 function App() {
   const [view, setView] = useState('landing');
@@ -2490,3 +2880,4 @@ function App() {
 }
 
 export default App; 
+
