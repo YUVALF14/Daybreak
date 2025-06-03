@@ -2297,11 +2297,8 @@ function LandingPage({ onAdminClick, onParticipantClick }) {
                 onClick={onAdminClick}
               >
                 <LockOutlinedIcon sx={{ fontSize: 40, color: 'primary.main', mb: 2 }} />
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h5">
                   כניסת מנהל
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  ניהול אירועים, משתתפים ותקציב
                 </Typography>
               </Paper>
             </Grid>
