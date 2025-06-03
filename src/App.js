@@ -46,6 +46,12 @@ import {
   List,
   ListItem,
   Alert,
+  Switch,
+  ToggleButtonGroup,
+  ToggleButton,
+  Chip,
+  InputAdornment,
+  Divider,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -59,6 +65,15 @@ import {
   ExitToApp as ExitToAppIcon,
   FilterList as FilterListIcon,
   Search as SearchIcon,
+  Event as EventIcon,
+  LocationOn as LocationIcon,
+  AccessTime as TimeIcon,
+  Group as GroupIcon,
+  AttachMoney as MoneyIcon,
+  Share as ShareIcon,
+  CalendarToday as CalendarIcon,
+  Favorite as FavoriteIcon,
+  FavoriteBorder as FavoriteBorderIcon,
 } from '@mui/icons-material';
 import './App.css';
 
@@ -1513,14 +1528,67 @@ function LandingPage({ onAdminClick, onParticipantClick }) {
 
 // ParticipantDashboard Component
 function ParticipantDashboard() {
-  const [events, setEvents] = useState(() => {
-    const savedEvents = localStorage.getItem('yjccEvents');
-    return savedEvents ? JSON.parse(savedEvents) : [];
-  });
+  const [events, setEvents] = useState(() => loadFromLocalStorage('yjccEvents', []));
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [registrationOpen, setRegistrationOpen] = useState(false);
   const [formData, setFormData] = useState({ name: '', phone: '' });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'calendar'
+  const [favorites, setFavorites] = useState(() => loadFromLocalStorage('yjccFavorites', []));
+  const [showPastEvents, setShowPastEvents] = useState(false);
+  const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false);
+  const [selectedEventForFeedback, setSelectedEventForFeedback] = useState(null);
+  const [feedbackForm, setFeedbackForm] = useState({
+    rating: 5,
+    comment: '',
+    anonymous: false
+  });
+
+  // Filter and sort events
+  const filteredEvents = events
+    .filter(event => {
+      const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          event.location.toLowerCase().includes(searchTerm.toLowerCase());
+      const eventDate = new Date(event.date);
+      const now = new Date();
+      return matchesSearch && (showPastEvents || eventDate >= now);
+    })
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const toggleFavorite = (eventId) => {
+    setFavorites(prev => {
+      const newFavorites = prev.includes(eventId)
+        ? prev.filter(id => id !== eventId)
+        : [...prev, eventId];
+      saveToLocalStorage('yjccFavorites', newFavorites);
+      return newFavorites;
+    });
+  };
+
+  const shareEvent = (event) => {
+    const eventDetails = `
+אירוע: ${event.name}
+תאריך: ${formatDate(event.date)}
+מיקום: ${event.location}
+${event.description ? `\nפרטים: ${event.description}` : ''}
+    `.trim();
+
+    if (navigator.share) {
+      navigator.share({
+        title: `הצטרפו אלינו! ${event.name}`,
+        text: eventDetails,
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(eventDetails).then(() => {
+        setSnackbar({
+          open: true,
+          message: 'פרטי האירוע הועתקו ללוח',
+          severity: 'success'
+        });
+      });
+    }
+  };
 
   const handleRegistrationClick = (event) => {
     setSelectedEvent(event);
@@ -1587,170 +1655,504 @@ function ParticipantDashboard() {
     });
   };
 
+  const handleFeedbackSubmit = () => {
+    if (!selectedEventForFeedback) return;
+
+    const updatedEvents = events.map(event => {
+      if (event.id === selectedEventForFeedback.id) {
+        const feedback = {
+          id: Date.now(),
+          rating: feedbackForm.rating,
+          comment: feedbackForm.comment,
+          createdAt: new Date().toISOString(),
+          participantName: feedbackForm.anonymous ? 'אנונימי' : formData.name
+        };
+
+        return {
+          ...event,
+          feedback: [...(event.feedback || []), feedback]
+        };
+      }
+      return event;
+    });
+
+    setEvents(updatedEvents);
+    saveToLocalStorage('yjccEvents', updatedEvents);
+
+    setSnackbar({
+      open: true,
+      message: 'תודה על המשוב שלך! 🙏',
+      severity: 'success'
+    });
+
+    setFeedbackDialogOpen(false);
+    setFeedbackForm({ rating: 5, comment: '', anonymous: false });
+  };
+
   return (
     <Container>
-      <Typography 
-        variant="h4" 
-        sx={{ 
-          mb: 4,
-          textAlign: 'center',
+      {/* Hero Section */}
+      <Box sx={{
+        textAlign: 'center',
+        py: 6,
+        px: 2,
+        mb: 4,
+        background: `linear-gradient(135deg, ${YJCC_COLORS.primary}15, ${YJCC_COLORS.secondary}15)`,
+        borderRadius: 4,
+      }}>
+        <Typography variant="h3" sx={{
+          fontWeight: 700,
+          mb: 2,
           background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
-          fontWeight: 700,
-        }}
-      >
-        🎉 הצטרפו לאירועי הקהילה שלנו
-      </Typography>
-      <Grid container spacing={3}>
-        {events
-          .filter(event => new Date(event.date) > new Date())
-          .sort((a, b) => new Date(a.date) - new Date(b.date))
-          .map(event => (
-            <Grid item xs={12} md={6} key={event.id}>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 4,
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '4px',
-                    background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
-                  },
-                }}
-              >
-                <Typography 
-                  variant="h5" 
-                  sx={{ 
-                    mb: 2,
-                    fontWeight: 700,
-                    color: YJCC_COLORS.text,
+        }}>
+          ברוכים הבאים לאירועי YJCC!
+        </Typography>
+        <Typography variant="h6" sx={{ color: 'text.secondary', mb: 4 }}>
+          הצטרפו אלינו לחוויות מדהימות בקהילה הישראלית בפראג 🌟
+        </Typography>
+      </Box>
+
+      {/* Search and Filters */}
+      <Box sx={{ mb: 4, display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
+        <TextField
+          placeholder="חיפוש אירועים..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          size="small"
+          sx={{ minWidth: 250 }}
+          InputProps={{
+            startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />,
+          }}
+        />
+        
+        <FormControlLabel
+          control={
+            <Switch
+              checked={showPastEvents}
+              onChange={(e) => setShowPastEvents(e.target.checked)}
+            />
+          }
+          label="הצג אירועים שהסתיימו"
+        />
+
+        <ToggleButtonGroup
+          value={viewMode}
+          exclusive
+          onChange={(e, value) => value && setViewMode(value)}
+          size="small"
+        >
+          <ToggleButton value="grid">
+            <GridViewIcon />
+          </ToggleButton>
+          <ToggleButton value="calendar">
+            <CalendarIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+
+      {/* Events Grid */}
+      {viewMode === 'grid' && (
+        <Grid container spacing={3}>
+          {filteredEvents.map(event => {
+            const eventDate = new Date(event.date);
+            const isPast = eventDate < new Date();
+            const isFavorite = favorites.includes(event.id);
+            const hasGivenFeedback = event.feedback?.some(f => 
+              !f.anonymous && f.participantName === formData.name
+            );
+
+            return (
+              <Grid item xs={12} sm={6} md={4} key={event.id}>
+                <Paper
+                  sx={{
+                    p: 3,
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    position: 'relative',
+                    opacity: isPast ? 0.7 : 1,
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    },
                   }}
                 >
-                  {event.name}
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, color: YJCC_COLORS.text }}>
-                  <Typography variant="body1" sx={{ mr: 1 }}>📅</Typography>
-                  <Typography variant="body1">
-                    {formatDate(event.date)}
+                  {/* Favorite Button */}
+                  <IconButton
+                    onClick={() => toggleFavorite(event.id)}
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 8,
+                      color: isFavorite ? 'error.main' : 'text.secondary',
+                    }}
+                  >
+                    {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                  </IconButton>
+
+                  {/* Share Button */}
+                  <IconButton
+                    onClick={() => shareEvent(event)}
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      left: 8,
+                    }}
+                  >
+                    <ShareIcon />
+                  </IconButton>
+
+                  <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, pr: 4 }}>
+                    {event.name}
                   </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, color: YJCC_COLORS.text }}>
-                  <Typography variant="body1" sx={{ mr: 1 }}>📍</Typography>
-                  <Typography variant="body1">
-                    {event.location}
-                  </Typography>
-                </Box>
-                {event.description && (
-                  <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3, color: YJCC_COLORS.text }}>
-                    <Typography variant="body1" sx={{ mr: 1 }}>ℹ️</Typography>
-                    <Typography variant="body1">
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <TimeIcon sx={{ mr: 1, color: 'primary.main' }} />
+                    <Typography>
+                      {formatDate(event.date)}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <LocationIcon sx={{ mr: 1, color: 'primary.main' }} />
+                    <Typography>
+                      {event.location}
+                    </Typography>
+                  </Box>
+
+                  {event.price && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <MoneyIcon sx={{ mr: 1, color: 'primary.main' }} />
+                      <Typography>
+                        {event.price} CZK
+                      </Typography>
+                    </Box>
+                  )}
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <GroupIcon sx={{ mr: 1, color: 'primary.main' }} />
+                    <Typography>
+                      {event.participants?.length || 0}
+                      {event.maxParticipants ? ` / ${event.maxParticipants}` : ''} משתתפים
+                    </Typography>
+                  </Box>
+
+                  {event.description && (
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        mb: 2,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                      }}
+                    >
                       {event.description}
                     </Typography>
-                  </Box>
-                )}
-                <Box sx={{ mt: 'auto' }}>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    mb: 2,
-                    p: 2,
-                    borderRadius: 2,
-                    bgcolor: 'rgba(255, 142, 83, 0.1)',
-                  }}>
-                    <Typography variant="body1" sx={{ mr: 1 }}>👥</Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      משתתפים: {event.participants?.length || 0} {event.maxParticipants ? `/ ${event.maxParticipants}` : ''}
-                    </Typography>
-                  </Box>
-                  {(!event.maxParticipants || event.participants?.length < event.maxParticipants) && (
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      sx={{ 
-                        mt: 2,
-                        py: 1.5,
-                        fontSize: '1.2rem',
-                        fontWeight: 700,
-                      }}
-                      onClick={() => handleRegistrationClick(event)}
-                    >
-                      🤝 הצטרפו אלינו!
-                    </Button>
                   )}
-                </Box>
-              </Paper>
-            </Grid>
-          ))}
-      </Grid>
 
-      <Dialog 
-        open={registrationOpen} 
+                  <Box sx={{ mt: 'auto' }}>
+                    {!isPast && (
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={() => handleRegistrationClick(event)}
+                        disabled={event.maxParticipants && event.participants?.length >= event.maxParticipants}
+                        sx={{
+                          background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+                          color: 'white',
+                          '&:hover': {
+                            background: `linear-gradient(45deg, ${YJCC_COLORS.secondary}, ${YJCC_COLORS.accent})`,
+                          },
+                        }}
+                      >
+                        {event.maxParticipants && event.participants?.length >= event.maxParticipants
+                          ? 'האירוע מלא'
+                          : 'הרשמה לאירוע'}
+                      </Button>
+                    )}
+                  </Box>
+
+                  {isPast && (
+                    <Chip
+                      label="האירוע הסתיים"
+                      color="default"
+                      sx={{ alignSelf: 'center', mt: 1 }}
+                    />
+                  )}
+
+                  {/* Add Feedback Section */}
+                  {isPast && (
+                    <Box sx={{ mt: 2, borderTop: '1px solid rgba(0,0,0,0.1)', pt: 2 }}>
+                      {event.feedback && event.feedback.length > 0 ? (
+                        <Box sx={{ mb: 2 }}>
+                          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                            משוב מהמשתתפים:
+                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Rating
+                              value={event.feedback.reduce((acc, f) => acc + f.rating, 0) / event.feedback.length}
+                              precision={0.5}
+                              readOnly
+                              size="small"
+                            />
+                            <Typography variant="body2" color="text.secondary">
+                              ({event.feedback.length} משובים)
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ) : null}
+
+                      {!hasGivenFeedback && (
+                        <Button
+                          fullWidth
+                          variant="outlined"
+                          startIcon={<RateReviewIcon />}
+                          onClick={() => {
+                            setSelectedEventForFeedback(event);
+                            setFeedbackDialogOpen(true);
+                          }}
+                          sx={{
+                            mt: 1,
+                            borderColor: 'primary.main',
+                            color: 'primary.main',
+                            '&:hover': {
+                              borderColor: 'primary.dark',
+                              backgroundColor: 'primary.light',
+                            }
+                          }}
+                        >
+                          שתפו את החוויה שלכם
+                        </Button>
+                      )}
+                    </Box>
+                  )}
+                </Paper>
+              </Grid>
+            );
+          })}
+        </Grid>
+      )}
+
+      {/* Calendar View - Coming soon message */}
+      {viewMode === 'calendar' && (
+        <Paper sx={{ p: 4, textAlign: 'center' }}>
+          <CalendarIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+          <Typography variant="h6">
+            תצוגת לוח שנה תהיה זמינה בקרוב!
+          </Typography>
+          <Typography color="text.secondary">
+            אנחנו עובדים על זה 🚀
+          </Typography>
+        </Paper>
+      )}
+
+      {/* No Events Message */}
+      {filteredEvents.length === 0 && (
+        <Paper sx={{ p: 4, textAlign: 'center' }}>
+          <Typography variant="h6" color="text.secondary">
+            {searchTerm
+              ? 'לא נמצאו אירועים התואמים את החיפוש'
+              : showPastEvents
+                ? 'אין אירועים להצגה'
+                : 'אין אירועים עתידיים כרגע'}
+          </Typography>
+          {!showPastEvents && (
+            <Button
+              variant="outlined"
+              onClick={() => setShowPastEvents(true)}
+              sx={{ mt: 2 }}
+            >
+              הצג אירועים קודמים
+            </Button>
+          )}
+        </Paper>
+      )}
+
+      {/* Registration Dialog */}
+      <Dialog
+        open={registrationOpen}
         onClose={handleRegistrationClose}
-        PaperProps={{
-          sx: {
-            borderRadius: 4,
-            p: 2,
-          }
-        }}
+        maxWidth="sm"
+        fullWidth
+        TransitionComponent={Slide}
+        TransitionProps={{ direction: 'up' }}
       >
         <DialogTitle sx={{ 
-          textAlign: 'center',
-          fontSize: '1.5rem',
-          fontWeight: 700,
-          color: YJCC_COLORS.text,
-          pb: 3,
+          pb: 1,
+          background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
         }}>
-          🎈 הצטרפות לאירוע {selectedEvent?.name}
+          הרשמה לאירוע {selectedEvent?.name}
         </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="name"
-            label="השם שלך"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={formData.name}
-            onChange={handleFormChange}
-            sx={{ mb: 3 }}
-          />
-          <TextField
-            margin="dense"
-            name="phone"
-            label="מספר טלפון"
-            type="tel"
-            fullWidth
-            variant="outlined"
-            value={formData.phone}
-            onChange={handleFormChange}
-            helperText="נשלח לך הודעת אישור בוואטסאפ 😊"
-          />
-        </DialogContent>
-        <DialogActions sx={{ p: 3, justifyContent: 'center' }}>
-          <Button 
-            onClick={handleRegistrationClose}
-            variant="outlined"
-            sx={{ mr: 2 }}
-          >
+        
+        {selectedEvent && (
+          <DialogContent>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" sx={{ mb: 2, color: 'text.secondary' }}>
+                פרטי האירוע:
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <TimeIcon sx={{ mr: 1, color: 'primary.main' }} />
+                  <Typography>{formatDate(selectedEvent.date)}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <LocationIcon sx={{ mr: 1, color: 'primary.main' }} />
+                  <Typography>{selectedEvent.location}</Typography>
+                </Box>
+                {selectedEvent.price && (
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <MoneyIcon sx={{ mr: 1, color: 'primary.main' }} />
+                    <Typography>{selectedEvent.price} CZK</Typography>
+                  </Box>
+                )}
+              </Box>
+            </Box>
+
+            <Divider sx={{ my: 2 }} />
+
+            <Typography variant="subtitle1" sx={{ mb: 2, color: 'text.secondary' }}>
+              הפרטים שלך:
+            </Typography>
+            
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  autoFocus
+                  name="name"
+                  label="השם שלך"
+                  fullWidth
+                  value={formData.name}
+                  onChange={handleFormChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  name="phone"
+                  label="מספר טלפון"
+                  fullWidth
+                  value={formData.phone}
+                  onChange={handleFormChange}
+                  required
+                  helperText="נשלח לך הודעת אישור בוואטסאפ"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <WhatsAppIcon color="success" />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+        )}
+        
+        <DialogActions sx={{ p: 2, gap: 1 }}>
+          <Button onClick={handleRegistrationClose} color="inherit">
             ביטול
           </Button>
-          <Button 
-            onClick={handleRegistrationSubmit} 
+          <Button
+            onClick={handleRegistrationSubmit}
             variant="contained"
-            sx={{ minWidth: 120 }}
+            sx={{
+              background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+              '&:hover': {
+                background: `linear-gradient(45deg, ${YJCC_COLORS.secondary}, ${YJCC_COLORS.accent})`,
+              },
+            }}
           >
-            הרשמה 🎉
+            אישור הרשמה
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Feedback Dialog */}
+      <Dialog
+        open={feedbackDialogOpen}
+        onClose={() => setFeedbackDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        TransitionComponent={Slide}
+        TransitionProps={{ direction: 'up' }}
+      >
+        <DialogTitle sx={{
+          pb: 1,
+          background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}>
+          משוב על {selectedEventForFeedback?.name}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ py: 2 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              איך היה האירוע?
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Rating
+                  value={feedbackForm.rating}
+                  onChange={(_, newValue) => {
+                    setFeedbackForm(prev => ({ ...prev, rating: newValue }));
+                  }}
+                  size="large"
+                />
+                <Typography color="text.secondary">
+                  {feedbackForm.rating === 5 ? 'מעולה!' :
+                   feedbackForm.rating === 4 ? 'טוב מאוד' :
+                   feedbackForm.rating === 3 ? 'בסדר' :
+                   feedbackForm.rating === 2 ? 'לא משהו' :
+                   'לא טוב'}
+                </Typography>
+              </Box>
+
+              <TextField
+                label="ספרו לנו על החוויה שלכם"
+                multiline
+                rows={4}
+                value={feedbackForm.comment}
+                onChange={(e) => setFeedbackForm(prev => ({ ...prev, comment: e.target.value }))}
+                fullWidth
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={feedbackForm.anonymous}
+                    onChange={(e) => setFeedbackForm(prev => ({ ...prev, anonymous: e.target.checked }))}
+                  />
+                }
+                label="שלח משוב אנונימי"
+              />
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, gap: 1 }}>
+          <Button onClick={() => setFeedbackDialogOpen(false)} color="inherit">
+            ביטול
+          </Button>
+          <Button
+            onClick={handleFeedbackSubmit}
+            variant="contained"
+            disabled={!feedbackForm.rating || !feedbackForm.comment}
+            sx={{
+              background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
+              '&:hover': {
+                background: `linear-gradient(45deg, ${YJCC_COLORS.secondary}, ${YJCC_COLORS.accent})`,
+              }
+            }}
+          >
+            שלח משוב
           </Button>
         </DialogActions>
       </Dialog>
@@ -1759,7 +2161,7 @@ function ParticipantDashboard() {
         open={snackbar.open}
         message={snackbar.message}
         severity={snackbar.severity}
-        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
     </Container>
   );
@@ -1819,3 +2221,4 @@ function App() {
 }
 
 export default App; 
+
