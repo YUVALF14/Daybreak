@@ -146,14 +146,17 @@ cd yjcc-events
 # Install dependencies
 npm install
 
-# Start the development server
-npm start
+# Start both the React client and Express server
+npm run dev
 ```
+
+Run `npm install` before running `npm test` or starting the server.
 
 ### Environment Setup
 Create a `.env` file in the project root with:
 ```
 REACT_APP_ADMIN_CODE=291147
+GOOGLE_SERVICE_ACCOUNT_KEY=/path/to/service-account.json
 ```
 
 ### Usage
