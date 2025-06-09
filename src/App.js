@@ -80,6 +80,7 @@ import {
   PieChart as PieChartIcon,
   CloudUpload as CloudUploadIcon,
   CloudDownload as CloudDownloadIcon,
+  Sync as SyncIcon,
   Assessment as AssessmentIcon,
 } from '@mui/icons-material';
 import './App.css';
