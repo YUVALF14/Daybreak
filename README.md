@@ -146,6 +146,9 @@ cd yjcc-events
 # Install dependencies
 npm install
 
+# If you see "react-scripts: not found" during build or start,
+# run `npm install` again to ensure all packages are present.
+
 # Start the development server
 npm start
 ```
