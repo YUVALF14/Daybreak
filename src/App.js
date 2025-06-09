@@ -81,6 +81,7 @@ import {
   CloudUpload as CloudUploadIcon,
   CloudDownload as CloudDownloadIcon,
   Assessment as AssessmentIcon,
+  Sync as SyncIcon,
 } from '@mui/icons-material';
 import './App.css';
 import { loadEventsFromCloud, saveEventsToCloud, updateEventInCloud, saveParticipantToEvent } from './services/database.js';
