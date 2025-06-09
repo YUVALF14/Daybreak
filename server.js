@@ -1,8 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const fs = require('fs').promises;
 const path = require('path');
 const multer = require('multer');
 const cors = require('cors');
+const { google } = require('googleapis');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -72,6 +74,42 @@ app.post('/api/sync', upload.none(), async (req, res) => {
   } catch (error) {
     console.error('Error syncing data:', error);
     res.status(500).json({ error: 'Failed to sync data' });
+  }
+});
+
+// Fetch data from Google Sheets and return as JSON
+app.post('/api/google-sheets', async (req, res) => {
+  const { spreadsheetId, range } = req.body;
+  if (!spreadsheetId || !range) {
+    return res.status(400).json({ error: 'Missing spreadsheetId or range' });
+  }
+
+  try {
+    const auth = new google.auth.GoogleAuth({
+      keyFile: process.env.GOOGLE_SERVICE_ACCOUNT_KEY || process.env.REACT_APP_GOOGLE_SERVICE_ACCOUNT_KEY,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+    });
+
+    const authClient = await auth.getClient();
+    const sheets = google.sheets('v4');
+
+    const response = await sheets.spreadsheets.values.get({
+      auth: authClient,
+      spreadsheetId,
+      range,
+    });
+
+    const rows = response.data.values || [];
+    const registrants = rows.map(row => ({
+      name: row[0],
+      email: row[1],
+      phone: row[2],
+    }));
+
+    res.json(registrants);
+  } catch (error) {
+    console.error('Error fetching data from Google Sheets:', error);
+    res.status(500).json({ error: 'Failed to fetch data from Google Sheets' });
   }
 });
 
