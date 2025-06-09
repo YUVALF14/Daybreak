@@ -1,3 +1,6 @@
+// REQUIRED ENV VARIABLE FOR GOOGLE SHEETS:
+// GOOGLE_SERVICE_ACCOUNT_KEY=path/to/your/service-account.json
+
 import { google } from 'googleapis';
 
 const sheets = google.sheets('v4');

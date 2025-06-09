@@ -349,6 +349,9 @@ function App() {
   );
 }
 
+// REQUIRED ENV VARIABLE FOR ADMIN ACCESS (optional fallback to '291147'):
+// REACT_APP_ADMIN_CODE=your_admin_code
+
 const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '291147';
 
 export default App;

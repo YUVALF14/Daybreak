@@ -1,3 +1,6 @@
+// REQUIRED ENV VARIABLE FOR SERVER PORT (optional fallback to 3001):
+// PORT=3001
+
 const express = require('express');
 const fs = require('fs').promises;
 const path = require('path');
