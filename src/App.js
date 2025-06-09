@@ -332,8 +332,7 @@ const theme = createTheme({
 });
 
 // Constants
-const ADMIN_CODE = '291147';
-
+const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || "291147";
 // Add new price type constants
 const PRICE_TYPES = {
   REGULAR: 'regular',
