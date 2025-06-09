@@ -7,10 +7,15 @@ module.exports = async (req, res) => {
     return;
   }
 
+  const credentialsJSON = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
+  if (!credentialsJSON) {
+    res.status(500).json({ error: 'Google service account credentials not provided' });
+    return;
+  }
+
   try {
-    const credentials = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
     const auth = new google.auth.GoogleAuth({
-      credentials: JSON.parse(credentials),
+      credentials: JSON.parse(credentialsJSON),
       scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
     });
 
