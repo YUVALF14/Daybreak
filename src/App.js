@@ -84,7 +84,6 @@ import {
 } from '@mui/icons-material';
 import './App.css';
 import { loadEventsFromCloud, saveEventsToCloud, updateEventInCloud, saveParticipantToEvent } from './services/database.js';
-import { fetchRegistrantsFromSheet } from './services/googleSheets.js';
 
 // Create rtl cache with specific configuration
 const cacheRtl = createCache({
@@ -925,7 +924,17 @@ function EventDashboard({ onLogout }) {
       const range = prompt('הכנס את טווח התאים (לדוגמה: Sheet1!A2:C10):');
       if (!range) return;
 
-      const registrants = await fetchRegistrantsFromSheet(spreadsheetId, range);
+      const response = await fetch('/api/fetch-sheet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ spreadsheetId, range }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch data from server');
+      }
+
+      const registrants = await response.json();
       
       // הוספת הנרשמים לאירוע הנבחר
       if (selectedEvent) {
