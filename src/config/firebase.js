@@ -4,7 +4,6 @@ import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  // Replace these with your Firebase configuration
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
@@ -14,9 +13,17 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
 
+// Warn if any config value is missing
+Object.entries(firebaseConfig).forEach(([key, value]) => {
+  if (!value) {
+    // eslint-disable-next-line no-console
+    console.warn(`Firebase config missing: ${key}`);
+  }
+});
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 
-export { database, auth }; 
+export { database, auth };
