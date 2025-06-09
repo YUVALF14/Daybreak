@@ -199,3 +199,7 @@ yjcc-events/
 ├── package.json
 ├── vercel.json
 └── .gitignore 
+
+## Development Notes
+Ensure `package.json` contains a valid `version` field. The Vercel build will fail with an "Invalid Version" error if this value is missing or malformed.
+
