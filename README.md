@@ -53,9 +53,9 @@ YJCC Events היא מערכת ניהול אירועים שפותחה במיוח�
 
 ### קוד מנהל
 - קוד ברירת המחדל: `291147`
-- ניתן לשנות את הקוד בקובץ `App.js`:
-  ```javascript
-  const ADMIN_CODE = 'your-new-code';
+- ניתן לשנות את הקוד בקובץ `App.js` או בקובץ `.env`:
+  ```env
+  REACT_APP_ADMIN_CODE=your-new-code
   ```
 
 ### התאמת עיצוב
@@ -198,4 +198,4 @@ yjcc-events/
 │   └── index.js
 ├── package.json
 ├── vercel.json
-└── .gitignore 
+└── .gitignore

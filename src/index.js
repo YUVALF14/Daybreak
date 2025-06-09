@@ -16,6 +16,7 @@ import '@fontsource/heebo/800.css';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+document.documentElement.setAttribute('dir', 'rtl'); // Ensure RTL globally
 root.render(
   <React.StrictMode>
     <App />

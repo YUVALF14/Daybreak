@@ -349,4 +349,6 @@ function App() {
   );
 }
 
+const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '291147';
+
 export default App;
