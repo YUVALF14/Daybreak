@@ -154,6 +154,7 @@ npm start
 Create a `.env` file in the project root with:
 ```
 REACT_APP_ADMIN_CODE=291147
+GOOGLE_SERVICE_ACCOUNT_KEY=path/to/service-account.json
 ```
 
 ### Usage
