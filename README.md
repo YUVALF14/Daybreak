@@ -151,10 +151,12 @@ npm start
 ```
 
 ### Environment Setup
-Create a `.env` file in the project root with:
-```
-REACT_APP_ADMIN_CODE=291147
-```
+1. Copy `.env.example` to `.env` in the project root:
+   ```bash
+   cp .env.example .env
+   ```
+2. Fill in values for each variable in `.env`.
+3. When deploying to Vercel, set the same variables in your project settings.
 
 ### Usage
 1. Admin Access:
