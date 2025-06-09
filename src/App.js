@@ -81,9 +81,10 @@ import {
   CloudUpload as CloudUploadIcon,
   CloudDownload as CloudDownloadIcon,
   Assessment as AssessmentIcon,
-  Sync as SyncIcon,
 } from '@mui/icons-material';
 import './App.css';
+import { loadEventsFromCloud, saveEventsToCloud, updateEventInCloud, saveParticipantToEvent } from './services/database';
+import { fetchRegistrantsFromSheet } from './services/googleSheets';
 
 // Create rtl cache with specific configuration
 const cacheRtl = createCache({
@@ -839,7 +840,9 @@ const calculateEventBudget = (event) => {
 
 // EventDashboard Component
 function EventDashboard({ onLogout }) {
-  const [events, setEvents] = useState(() => loadFromLocalStorage('yjccEvents', []));
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openParticipantsDialog, setOpenParticipantsDialog] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -879,6 +882,70 @@ function EventDashboard({ onLogout }) {
   const [lastSyncTime, setLastSyncTime] = useState(null);
   const [syncStatus, setSyncStatus] = useState('idle'); // 'idle', 'syncing', 'error'
 
+  // טעינת אירועים בעת טעינת הקומפוננטה
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setLoading(true);
+        const cloudEvents = await loadEventsFromCloud();
+        setEvents(cloudEvents);
+      } catch (error) {
+        setError('שגיאה בטעינת האירועים');
+        console.error('Error loading events:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadEvents();
+  }, []);
+
+  // שמירת אירועים בענן בכל שינוי
+  useEffect(() => {
+    const saveEvents = async () => {
+      try {
+        if (events.length > 0) {
+          await saveEventsToCloud(events);
+        }
+      } catch (error) {
+        console.error('Error saving events:', error);
+        setError('שגיאה בשמירת האירועים');
+      }
+    };
+    
+    saveEvents();
+  }, [events]);
+
+  // ייבוא נרשמים מגוגל שיטס
+  const importFromGoogleSheets = async () => {
+    try {
+      const spreadsheetId = prompt('הכנס את מזהה הגיליון:');
+      if (!spreadsheetId) return;
+      
+      const range = prompt('הכנס את טווח התאים (לדוגמה: Sheet1!A2:C10):');
+      if (!range) return;
+
+      const registrants = await fetchRegistrantsFromSheet(spreadsheetId, range);
+      
+      // הוספת הנרשמים לאירוע הנבחר
+      if (selectedEvent) {
+        const updatedEvent = {
+          ...selectedEvent,
+          participants: [...(selectedEvent.participants || []), ...registrants]
+        };
+        
+        setEvents(events.map(event => 
+          event.id === selectedEvent.id ? updatedEvent : event
+        ));
+        
+        await updateEventInCloud(selectedEvent.id, updatedEvent);
+      }
+    } catch (error) {
+      console.error('Error importing from Google Sheets:', error);
+      setError('שגיאה בייבוא נתונים מגוגל שיטס');
+    }
+  };
+
   // Filter events based on search and status
   const filteredEvents = events.filter(event => {
     const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -916,15 +983,6 @@ function EventDashboard({ onLogout }) {
       });
     }
   }, [selectedEvent]);
-
-  // Save events to localStorage whenever they change
-  useEffect(() => {
-    saveToLocalStorage('yjccEvents', events);
-  }, [events]);
-
-  useEffect(() => {
-    setStatsData(calculateEventStats(events));
-  }, [events]);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -1559,34 +1617,6 @@ function EventDashboard({ onLogout }) {
             </Box>
           </Grid>
         </Grid>
-
-        {/* Sync Status */}
-        <Box sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: 1,
-          mt: 2,
-          justifyContent: 'center',
-        }}>
-          <SyncIcon 
-            sx={{ 
-              animation: syncStatus === 'syncing' ? 'spin 1s linear infinite' : 'none',
-              color: syncStatus === 'error' ? 'error.main' : 
-                     syncStatus === 'syncing' ? 'primary.main' : 'success.main',
-              '@keyframes spin': {
-                '0%': { transform: 'rotate(0deg)' },
-                '100%': { transform: 'rotate(360deg)' }
-              },
-              fontSize: '1rem',
-            }} 
-          />
-          <Typography variant="caption" color="text.secondary">
-            {syncStatus === 'error' ? 'שגיאת סנכרון' :
-             syncStatus === 'syncing' ? 'מסנכרן נתונים...' :
-             lastSyncTime ? `סונכרן לאחרונה: ${new Date(lastSyncTime).toLocaleTimeString('he-IL')}` :
-             'טוען נתונים...'}
-          </Typography>
-        </Box>
       </Box>
 
       {/* Update Data Management and Stats Buttons */}
@@ -1609,7 +1639,7 @@ function EventDashboard({ onLogout }) {
         </Button>
         {lastSyncTime && (
           <Typography variant="caption" sx={{ alignSelf: 'center', color: 'text.secondary' }}>
-            סנכרון אחרון: {new Date(lastSyncTime).toLocaleString('he-IL')}
+            סנכרון אחרון: {new Date(lastSyncTime).toLocaleTimeString('he-IL')}
           </Typography>
         )}
         <Button
@@ -3162,6 +3192,13 @@ ${event.description ? `\nפרטים: ${event.description}` : ''}
         severity={snackbar.severity}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
+
+      {/* WhatsApp Contact Button */}
+      <StyledFab
+        onClick={() => window.open('https://wa.me/+972542230342', '_blank')}
+      >
+        <WhatsAppIcon />
+      </StyledFab>
     </Container>
   );
 }
