@@ -154,7 +154,17 @@ npm start
 Create a `.env` file in the project root with:
 ```
 REACT_APP_ADMIN_CODE=291147
+GOOGLE_SERVICE_ACCOUNT_KEY=path/to/service-account.json
 ```
+
+The `GOOGLE_SERVICE_ACCOUNT_KEY` variable should point to a Google service
+account JSON file that has read access to the relevant Google Sheets. This is
+required for the server to import registrant data from Google Docs/Sheets.
+
+### Internet Sync & Google Docs Import
+The server exposes an endpoint `/api/google-sheets` which retrieves registrant
+data from a Google Sheet. When adding participants you can import data directly
+from Google Docs/Sheets and it will automatically sync over the internet.
 
 ### Usage
 1. Admin Access:

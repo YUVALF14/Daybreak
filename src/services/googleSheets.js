@@ -1,30 +1,15 @@
-import { google } from 'googleapis';
+import axios from 'axios';
 
-const sheets = google.sheets('v4');
-
-// Initialize with credentials
-const auth = new google.auth.GoogleAuth({
-  keyFile: process.env.REACT_APP_GOOGLE_SERVICE_ACCOUNT_KEY,
-  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-});
-
+// Fetch registrants by calling the server endpoint
 export const fetchRegistrantsFromSheet = async (spreadsheetId, range) => {
   try {
-    const authClient = await auth.getClient();
-    const response = await sheets.spreadsheets.values.get({
-      auth: authClient,
+    const response = await axios.post('/api/google-sheets', {
       spreadsheetId,
       range,
     });
-
-    return response.data.values.map(row => ({
-      name: row[0],
-      email: row[1],
-      phone: row[2],
-      // Add more fields as needed based on your sheet structure
-    }));
+    return response.data;
   } catch (error) {
     console.error('Error fetching data from Google Sheets:', error);
     throw error;
   }
-}; 
+};
