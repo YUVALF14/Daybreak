@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface Event {
   id: string;
@@ -18,25 +18,35 @@ interface EventsContextType {
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
+const EVENTS_STORAGE_KEY = 'events';
+
 export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<Event[]>(() => {
+    const stored = localStorage.getItem(EVENTS_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+  }, [events]);
 
   const addEvent = (eventData: Omit<Event, 'id'>) => {
-    const newEvent: Event = {
-      id: Date.now().toString(),
-      ...eventData
-    };
-    setEvents([...events, newEvent]);
+    setEvents(prevEvents => [
+      ...prevEvents,
+      { id: Date.now().toString(), ...eventData }
+    ]);
   };
 
   const updateEvent = (id: string, eventData: Partial<Event>) => {
-    setEvents(events.map(event => 
-      event.id === id ? { ...event, ...eventData } : event
-    ));
+    setEvents(prevEvents =>
+      prevEvents.map(event =>
+        event.id === id ? { ...event, ...eventData } : event
+      )
+    );
   };
 
   const deleteEvent = (id: string) => {
-    setEvents(events.filter(event => event.id !== id));
+    setEvents(prevEvents => prevEvents.filter(event => event.id !== id));
   };
 
   return (
@@ -52,4 +62,4 @@ export const useEvents = () => {
     throw new Error('useEvents must be used within an EventsProvider');
   }
   return context;
-}; 
+};

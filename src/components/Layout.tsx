@@ -1,7 +1,6 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Box, Container, AppBar, Toolbar, Typography, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -13,13 +12,13 @@ const Layout = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             DAYBREAK
           </Typography>
-          <Button color="inherit" onClick={() => navigate('/')}>
+          <Button color="inherit" onClick={() => navigate('/')} aria-label="דף הבית">
             דף הבית
           </Button>
-          <Button color="inherit" onClick={() => navigate('/events')}>
+          <Button color="inherit" onClick={() => navigate('/events')} aria-label="אירועים">
             אירועים
           </Button>
-          <Button color="inherit" onClick={() => navigate('/participants')}>
+          <Button color="inherit" onClick={() => navigate('/participants')} aria-label="משתתפים">
             משתתפים
           </Button>
         </Toolbar>
@@ -27,7 +26,7 @@ const Layout = () => {
       <Container component="main" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
         <Outlet />
       </Container>
-      <Box component="footer" sx={{ py: 3, bgcolor: 'background.paper', textAlign: 'center' }}>
+      <Box component="footer" sx={{ py: 3, bgcolor: 'background.paper', textAlign: 'center', mt: 'auto' }}>
         <Typography variant="body2" color="text.secondary">
           © {new Date().getFullYear()} DAYBREAK. כל הזכויות שמורות.
         </Typography>
@@ -36,4 +35,4 @@ const Layout = () => {
   );
 };
 
-export default Layout; 
+export default Layout;

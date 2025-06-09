@@ -45,6 +45,7 @@ const Dashboard = () => {
                 color="primary"
                 onClick={() => navigate('/events')}
                 sx={{ mt: 2 }}
+                aria-label="לכל האירועים"
               >
                 לכל האירועים
               </Button>
@@ -63,6 +64,7 @@ const Dashboard = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => navigate('/events')}
+                  aria-label="יצירת אירוע חדש"
                 >
                   יצירת אירוע חדש
                 </Button>
@@ -70,6 +72,7 @@ const Dashboard = () => {
                   variant="contained"
                   color="secondary"
                   onClick={() => navigate('/participants')}
+                  aria-label="הוספת משתתף"
                 >
                   הוספת משתתף
                 </Button>
@@ -82,4 +85,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard; 
+export default Dashboard;

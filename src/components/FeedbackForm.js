@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import { Container, Paper, Typography, Box, TextField, Button } from '@mui/material';
+import { Container, Paper, Typography, Box, TextField, Button, Snackbar } from '@mui/material';
 
 function FeedbackForm() {
   const [feedback, setFeedback] = useState({
     rating: '',
     comments: '',
   });
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle feedback submission
     console.log('Feedback submitted:', feedback);
+    setSnackbarOpen(true);
+    setFeedback({ rating: '', comments: '' });
   };
 
   return (
@@ -49,9 +52,15 @@ function FeedbackForm() {
             שלח משוב
           </Button>
         </Box>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarOpen(false)}
+          message="תודה על המשוב!"
+        />
       </Paper>
     </Container>
   );
 }
 
-export default FeedbackForm; 
+export default FeedbackForm;

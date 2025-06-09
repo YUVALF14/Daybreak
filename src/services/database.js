@@ -1,7 +1,11 @@
 import { ref, set, get, update } from 'firebase/database';
 import { database } from '../config/firebase';
 
-// שמירת אירועים בענן
+/**
+ * Save all events to the cloud (overwrites all events).
+ * @param {Array|Object} events
+ * @returns {Promise<boolean>}
+ */
 export const saveEventsToCloud = async (events) => {
   try {
     const eventsRef = ref(database, 'events');
@@ -13,7 +17,10 @@ export const saveEventsToCloud = async (events) => {
   }
 };
 
-// קריאת אירועים מהענן
+/**
+ * Load all events from the cloud.
+ * @returns {Promise<Array|Object>}
+ */
 export const loadEventsFromCloud = async () => {
   try {
     const eventsRef = ref(database, 'events');
@@ -25,7 +32,12 @@ export const loadEventsFromCloud = async () => {
   }
 };
 
-// עדכון אירוע בודד
+/**
+ * Update a single event in the cloud.
+ * @param {string} eventId
+ * @param {Object} eventData
+ * @returns {Promise<boolean>}
+ */
 export const updateEventInCloud = async (eventId, eventData) => {
   try {
     const eventRef = ref(database, `events/${eventId}`);
@@ -37,7 +49,12 @@ export const updateEventInCloud = async (eventId, eventData) => {
   }
 };
 
-// שמירת משתתף באירוע
+/**
+ * Save a participant to a specific event in the cloud.
+ * @param {string} eventId
+ * @param {Object} participant
+ * @returns {Promise<boolean>}
+ */
 export const saveParticipantToEvent = async (eventId, participant) => {
   try {
     const participantRef = ref(database, `events/${eventId}/participants/${participant.id}`);
@@ -47,4 +64,4 @@ export const saveParticipantToEvent = async (eventId, participant) => {
     console.error('Error saving participant to cloud:', error);
     throw error;
   }
-}; 
+};

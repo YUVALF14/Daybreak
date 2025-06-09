@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   TextField,
@@ -18,6 +19,8 @@ function AdminLogin({ onLogin }) {
     const success = onLogin(code);
     if (!success) {
       setError(true);
+    } else {
+      setError(false);
     }
   };
 
@@ -60,6 +63,7 @@ function AdminLogin({ onLogin }) {
               type="password"
               label="Admin Code"
               value={code}
+              autoFocus
               onChange={(e) => {
                 setCode(e.target.value);
                 setError(false);
@@ -82,4 +86,8 @@ function AdminLogin({ onLogin }) {
   );
 }
 
-export default AdminLogin; 
+AdminLogin.propTypes = {
+  onLogin: PropTypes.func.isRequired,
+};
+
+export default AdminLogin;

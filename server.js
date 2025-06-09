@@ -8,7 +8,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(cors()); // In production, set origin: 'https://yourdomain.com'
 app.use(express.json());
 app.use(express.static('build'));
 
@@ -27,7 +27,7 @@ const ensureDataDir = async () => {
   }
 };
 
-// Routes
+// GET events
 app.get('/api/events.json', async (req, res) => {
   try {
     await ensureDataDir();
@@ -35,7 +35,6 @@ app.get('/api/events.json', async (req, res) => {
     res.json(JSON.parse(data));
   } catch (error) {
     if (error.code === 'ENOENT') {
-      // If file doesn't exist, return empty array
       res.json([]);
     } else {
       console.error('Error reading events file:', error);
@@ -44,16 +43,22 @@ app.get('/api/events.json', async (req, res) => {
   }
 });
 
+// POST sync events
 app.post('/api/sync', upload.none(), async (req, res) => {
   try {
     await ensureDataDir();
-    const data = req.body.data;
-    
+    let data = req.body.data;
+
+    // Accept both JSON and raw string
+    if (!data && req.body && Object.keys(req.body).length > 0) {
+      data = JSON.stringify(req.body);
+    }
+
     if (!data) {
       return res.status(400).json({ error: 'No data provided' });
     }
 
-    // Create backup of existing file if it exists
+    // Backup existing file
     try {
       const stats = await fs.stat(DATA_FILE);
       if (stats.isFile()) {
@@ -82,4 +87,4 @@ app.get('*', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
-}); 
+});

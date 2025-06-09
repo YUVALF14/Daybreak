@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -25,9 +25,28 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
     attended: false
   });
 
+  useEffect(() => {
+    if (open) {
+      setNewParticipant({
+        name: '',
+        phone: '',
+        paid: false,
+        confirmed: false,
+        attended: false
+      });
+    }
+  }, [open]);
+
+  if (!event) return null;
+
   const handleAddParticipant = (e) => {
     e.preventDefault();
-    onParticipantUpdate(event.id, newParticipant);
+    // Prevent duplicate phone numbers
+    if (event.participants.some(p => p.phone === newParticipant.phone)) {
+      alert('משתתף עם מספר טלפון זה כבר קיים');
+      return;
+    }
+    onParticipantUpdate(event.id, { ...newParticipant });
     setNewParticipant({
       name: '',
       phone: '',
@@ -42,11 +61,18 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
     onParticipantUpdate(event.id, updatedParticipant);
   };
 
-  if (!event) return null;
+  const handleDeleteParticipant = (participant) => {
+    if (window.confirm('האם אתה בטוח שברצונך למחוק משתתף זה?')) {
+      // Remove participant by phone
+      const updatedParticipants = event.participants.filter(p => p.phone !== participant.phone);
+      onParticipantUpdate(event.id, { ...participant, delete: true }); // Signal deletion
+      // You may need to handle this in the parent by filtering out participants with delete: true
+    }
+  };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>משתתפים - {event.name}</DialogTitle>
+      <DialogTitle>משתתפים - {event.name || event.title}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleAddParticipant} sx={{ mb: 3 }}>
           <TextField
@@ -77,11 +103,12 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
                 <TableCell>שילם</TableCell>
                 <TableCell>אישר הגעה</TableCell>
                 <TableCell>הגיע</TableCell>
+                <TableCell>מחיקה</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {event.participants.map((participant, index) => (
-                <TableRow key={index}>
+              {event.participants.map((participant) => (
+                <TableRow key={participant.phone}>
                   <TableCell>{participant.name}</TableCell>
                   <TableCell>{participant.phone}</TableCell>
                   <TableCell>
@@ -102,6 +129,14 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
                       onChange={() => handleParticipantChange(participant, 'attended')}
                     />
                   </TableCell>
+                  <TableCell>
+                    <Button
+                      color="error"
+                      onClick={() => handleDeleteParticipant(participant)}
+                    >
+                      מחק
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -115,4 +150,4 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
   );
 }
 
-export default ParticipantDialog; 
+export default ParticipantDialog;

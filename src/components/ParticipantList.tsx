@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Card,
@@ -11,6 +11,7 @@ import {
   DialogActions,
   TextField,
   Alert,
+  Snackbar,
 } from '@mui/material';
 import { useWhatsApp } from '../context/WhatsAppContext';
 
@@ -22,19 +23,39 @@ interface Participant {
 }
 
 const ParticipantList = () => {
-  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [participants, setParticipants] = useState<Participant[]>(() => {
+    const saved = localStorage.getItem('participants');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [openDialog, setOpenDialog] = useState(false);
   const [formData, setFormData] = useState({ name: '', phone: '', email: '' });
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const { sendMessage, isLoading } = useWhatsApp();
+
+  useEffect(() => {
+    localStorage.setItem('participants', JSON.stringify(participants));
+  }, [participants]);
 
   const handleRegister = async () => {
     try {
       setError(null);
-      
+
       // Validation
       if (!formData.name || !formData.phone) {
         setError('נא למלא שם וטלפון');
+        return;
+      }
+      if (!/^05\d{8}$/.test(formData.phone)) {
+        setError('מספר טלפון לא תקין');
+        return;
+      }
+      if (formData.email && !/^[^@]+@[^@]+\.[^@]+$/.test(formData.email)) {
+        setError('כתובת אימייל לא תקינה');
+        return;
+      }
+      if (participants.some(p => p.phone === formData.phone)) {
+        setError('משתתף עם מספר טלפון זה כבר קיים');
         return;
       }
 
@@ -43,7 +64,7 @@ const ParticipantList = () => {
         id: Date.now().toString(),
         ...formData
       };
-      
+
       setParticipants([...participants, newParticipant]);
 
       // Send WhatsApp message
@@ -54,9 +75,16 @@ const ParticipantList = () => {
 
       setOpenDialog(false);
       setFormData({ name: '', phone: '', email: '' });
+      setSuccess(true);
     } catch (err) {
       setError('אירעה שגיאה בתהליך ההרשמה');
     }
+  };
+
+  const handleOpenDialog = () => {
+    setError(null);
+    setFormData({ name: '', phone: '', email: '' });
+    setOpenDialog(true);
   };
 
   return (
@@ -68,7 +96,7 @@ const ParticipantList = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setOpenDialog(true)}
+          onClick={handleOpenDialog}
         >
           הרשמה חדשה ✨
         </Button>
@@ -82,6 +110,15 @@ const ParticipantList = () => {
             {participant.email && (
               <Typography color="text.secondary">{participant.email}</Typography>
             )}
+            <Button
+              color="error"
+              onClick={() =>
+                setParticipants(participants.filter(p => p.id !== participant.id))
+              }
+              sx={{ mt: 1 }}
+            >
+              מחק
+            </Button>
           </CardContent>
         </Card>
       ))}
@@ -116,8 +153,8 @@ const ParticipantList = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>ביטול</Button>
-          <Button 
-            onClick={handleRegister} 
+          <Button
+            onClick={handleRegister}
             variant="contained"
             disabled={isLoading}
           >
@@ -125,8 +162,14 @@ const ParticipantList = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={success}
+        autoHideDuration={3000}
+        onClose={() => setSuccess(false)}
+        message="ההרשמה בוצעה בהצלחה!"
+      />
     </Box>
   );
 };
 
-export default ParticipantList; 
+export default ParticipantList;

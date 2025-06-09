@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -16,12 +16,28 @@ function EventForm({ open, onClose, onSubmit, event }) {
     description: '',
     location: '',
     maxParticipants: '',
-    ...event
   });
+
+  useEffect(() => {
+    if (open) {
+      setFormData({
+        name: event?.name || '',
+        date: event?.date || '',
+        description: event?.description || '',
+        location: event?.location || '',
+        maxParticipants: event?.maxParticipants?.toString() || '',
+      });
+    }
+  }, [event, open]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({
+      ...formData,
+      maxParticipants: formData.maxParticipants
+        ? parseInt(formData.maxParticipants, 10)
+        : undefined,
+    });
   };
 
   return (
@@ -72,16 +88,16 @@ function EventForm({ open, onClose, onSubmit, event }) {
             onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
             margin="normal"
           />
+          <DialogActions>
+            <Button onClick={onClose}>ביטול</Button>
+            <Button type="submit" variant="contained">
+              {event ? 'עדכון' : 'יצירה'}
+            </Button>
+          </DialogActions>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>ביטול</Button>
-        <Button onClick={handleSubmit} variant="contained">
-          {event ? 'עדכון' : 'יצירה'}
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }
 
-export default EventForm; 
+export default EventForm;

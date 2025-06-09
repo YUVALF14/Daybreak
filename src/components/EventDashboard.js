@@ -41,15 +41,20 @@ function EventDashboard() {
   }, [events]);
 
   const handleAddEvent = (newEvent) => {
-    const updatedEvents = [...events, { ...newEvent, id: Date.now(), participants: [] }];
+    const updatedEvents = [
+      ...events,
+      { ...newEvent, id: Date.now(), participants: [] }
+    ];
     setEvents(updatedEvents);
     setOpenEventForm(false);
     setSnackbar({ open: true, message: 'האירוע נוצר בהצלחה' });
   };
 
   const handleUpdateEvent = (updatedEvent) => {
-    setEvents(events.map(event => 
-      event.id === updatedEvent.id ? { ...updatedEvent, participants: event.participants } : event
+    setEvents(events.map(event =>
+      event.id === updatedEvent.id
+        ? { ...updatedEvent, participants: event.participants || [] }
+        : event
     ));
     setOpenEventForm(false);
     setSnackbar({ open: true, message: 'האירוע עודכן בהצלחה' });
@@ -74,7 +79,8 @@ function EventDashboard() {
   };
 
   const sendEventReminders = (event) => {
-    const message = `שלום! תזכורת לאירוע "${event.name}" שיתקיים ב-${new Date(event.date).toLocaleDateString('he-IL')} ב${event.location}. נשמח לראותך!`;
+    // Use event.title if that's your canonical property
+    const message = `שלום! תזכורת לאירוע "${event.title || event.name}" שיתקיים ב-${new Date(event.date).toLocaleDateString('he-IL')} ב${event.location}. נשמח לראותך!`;
     event.participants.forEach(participant => {
       if (participant.confirmed) {
         window.open(`https://wa.me/${participant.phone}?text=${encodeURIComponent(message)}`, '_blank');
@@ -108,7 +114,7 @@ function EventDashboard() {
           <TableBody>
             {events.map((event) => (
               <TableRow key={event.id}>
-                <TableCell>{event.name}</TableCell>
+                <TableCell>{event.title || event.name}</TableCell>
                 <TableCell>{new Date(event.date).toLocaleDateString('he-IL')}</TableCell>
                 <TableCell>{event.location}</TableCell>
                 <TableCell>
@@ -179,4 +185,4 @@ function EventDashboard() {
   );
 }
 
-export default EventDashboard; 
+export default EventDashboard;

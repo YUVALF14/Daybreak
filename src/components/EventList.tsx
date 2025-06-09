@@ -15,19 +15,30 @@ import {
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import { useEvents } from '../context/EventsContext';
 
+interface FormData {
+  title: string;
+  date: string;
+  description: string;
+  location: string;
+  maxParticipants: string;
+}
+
+const initialFormData: FormData = {
+  title: '',
+  date: '',
+  description: '',
+  location: '',
+  maxParticipants: ''
+};
+
 const EventList = () => {
   const { events, addEvent, updateEvent, deleteEvent } = useEvents();
   const [openDialog, setOpenDialog] = useState(false);
   const [editingEvent, setEditingEvent] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    date: '',
-    description: '',
-    location: '',
-    maxParticipants: ''
-  });
+  const [formData, setFormData] = useState<FormData>(initialFormData);
 
   const handleSubmit = () => {
+    if (!formData.title.trim() || !formData.date) return;
     if (editingEvent) {
       updateEvent(editingEvent, {
         ...formData,
@@ -57,13 +68,7 @@ const EventList = () => {
   const handleClose = () => {
     setOpenDialog(false);
     setEditingEvent(null);
-    setFormData({
-      title: '',
-      date: '',
-      description: '',
-      location: '',
-      maxParticipants: ''
-    });
+    setFormData(initialFormData);
   };
 
   return (
@@ -75,7 +80,11 @@ const EventList = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setOpenDialog(true)}
+          onClick={() => {
+            setEditingEvent(null);
+            setFormData(initialFormData);
+            setOpenDialog(true);
+          }}
         >
           אירוע חדש 🎉
         </Button>
@@ -162,7 +171,7 @@ const EventList = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>ביטול</Button>
-          <Button onClick={handleSubmit} variant="contained">
+          <Button onClick={handleSubmit} variant="contained" disabled={!formData.title.trim() || !formData.date}>
             {editingEvent ? 'עדכון' : 'יצירה'}
           </Button>
         </DialogActions>
@@ -171,4 +180,4 @@ const EventList = () => {
   );
 };
 
-export default EventList; 
+export default EventList;
