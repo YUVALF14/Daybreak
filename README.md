@@ -34,7 +34,7 @@ YJCC Events היא מערכת ניהול אירועים שפותחה במיוח�
 
 ## 📦 התקנה
 
-1. התקן את Node.js (גרסה 14 ומעלה)
+1. התקן את Node.js (גרסה 18 ומעלה)
 2. שכפל את הפרויקט:
    ```bash
    git clone https://github.com/your-username/yjcc-events.git
@@ -131,7 +131,7 @@ This system was developed for YJCC (Young Israeli Community in Prague) to manage
 - 📊 Statistics and reports
 
 ### System Requirements
-- Node.js 14.0 or higher
+- Node.js 18 or higher
 - npm or yarn
 
 ### Installation
@@ -154,7 +154,9 @@ npm start
 Create a `.env` file in the project root with:
 ```
 REACT_APP_ADMIN_CODE=291147
+GOOGLE_SERVICE_ACCOUNT_KEY="<service-account-json>"
 ```
+The `GOOGLE_SERVICE_ACCOUNT_KEY` should contain your Google service account credentials in JSON format.
 
 ### Usage
 1. Admin Access:
@@ -202,4 +204,5 @@ yjcc-events/
 
 ## Development Notes
 Ensure `package.json` contains a valid `version` field. The Vercel build will fail with an "Invalid Version" error if this value is missing or malformed.
+Use the `/api/google-sheets` endpoint to fetch data from Google Sheets.
 
