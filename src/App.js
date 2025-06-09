@@ -83,8 +83,8 @@ import {
   Assessment as AssessmentIcon,
 } from '@mui/icons-material';
 import './App.css';
-import { loadEventsFromCloud, saveEventsToCloud, updateEventInCloud, saveParticipantToEvent } from './services/database';
-import { fetchRegistrantsFromSheet } from './services/googleSheets';
+import { loadEventsFromCloud, saveEventsToCloud, updateEventInCloud, saveParticipantToEvent } from './services/database.js';
+import { fetchRegistrantsFromSheet } from './services/googleSheets.js';
 
 // Create rtl cache with specific configuration
 const cacheRtl = createCache({
