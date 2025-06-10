@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Card,
-  CardContent,
   Typography,
   Button,
   Dialog,
@@ -23,7 +22,7 @@ import { useWhatsApp } from '../context/WhatsAppContext';
 import { useEvents } from '../context/EventsContext';
 import { useNavigate } from 'react-router-dom';
 import { database } from '../config/firebase';
-import { ref, set, push, onValue, off } from 'firebase/database';
+import { ref, set, onValue, off } from 'firebase/database';
 
 interface Participant {
   id: string;
@@ -33,19 +32,10 @@ interface Participant {
   registeredEvents?: string[];
 }
 
-const getInitialParticipant = () => {
-  try {
-    return JSON.parse(localStorage.getItem('participant') || '{}');
-  } catch {
-    return {};
-  }
-};
-
 const ParticipantList = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [editProfile, setEditProfile] = useState(false);
   const [formData, setFormData] = useState({ name: '', phone: '', email: '' });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -144,7 +134,6 @@ const ParticipantList = () => {
       phone: currentParticipant?.phone || '',
       email: currentParticipant?.email || '',
     });
-    setEditProfile(true);
   };
 
   const handleSaveProfile = () => {
@@ -156,7 +145,6 @@ const ParticipantList = () => {
       id: currentParticipant?.id || Date.now().toString(),
       ...formData,
     });
-    setEditProfile(false);
     setError(null);
     setSuccess(true);
   };
