@@ -117,6 +117,11 @@ function App() {
           />
           <Route path="/participants" element={<ParticipantLogin />} />
           <Route path="/participant-list" element={<ParticipantList />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="events" element={<EventList />} />
+            <Route path="participants" element={<ParticipantList />} />
+          </Route>
         </Routes>
       </Layout>
     </Router>

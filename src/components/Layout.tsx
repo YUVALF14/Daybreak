@@ -2,7 +2,11 @@ import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Box, Container, AppBar, Toolbar, Typography, Button, Avatar } from '@mui/material';
 
-const Layout = ({ children }) => {
+type LayoutProps = {
+  children?: React.ReactNode;
+};
+
+const Layout: React.FC<LayoutProps> = () => {
   const navigate = useNavigate();
 
   return (
@@ -29,7 +33,7 @@ const Layout = ({ children }) => {
         </Toolbar>
       </AppBar>
       <Container component="main" sx={{ mt: 4, mb: 4, flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        {children || <Outlet />}
+        <Outlet />
       </Container>
       <Box component="footer" sx={{ py: 3, bgcolor: 'background.paper', textAlign: 'center', mt: 'auto', opacity: 0.8 }}>
         <Typography variant="body2" color="text.secondary">
