@@ -130,7 +130,9 @@ const EventList = () => {
                 )}
                 {event.maxParticipants && event.subsidy && (
                   <Typography color="text.secondary">
-                    💰 סה"כ תקציב סבסוד: {(parseInt(event.maxParticipants) * parseFloat(event.subsidy)).toLocaleString()} ₪
+                    💰 סה"כ תקציב סבסוד: {Number(event.maxParticipants) * Number(event.subsidy) > 0
+                      ? (Number(event.maxParticipants) * Number(event.subsidy)).toLocaleString()
+                      : 0} ₪
                   </Typography>
                 )}
               </Box>
@@ -212,7 +214,9 @@ const EventList = () => {
           {formData.maxParticipants && formData.subsidy && (
             <Box sx={{ mt: 2, mb: 1 }}>
               <strong>סה"כ תקציב סבסוד:</strong>{' '}
-              {(parseInt(formData.maxParticipants) * parseFloat(formData.subsidy || '0')).toLocaleString()} ₪
+              {Number(formData.maxParticipants) * Number(formData.subsidy) > 0
+                ? (Number(formData.maxParticipants) * Number(formData.subsidy)).toLocaleString()
+                : 0} ₪
             </Box>
           )}
         </DialogContent>
