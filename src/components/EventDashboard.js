@@ -120,11 +120,11 @@ function EventDashboard() {
                 <TableCell>{event.title || event.name}</TableCell>
                 <TableCell>{new Date(event.date).toLocaleDateString('he-IL')}</TableCell>
                 <TableCell>{event.location}</TableCell>
-                <TableCell>{event.price ? `${event.price} ₪` : '-'}</TableCell>
-                <TableCell>{event.subsidy ? `${event.subsidy} ₪` : '-'}</TableCell>
+                <TableCell>{event.price ? `${event.price} CZK` : '-'}</TableCell>
+                <TableCell>{event.subsidy ? `${event.subsidy} CZK` : '-'}</TableCell>
                 <TableCell>
                   {event.maxParticipants && event.subsidy
-                    ? `${(parseInt(event.maxParticipants) * parseFloat(event.subsidy)).toLocaleString()} ₪`
+                    ? `${(parseInt(event.maxParticipants) * parseFloat(event.subsidy)).toLocaleString()} CZK`
                     : '-'}
                 </TableCell>
                 <TableCell>

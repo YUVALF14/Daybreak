@@ -97,7 +97,7 @@ function EventForm({ open, onClose, onSubmit, event }) {
           <TextField
             fullWidth
             type="number"
-            label="מחיר למשתתף (₪)"
+            label="מחיר למשתתף (CZK)"
             value={formData.price}
             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
             margin="normal"
@@ -105,7 +105,7 @@ function EventForm({ open, onClose, onSubmit, event }) {
           <TextField
             fullWidth
             type="number"
-            label="סבסוד למשתתף (₪)"
+            label="סבסוד למשתתף (CZK)"
             value={formData.subsidy}
             onChange={(e) => setFormData({ ...formData, subsidy: e.target.value })}
             margin="normal"
@@ -113,7 +113,7 @@ function EventForm({ open, onClose, onSubmit, event }) {
           {formData.maxParticipants && formData.subsidy && (
             <Box sx={{ mt: 2, mb: 1 }}>
               <strong>סה"כ תקציב סבסוד:</strong>{' '}
-              {(parseInt(formData.maxParticipants, 10) * parseFloat(formData.subsidy || 0)).toLocaleString()} ₪
+              {(parseInt(formData.maxParticipants, 10) * parseFloat(formData.subsidy || 0)).toLocaleString()} CZK
             </Box>
           )}
           <DialogActions>

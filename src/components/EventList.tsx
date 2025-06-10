@@ -120,19 +120,19 @@ const EventList = () => {
                 )}
                 {event.price && (
                   <Typography color="text.secondary">
-                    💸 מחיר למשתתף: {event.price} ₪
+                    💸 מחיר למשתתף: {event.price} CZK
                   </Typography>
                 )}
                 {event.subsidy && (
                   <Typography color="text.secondary">
-                    🏷️ סבסוד למשתתף: {event.subsidy} ₪
+                    🏷️ סבסוד למשתתף: {event.subsidy} CZK
                   </Typography>
                 )}
                 {event.maxParticipants && event.subsidy && (
                   <Typography color="text.secondary">
                     💰 סה"כ תקציב סבסוד: {Number(event.maxParticipants) * Number(event.subsidy) > 0
                       ? (Number(event.maxParticipants) * Number(event.subsidy)).toLocaleString()
-                      : 0} ₪
+                      : 0} CZK
                   </Typography>
                 )}
               </Box>
@@ -197,7 +197,7 @@ const EventList = () => {
           />
           <TextField
             margin="dense"
-            label="מחיר למשתתף (₪)"
+            label="מחיר למשתתף (CZK)"
             type="number"
             fullWidth
             value={formData.price}
@@ -205,7 +205,7 @@ const EventList = () => {
           />
           <TextField
             margin="dense"
-            label="סבסוד למשתתף (₪)"
+            label="סבסוד למשתתף (CZK)"
             type="number"
             fullWidth
             value={formData.subsidy}
@@ -216,7 +216,7 @@ const EventList = () => {
               <strong>סה"כ תקציב סבסוד:</strong>{' '}
               {Number(formData.maxParticipants) * Number(formData.subsidy) > 0
                 ? (Number(formData.maxParticipants) * Number(formData.subsidy)).toLocaleString()
-                : 0} ₪
+                : 0} CZK
             </Box>
           )}
         </DialogContent>
