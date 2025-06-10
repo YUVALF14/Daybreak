@@ -38,6 +38,8 @@ import AdminLogin from './components/AdminLogin';
 import EventDashboard from './components/EventDashboard';
 import ParticipantLogin from './components/ParticipantLogin';
 import ParticipantList from './components/ParticipantList';
+import Dashboard from './components/Dashboard';
+import EventList from './components/EventList';
 import './App.css';
 
 // Branding colors
