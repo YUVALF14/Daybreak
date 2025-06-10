@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Box,
@@ -24,62 +24,38 @@ import {
 } from '@mui/icons-material';
 import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
+import { useEvents } from '../context/EventsContext';
 
 function EventDashboard() {
-  const [events, setEvents] = useState(() => {
-    const savedEvents = localStorage.getItem('yjccEvents');
-    return savedEvents ? JSON.parse(savedEvents) : [];
-  });
+  const { events, addEvent, updateEvent, deleteEvent } = useEvents();
   const [openEventForm, setOpenEventForm] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [openParticipants, setOpenParticipants] = useState(false);
   const [selectedEventParticipants, setSelectedEventParticipants] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
 
-  useEffect(() => {
-    localStorage.setItem('yjccEvents', JSON.stringify(events));
-  }, [events]);
-
-  const handleAddEvent = (newEvent) => {
-    const updatedEvents = [
-      ...events,
-      { ...newEvent, id: Date.now(), participants: [] }
-    ];
-    setEvents(updatedEvents);
+  const handleAddEvent = async (newEvent) => {
+    await addEvent({ ...newEvent, participants: [] });
     setOpenEventForm(false);
     setSnackbar({ open: true, message: 'האירוע נוצר בהצלחה' });
   };
 
-  const handleUpdateEvent = (updatedEvent) => {
-    setEvents(events.map(event =>
-      event.id === updatedEvent.id
-        ? { ...updatedEvent, participants: event.participants || [] }
-        : event
-    ));
+  const handleUpdateEvent = async (updatedEvent) => {
+    await updateEvent(updatedEvent.id, updatedEvent);
     setOpenEventForm(false);
     setSnackbar({ open: true, message: 'האירוע עודכן בהצלחה' });
   };
 
-  const handleDeleteEvent = (eventId) => {
-    setEvents(events.filter(event => event.id !== eventId));
+  const handleDeleteEvent = async (eventId) => {
+    await deleteEvent(eventId);
     setSnackbar({ open: true, message: 'האירוע נמחק בהצלחה' });
   };
 
-  const handleParticipantUpdate = (eventId, participant) => {
-    setEvents(events.map(event => {
-      if (event.id === eventId) {
-        const existingParticipant = event.participants.find(p => p.phone === participant.phone);
-        const updatedParticipants = existingParticipant
-          ? event.participants.map(p => p.phone === participant.phone ? participant : p)
-          : [...event.participants, participant];
-        return { ...event, participants: updatedParticipants };
-      }
-      return event;
-    }));
+  const handleParticipantUpdate = async (eventId, participant) => {
+    await updateEvent(eventId, { /* ...עדכן את רשימת המשתתפים... */ });
   };
 
   const sendEventReminders = (event) => {
-    // Use event.title if that's your canonical property
     const message = `שלום! תזכורת לאירוע "${event.title || event.name}" שיתקיים ב-${new Date(event.date).toLocaleDateString('he-IL')} ב${event.location}. נשמח לראותך!`;
     event.participants.forEach(participant => {
       if (participant.confirmed) {
