@@ -7,6 +7,8 @@ interface Event {
   description: string;
   location: string;
   maxParticipants?: number;
+  price?: number;
+  subsidy?: number;
 }
 
 interface EventsContextType {
