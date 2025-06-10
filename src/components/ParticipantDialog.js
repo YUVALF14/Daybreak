@@ -64,7 +64,6 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
   const handleDeleteParticipant = (participant) => {
     if (window.confirm('האם אתה בטוח שברצונך למחוק משתתף זה?')) {
       // Remove participant by phone
-      const updatedParticipants = event.participants.filter(p => p.phone !== participant.phone);
       onParticipantUpdate(event.id, { ...participant, delete: true }); // Signal deletion
       // You may need to handle this in the parent by filtering out participants with delete: true
     }
