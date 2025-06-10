@@ -164,14 +164,31 @@ a:hover {
 
 @media (max-width: 600px) {
   .MuiContainer-root {
-    padding: 12px !important;
-  }
-  .MuiPaper-root, .MuiCard-root, .MuiDialog-paper {
-    border-radius: 12px !important;
     padding: 8px !important;
   }
+  .MuiPaper-root, .MuiCard-root, .MuiDialog-paper {
+    border-radius: 8px !important;
+    padding: 6px !important;
+  }
   h1, h2, h3 {
-    font-size: 1.3rem !important;
+    font-size: 1.1rem !important;
+  }
+  .MuiButton-root {
+    width: 100% !important;
+    margin-bottom: 10px !important;
+    padding: 10px 0 !important;
+    font-size: 1rem !important;
+  }
+  .MuiStack-root {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .MuiCard-root, .MuiPaper-root, .MuiDialog-paper {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  .MuiTableContainer-root {
+    overflow-x: auto !important;
   }
 }
 

@@ -92,8 +92,8 @@ const EventList = () => {
   };
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+    <Box sx={{ px: { xs: 1, sm: 0 } }}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', mb: 3, gap: { xs: 2, sm: 0 } }}>
         <Typography variant="h4" component="h1">
           אירועים
         </Typography>
@@ -105,13 +105,17 @@ const EventList = () => {
             setFormData(initialFormData);
             setOpenDialog(true);
           }}
+          sx={{
+            width: { xs: '100%', sm: 'auto' },
+            mt: { xs: 1, sm: 0 }
+          }}
         >
           אירוע חדש 🎉
         </Button>
       </Box>
 
       {events.map((event) => (
-        <Card key={event.id} sx={{ mb: 2 }}>
+        <Card key={event.id} sx={{ mb: 2, borderRadius: { xs: 2, sm: 4 }, px: { xs: 1, sm: 2 } }}>
           <CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
               <Box>
@@ -158,7 +162,7 @@ const EventList = () => {
                   variant="outlined"
                   color="info"
                   size="small"
-                  sx={{ mt: 1 }}
+                  sx={{ mt: 1, width: { xs: '100%', sm: 'auto' } }}
                   onClick={() => handleOpenFeedback(event.id)}
                 >
                   משוב
@@ -171,7 +175,7 @@ const EventList = () => {
                 >
                   <DialogTitle>משוב על האירוע: {event.title}</DialogTitle>
                   <DialogContent>
-                    <FeedbackForm />
+                    <FeedbackForm eventId={event.id} />
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={() => handleCloseFeedback(event.id)}>סגור</Button>

@@ -26,13 +26,14 @@ const Layout: React.FC<LayoutProps> = () => {
         sx={{
           background: 'linear-gradient(90deg, #64B5F6 0%, #42A5F5 100%)',
           boxShadow: 3,
+          px: { xs: 1, sm: 3 },
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'stretch', sm: 'center' }, gap: { xs: 1, sm: 0 } }}>
           <Avatar
             src="/favicon.ico"
             alt="logo"
-            sx={{ mr: 2, bgcolor: '#fff', width: 40, height: 40, boxShadow: 2 }}
+            sx={{ mr: { xs: 0, sm: 2 }, mb: { xs: 1, sm: 0 }, bgcolor: '#fff', width: 40, height: 40, boxShadow: 2 }}
           />
           <Typography
             variant="h5"
@@ -45,15 +46,15 @@ const Layout: React.FC<LayoutProps> = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               textShadow: '0 2px 12px #90caf9',
-              animation: 'titleFadeIn 1.2s cubic-bezier(0.4,0,0.2,1)',
+              fontSize: { xs: '1.3rem', sm: '2rem' },
             }}
           >
             DAYBREAK
           </Typography>
-          <Button color="inherit" onClick={() => navigate('/')} sx={{ mx: 1 }} aria-label="דף הבית">
+          <Button color="inherit" onClick={() => navigate('/')} sx={{ mx: 1, width: { xs: '100%', sm: 'auto' }, my: { xs: 0.5, sm: 0 } }} aria-label="דף הבית">
             דף הבית
           </Button>
-          <Button color="inherit" onClick={() => navigate('/admin-login')} sx={{ mx: 1 }} aria-label="כניסת מנהלים">
+          <Button color="inherit" onClick={() => navigate('/admin-login')} sx={{ mx: 1, width: { xs: '100%', sm: 'auto' }, my: { xs: 0.5, sm: 0 } }} aria-label="כניסת מנהלים">
             כניסת מנהלים
           </Button>
         </Toolbar>

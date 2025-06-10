@@ -144,12 +144,12 @@ const ParticipantList = () => {
     <Box sx={{
       maxWidth: 500,
       mx: 'auto',
-      mt: 6,
-      mb: 6,
-      p: { xs: 2, sm: 4 },
+      mt: { xs: 2, sm: 6 },
+      mb: { xs: 2, sm: 6 },
+      p: { xs: 1, sm: 4 },
       background: 'linear-gradient(135deg, #E3F2FD 0%, #FFFFFF 100%)',
-      borderRadius: 6,
-      boxShadow: 6,
+      borderRadius: { xs: 3, sm: 6 },
+      boxShadow: { xs: 3, sm: 6 },
       minHeight: 400,
       display: 'flex',
       flexDirection: 'column',
@@ -216,7 +216,7 @@ const ParticipantList = () => {
           </Button>
         </Box>
       )}
-      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3, width: '100%', flexDirection: { xs: 'column', sm: 'row' } }}>
         <Button
           variant="outlined"
           color="primary"
@@ -225,6 +225,7 @@ const ParticipantList = () => {
             borderRadius: 8,
             fontWeight: 600,
             boxShadow: 1,
+            width: { xs: '100%', sm: 'auto' },
             transition: 'transform 0.2s, box-shadow 0.2s',
             '&:hover': {
               transform: 'scale(1.05)',
@@ -245,6 +246,7 @@ const ParticipantList = () => {
               borderRadius: 8,
               fontWeight: 600,
               boxShadow: 2,
+              width: { xs: '100%', sm: 'auto' },
               transition: 'transform 0.2s, box-shadow 0.2s',
               '&:hover': {
                 transform: 'scale(1.05)',
@@ -322,13 +324,14 @@ const ParticipantList = () => {
         {participants.map((participant) => (
           <Card key={participant.id} sx={{
             background: 'rgba(255,255,255,0.97)',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             boxShadow: 2,
             transition: 'transform 0.2s, box-shadow 0.2s',
             '&:hover': { transform: 'scale(1.02)', boxShadow: 4 },
             display: 'flex',
             alignItems: 'center',
             px: 2,
+            minHeight: { xs: 70, sm: 90 },
           }}>
             <Avatar sx={{ bgcolor: '#90CAF9', width: 40, height: 40, mr: 2 }}>
               {participant.name?.[0] || <PersonIcon />}
