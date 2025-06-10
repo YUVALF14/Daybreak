@@ -17,7 +17,9 @@ import {
   IconButton,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import PersonIcon from '@mui/icons-material/Person';
 import { useWhatsApp } from '../context/WhatsAppContext';
+import { useNavigate } from 'react-router-dom';
 
 interface Participant {
   id: string;
@@ -46,6 +48,7 @@ const ParticipantList = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const { sendMessage, isLoading } = useWhatsApp();
+  const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.setItem('participants', JSON.stringify(participants));
@@ -125,8 +128,82 @@ const ParticipantList = () => {
     setOpenDialog(true);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('participant');
+    navigate('/');
+  };
+
   return (
-    <Box sx={{ maxWidth: 500, mx: 'auto', mt: 4 }}>
+    <Box sx={{
+      maxWidth: 500,
+      mx: 'auto',
+      mt: 6,
+      mb: 6,
+      p: { xs: 2, sm: 4 },
+      background: 'linear-gradient(135deg, #E3F2FD 0%, #FFFFFF 100%)',
+      borderRadius: 6,
+      boxShadow: 6,
+      minHeight: 400,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      animation: 'fadeIn 0.7s',
+    }}>
+      <Avatar
+        src="/favicon.ico"
+        alt="logo"
+        sx={{
+          width: 64,
+          height: 64,
+          mb: 2,
+          boxShadow: 2,
+          bgcolor: '#fff',
+        }}
+      />
+      <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, color: '#1976d2', letterSpacing: 1, textShadow: '0 2px 12px #90caf9' }}>
+        עמוד משתתפים
+      </Typography>
+      <Typography variant="subtitle1" sx={{ mb: 3, color: '#2C3E50', opacity: 0.85 }}>
+        כאן תוכל לראות את פרטיך ולנהל את ההרשמה שלך
+      </Typography>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => navigate('/')}
+          sx={{
+            borderRadius: 8,
+            fontWeight: 600,
+            boxShadow: 1,
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              boxShadow: 3,
+              borderColor: '#1976d2',
+              background: '#e3f2fd',
+            },
+          }}
+        >
+          חזור
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleLogout}
+          sx={{
+            borderRadius: 8,
+            fontWeight: 600,
+            boxShadow: 2,
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              boxShadow: 4,
+            },
+          }}
+        >
+          יציאה
+        </Button>
+      </Box>
       <Card sx={{
         mb: 3,
         p: 2,
@@ -135,9 +212,11 @@ const ParticipantList = () => {
         borderRadius: 4,
         display: 'flex',
         alignItems: 'center',
+        width: '100%',
+        animation: 'fadeIn 0.7s',
       }}>
-        <Avatar sx={{ bgcolor: '#64B5F6', width: 56, height: 56, mr: 2 }}>
-          {currentParticipant?.name?.[0] || '👤'}
+        <Avatar sx={{ bgcolor: '#64B5F6', width: 56, height: 56, mr: 2, border: '3px solid #fff', boxShadow: 2 }}>
+          {currentParticipant?.name?.[0] || <PersonIcon />}
         </Avatar>
         <Box sx={{ flexGrow: 1 }}>
           <Typography variant="h5" sx={{ fontWeight: 700 }}>
@@ -150,14 +229,22 @@ const ParticipantList = () => {
             {currentParticipant?.email}
           </Typography>
         </Box>
-        <IconButton color="primary" onClick={handleEditProfile} aria-label="ערוך פרופיל">
+        <IconButton
+          color="primary"
+          onClick={handleEditProfile}
+          aria-label="ערוך פרופיל"
+          sx={{
+            transition: 'transform 0.2s',
+            '&:hover': { transform: 'scale(1.15)', color: '#1976d2' },
+          }}
+        >
           <EditIcon />
         </IconButton>
       </Card>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
-          משתתפים
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, width: '100%' }}>
+        <Typography variant="h5" component="h1" sx={{ fontWeight: 700, color: '#1976d2' }}>
+          רשימת משתתפים
         </Typography>
         <Button
           variant="contained"
@@ -168,37 +255,54 @@ const ParticipantList = () => {
             fontWeight: 600,
             boxShadow: 2,
             background: 'linear-gradient(90deg, #64B5F6 0%, #42A5F5 100%)',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              boxShadow: 4,
+            },
           }}
         >
           הרשמה חדשה ✨
         </Button>
       </Box>
 
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ width: '100%' }}>
         {participants.map((participant) => (
           <Card key={participant.id} sx={{
-            background: 'rgba(255,255,255,0.95)',
+            background: 'rgba(255,255,255,0.97)',
             borderRadius: 3,
             boxShadow: 2,
-            transition: 'transform 0.2s',
-            '&:hover': { transform: 'scale(1.02)', boxShadow: 4 }
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            '&:hover': { transform: 'scale(1.02)', boxShadow: 4 },
+            display: 'flex',
+            alignItems: 'center',
+            px: 2,
           }}>
-            <CardContent>
-              <Typography variant="h6">{participant.name}</Typography>
+            <Avatar sx={{ bgcolor: '#90CAF9', width: 40, height: 40, mr: 2 }}>
+              {participant.name?.[0] || <PersonIcon />}
+            </Avatar>
+            <CardContent sx={{ flex: 1 }}>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>{participant.name}</Typography>
               <Typography color="text.secondary">{participant.phone}</Typography>
               {participant.email && (
                 <Typography color="text.secondary">{participant.email}</Typography>
               )}
-              <Button
-                color="error"
-                onClick={() =>
-                  setParticipants(participants.filter(p => p.id !== participant.id))
-                }
-                sx={{ mt: 1 }}
-              >
-                מחק
-              </Button>
             </CardContent>
+            <Button
+              color="error"
+              onClick={() =>
+                setParticipants(participants.filter(p => p.id !== participant.id))
+              }
+              sx={{
+                mt: 1,
+                fontWeight: 600,
+                borderRadius: 8,
+                transition: 'transform 0.2s',
+                '&:hover': { transform: 'scale(1.08)' },
+              }}
+            >
+              מחק
+            </Button>
           </Card>
         ))}
       </Stack>
