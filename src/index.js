@@ -14,12 +14,15 @@ import '@fontsource/heebo/700.css';
 import '@fontsource/heebo/800.css';
 
 import reportWebVitals from './reportWebVitals';
+import { EventsProvider } from './context/EventsContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 document.documentElement.setAttribute('dir', 'rtl'); // Ensure RTL globally
 root.render(
   <React.StrictMode>
-    <App />
+    <EventsProvider>
+      <App />
+    </EventsProvider>
   </React.StrictMode>
 );
 
