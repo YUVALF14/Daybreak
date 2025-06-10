@@ -21,6 +21,8 @@ interface FormData {
   description: string;
   location: string;
   maxParticipants: string;
+  price: string;
+  subsidy: string;
 }
 
 const initialFormData: FormData = {
@@ -28,7 +30,9 @@ const initialFormData: FormData = {
   date: '',
   description: '',
   location: '',
-  maxParticipants: ''
+  maxParticipants: '',
+  price: '',
+  subsidy: '',
 };
 
 const EventList = () => {
@@ -42,12 +46,16 @@ const EventList = () => {
     if (editingEvent) {
       updateEvent(editingEvent, {
         ...formData,
-        maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined
+        maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
+        price: formData.price ? parseFloat(formData.price) : undefined,
+        subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
       });
     } else {
       addEvent({
         ...formData,
-        maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined
+        maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
+        price: formData.price ? parseFloat(formData.price) : undefined,
+        subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
       });
     }
     handleClose();
@@ -60,7 +68,9 @@ const EventList = () => {
       date: event.date,
       description: event.description,
       location: event.location,
-      maxParticipants: event.maxParticipants?.toString() || ''
+      maxParticipants: event.maxParticipants?.toString() || '',
+      price: event.price?.toString() || '',
+      subsidy: event.subsidy?.toString() || '',
     });
     setOpenDialog(true);
   };
@@ -106,6 +116,21 @@ const EventList = () => {
                 {event.maxParticipants && (
                   <Typography color="text.secondary">
                     👥 מקסימום משתתפים: {event.maxParticipants}
+                  </Typography>
+                )}
+                {event.price && (
+                  <Typography color="text.secondary">
+                    💸 מחיר למשתתף: {event.price} ₪
+                  </Typography>
+                )}
+                {event.subsidy && (
+                  <Typography color="text.secondary">
+                    🏷️ סבסוד למשתתף: {event.subsidy} ₪
+                  </Typography>
+                )}
+                {event.maxParticipants && event.subsidy && (
+                  <Typography color="text.secondary">
+                    💰 סה"כ תקציב סבסוד: {(parseInt(event.maxParticipants) * parseFloat(event.subsidy)).toLocaleString()} ₪
                   </Typography>
                 )}
               </Box>
@@ -168,6 +193,28 @@ const EventList = () => {
             value={formData.maxParticipants}
             onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
           />
+          <TextField
+            margin="dense"
+            label="מחיר למשתתף (₪)"
+            type="number"
+            fullWidth
+            value={formData.price}
+            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+          />
+          <TextField
+            margin="dense"
+            label="סבסוד למשתתף (₪)"
+            type="number"
+            fullWidth
+            value={formData.subsidy}
+            onChange={(e) => setFormData({ ...formData, subsidy: e.target.value })}
+          />
+          {formData.maxParticipants && formData.subsidy && (
+            <Box sx={{ mt: 2, mb: 1 }}>
+              <strong>סה"כ תקציב סבסוד:</strong>{' '}
+              {(parseInt(formData.maxParticipants) * parseFloat(formData.subsidy || '0')).toLocaleString()} ₪
+            </Box>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>ביטול</Button>

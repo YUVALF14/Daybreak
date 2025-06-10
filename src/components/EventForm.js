@@ -16,6 +16,8 @@ function EventForm({ open, onClose, onSubmit, event }) {
     description: '',
     location: '',
     maxParticipants: '',
+    price: '',
+    subsidy: '',
   });
 
   useEffect(() => {
@@ -26,6 +28,8 @@ function EventForm({ open, onClose, onSubmit, event }) {
         description: event?.description || '',
         location: event?.location || '',
         maxParticipants: event?.maxParticipants?.toString() || '',
+        price: event?.price?.toString() || '',
+        subsidy: event?.subsidy?.toString() || '',
       });
     }
   }, [event, open]);
@@ -37,6 +41,8 @@ function EventForm({ open, onClose, onSubmit, event }) {
       maxParticipants: formData.maxParticipants
         ? parseInt(formData.maxParticipants, 10)
         : undefined,
+      price: formData.price ? parseFloat(formData.price) : undefined,
+      subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
     });
   };
 
@@ -88,6 +94,28 @@ function EventForm({ open, onClose, onSubmit, event }) {
             onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
             margin="normal"
           />
+          <TextField
+            fullWidth
+            type="number"
+            label="מחיר למשתתף (₪)"
+            value={formData.price}
+            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+            margin="normal"
+          />
+          <TextField
+            fullWidth
+            type="number"
+            label="סבסוד למשתתף (₪)"
+            value={formData.subsidy}
+            onChange={(e) => setFormData({ ...formData, subsidy: e.target.value })}
+            margin="normal"
+          />
+          {formData.maxParticipants && formData.subsidy && (
+            <Box sx={{ mt: 2, mb: 1 }}>
+              <strong>סה"כ תקציב סבסוד:</strong>{' '}
+              {(parseInt(formData.maxParticipants, 10) * parseFloat(formData.subsidy || 0)).toLocaleString()} ₪
+            </Box>
+          )}
           <DialogActions>
             <Button onClick={onClose}>ביטול</Button>
             <Button type="submit" variant="contained">

@@ -399,3 +399,4 @@ const ParticipantList = () => {
 };
 
 export default ParticipantList;
+// הוסף הצגה של מחיר/סבסוד/תקציב אם תרצה, לדוג' מתחת לנתוני המשתתף או האירוע

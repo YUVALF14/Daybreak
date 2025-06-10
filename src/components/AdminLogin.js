@@ -10,6 +10,7 @@ import {
   Avatar,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function AdminLogin({ onLogin }) {
   const [code, setCode] = useState('');
@@ -48,8 +49,25 @@ function AdminLogin({ onLogin }) {
             borderRadius: 6,
             boxShadow: 6,
             animation: 'fadeIn 0.7s',
+            position: 'relative',
           }}
         >
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => window.history.back()}
+            sx={{
+              position: 'absolute',
+              top: 16,
+              left: 16,
+              color: '#1976d2',
+              fontWeight: 700,
+              borderRadius: 3,
+              background: 'rgba(100,181,246,0.08)',
+              '&:hover': { background: 'rgba(100,181,246,0.18)' },
+            }}
+          >
+            חזור
+          </Button>
           <Avatar
             sx={{
               m: 1,

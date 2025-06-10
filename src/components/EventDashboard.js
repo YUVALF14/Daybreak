@@ -107,6 +107,9 @@ function EventDashboard() {
               <TableCell>שם האירוע</TableCell>
               <TableCell>תאריך</TableCell>
               <TableCell>מיקום</TableCell>
+              <TableCell>מחיר למשתתף</TableCell>
+              <TableCell>סבסוד למשתתף</TableCell>
+              <TableCell>סה"כ תקציב סבסוד</TableCell>
               <TableCell>משתתפים</TableCell>
               <TableCell>פעולות</TableCell>
             </TableRow>
@@ -117,6 +120,13 @@ function EventDashboard() {
                 <TableCell>{event.title || event.name}</TableCell>
                 <TableCell>{new Date(event.date).toLocaleDateString('he-IL')}</TableCell>
                 <TableCell>{event.location}</TableCell>
+                <TableCell>{event.price ? `${event.price} ₪` : '-'}</TableCell>
+                <TableCell>{event.subsidy ? `${event.subsidy} ₪` : '-'}</TableCell>
+                <TableCell>
+                  {event.maxParticipants && event.subsidy
+                    ? `${(parseInt(event.maxParticipants) * parseFloat(event.subsidy)).toLocaleString()} ₪`
+                    : '-'}
+                </TableCell>
                 <TableCell>
                   <Button
                     variant="outlined"
