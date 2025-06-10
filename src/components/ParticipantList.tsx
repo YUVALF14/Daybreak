@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useWhatsApp } from '../context/WhatsAppContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -47,6 +48,7 @@ const ParticipantList = () => {
   const [formData, setFormData] = useState({ name: '', phone: '', email: '' });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { sendMessage, isLoading } = useWhatsApp();
   const navigate = useNavigate();
 
@@ -59,6 +61,11 @@ const ParticipantList = () => {
       localStorage.setItem('participant', JSON.stringify(currentParticipant));
     }
   }, [currentParticipant]);
+
+  useEffect(() => {
+    // Example: detect admin by localStorage or context
+    setIsAdmin(localStorage.getItem('adminAuthenticated') === 'true');
+  }, []);
 
   const handleRegister = async () => {
     try {
@@ -149,6 +156,28 @@ const ParticipantList = () => {
       alignItems: 'center',
       animation: 'fadeIn 0.7s',
     }}>
+      {/* התנתקות מנהל */}
+      {isAdmin && (
+        <Button
+          variant="outlined"
+          color="error"
+          startIcon={<LogoutIcon />}
+          onClick={() => {
+            localStorage.removeItem('adminAuthenticated');
+            window.location.href = '/';
+          }}
+          sx={{
+            position: 'absolute',
+            top: 24,
+            left: 24,
+            fontWeight: 700,
+            borderRadius: 8,
+            zIndex: 2,
+          }}
+        >
+          התנתקות מנהל
+        </Button>
+      )}
       <Avatar
         src="/favicon.ico"
         alt="logo"
@@ -161,11 +190,32 @@ const ParticipantList = () => {
         }}
       />
       <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, color: '#1976d2', letterSpacing: 1, textShadow: '0 2px 12px #90caf9' }}>
-        עמוד משתתפים
+        עמוד משתתפים 👥
       </Typography>
       <Typography variant="subtitle1" sx={{ mb: 3, color: '#2C3E50', opacity: 0.85 }}>
         כאן תוכל לראות את פרטיך ולנהל את ההרשמה שלך
       </Typography>
+      {/* אם אין משתמש נוכחי - הצג אפשרות להתחברות/הרשמה */}
+      {!currentParticipant && (
+        <Box sx={{ mb: 3 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mx: 1 }}
+            onClick={() => navigate('/login')}
+          >
+            התחברות לחשבון קיים 🚪
+          </Button>
+          <Button
+            variant="outlined"
+            color="success"
+            sx={{ mx: 1 }}
+            onClick={() => navigate('/signup')}
+          >
+            יצירת חשבון חדש ✍️
+          </Button>
+        </Box>
+      )}
       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
         <Button
           variant="outlined"
@@ -184,7 +234,7 @@ const ParticipantList = () => {
             },
           }}
         >
-          חזור
+          חזור 🔙
         </Button>
         <Button
           variant="contained"
@@ -201,7 +251,7 @@ const ParticipantList = () => {
             },
           }}
         >
-          יציאה
+          יציאה מהחשבון 🚪
         </Button>
       </Box>
       <Card sx={{

@@ -40,6 +40,8 @@ import ParticipantLogin from './components/ParticipantLogin';
 import ParticipantList from './components/ParticipantList';
 import Dashboard from './components/Dashboard';
 import EventList from './components/EventList';
+import Signup from './components/Signup'; // צור קובץ זה
+import Login from './components/Login';   // צור קובץ זה
 import './App.css';
 
 // Branding colors
@@ -90,13 +92,14 @@ const YJCCLogo = () => (
 
 function App() {
   const { events } = useEvents();
-
-  // Admin authentication state (simple local state for demo)
-  const [adminAuthenticated, setAdminAuthenticated] = React.useState(false);
+  const [adminAuthenticated, setAdminAuthenticated] = React.useState(
+    localStorage.getItem('adminAuthenticated') === 'true'
+  );
 
   const handleAdminLogin = (code) => {
     if (code === '291147') {
       setAdminAuthenticated(true);
+      localStorage.setItem('adminAuthenticated', 'true');
       return true;
     }
     return false;
@@ -121,6 +124,8 @@ function App() {
           <Route path="participant-list" element={<ParticipantList />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="events" element={<EventList />} />
+          <Route path="signup" element={<Signup />} />
+          <Route path="login" element={<Login />} />
           {/* Add other routes as needed */}
         </Route>
       </Routes>

@@ -1,9 +1,10 @@
 import React from 'react';
-import { Box, Typography, Button, Stack, Avatar } from '@mui/material';
+import { Box, Typography, Button, Stack, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const isOnline = navigator.onLine;
 
   return (
     <Box
@@ -30,19 +31,6 @@ const HomePage = () => {
         },
       }}
     >
-      <Avatar
-        src="/favicon.ico"
-        alt="logo"
-        sx={{
-          width: 72,
-          height: 72,
-          mx: 'auto',
-          mb: 2,
-          boxShadow: 2,
-          bgcolor: '#fff',
-          border: '2px solid #1976d2',
-        }}
-      />
       <Typography
         variant="h3"
         sx={{
@@ -86,7 +74,7 @@ const HomePage = () => {
             },
           }}
         >
-          כניסת מנהלים
+          כניסת מנהלים 🔑
         </Button>
         <Button
           variant="outlined"
@@ -109,9 +97,86 @@ const HomePage = () => {
             },
           }}
         >
-          כניסת משתתפים
+          כניסת משתתפים 👤
         </Button>
       </Stack>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={3}
+        justifyContent="center"
+        sx={{ mt: 4, zIndex: 1, position: 'relative' }}
+      >
+        <Button
+          variant="outlined"
+          color="success"
+          size="large"
+          onClick={() => navigate('/signup')}
+          sx={{
+            px: 5,
+            py: 2,
+            fontWeight: 700,
+            borderWidth: 2,
+            borderRadius: 8,
+            transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
+            boxShadow: 1,
+            '&:hover': {
+              transform: 'scale(1.07)',
+              boxShadow: 4,
+              borderColor: '#388e3c',
+              background: '#e8f5e9',
+            },
+          }}
+        >
+          יצירת חשבון חדש ✍️
+        </Button>
+        <Button
+          variant="outlined"
+          color="info"
+          size="large"
+          onClick={() => navigate('/login')}
+          sx={{
+            px: 5,
+            py: 2,
+            fontWeight: 700,
+            borderWidth: 2,
+            borderRadius: 8,
+            transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
+            boxShadow: 1,
+            '&:hover': {
+              transform: 'scale(1.07)',
+              boxShadow: 4,
+              borderColor: '#0288d1',
+              background: '#e3f2fd',
+            },
+          }}
+        >
+          התחברות לחשבון קיים 🚪
+        </Button>
+      </Stack>
+      <Box sx={{ mt: 5, zIndex: 1, position: 'relative' }}>
+        <Typography variant="subtitle1" sx={{ mb: 1 }}>
+          <span role="img" aria-label="info">ℹ️</span> בחרו פעולה:
+        </Typography>
+        <Typography sx={{ mb: 1 }}>
+          <span role="img" aria-label="admin">🔑</span> כניסת מנהלים - ניהול אירועים, משתתפים וסטטיסטיקות
+        </Typography>
+        <Typography sx={{ mb: 1 }}>
+          <span role="img" aria-label="participant">👤</span> כניסת משתתפים - הרשמה לאירועים וצפייה בפרטים
+        </Typography>
+        <Typography sx={{ mb: 1 }}>
+          <span role="img" aria-label="signup">✍️</span> יצירת חשבון - הרשמה חדשה למערכת
+        </Typography>
+        <Typography sx={{ mb: 1 }}>
+          <span role="img" aria-label="login">🚪</span> התחברות לחשבון קיים
+        </Typography>
+      </Box>
+      <Box sx={{ mt: 4 }}>
+        <Alert severity={isOnline ? 'success' : 'warning'}>
+          {isOnline
+            ? 'המערכת מחוברת לאינטרנט ומסונכרנת ☁️'
+            : 'אין חיבור לאינטרנט - הנתונים לא יסונכרנו!'}
+        </Alert>
+      </Box>
       {/* Animation keyframes */}
       <style>
         {`
