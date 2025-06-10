@@ -234,25 +234,27 @@ const ParticipantList = () => {
             },
           }}
         >
-          חזור 🔙
+          חזור
         </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleLogout}
-          sx={{
-            borderRadius: 8,
-            fontWeight: 600,
-            boxShadow: 2,
-            transition: 'transform 0.2s, box-shadow 0.2s',
-            '&:hover': {
-              transform: 'scale(1.05)',
-              boxShadow: 4,
-            },
-          }}
-        >
-          יציאה מהחשבון 🚪
-        </Button>
+        {currentParticipant && (
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleLogout}
+            sx={{
+              borderRadius: 8,
+              fontWeight: 600,
+              boxShadow: 2,
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: 4,
+              },
+            }}
+          >
+            יציאה מהחשבון
+          </Button>
+        )}
       </Box>
       <Card sx={{
         mb: 3,

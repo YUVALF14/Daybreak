@@ -92,12 +92,31 @@ function EventDashboard() {
     <Container>
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h4">אירועי YJCC</Typography>
-        <Fab color="primary" onClick={() => {
-          setSelectedEvent(null);
-          setOpenEventForm(true);
-        }}>
-          <AddIcon />
-        </Fab>
+        <Box>
+          {localStorage.getItem('adminAuthenticated') === 'true' && (
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => {
+                localStorage.removeItem('adminAuthenticated');
+                window.location.href = '/';
+              }}
+              sx={{
+                mr: 2,
+                fontWeight: 700,
+                borderRadius: 8,
+              }}
+            >
+              התנתקות מנהל
+            </Button>
+          )}
+          <Fab color="primary" onClick={() => {
+            setSelectedEvent(null);
+            setOpenEventForm(true);
+          }}>
+            <AddIcon />
+          </Fab>
+        </Box>
       </Box>
 
       <TableContainer component={Paper}>
