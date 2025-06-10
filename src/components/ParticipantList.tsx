@@ -20,7 +20,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useWhatsApp } from '../context/WhatsAppContext';
 import { useEvents } from '../context/EventsContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { database } from '../config/firebase';
 import { ref, set, onValue, off } from 'firebase/database';
 
@@ -43,6 +43,9 @@ const ParticipantList = () => {
   const { sendMessage, isLoading } = useWhatsApp();
   const { events } = useEvents();
   const navigate = useNavigate();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const eventIdFromUrl = query.get('eventId');
 
   useEffect(() => {
     const participantsRef = ref(database, 'participants');
@@ -180,6 +183,11 @@ const ParticipantList = () => {
     );
     setSuccess(true);
   };
+
+  // סינון אירועים לפי eventId מה-URL
+  const filteredEvents = eventIdFromUrl
+    ? events.filter(e => e.id === eventIdFromUrl)
+    : [];
 
   return (
     <Box sx={{
@@ -340,63 +348,60 @@ const ParticipantList = () => {
       {/* אירועים קרובים למשתתף */}
       <Box sx={{ width: '100%', mb: 3 }}>
         <Typography variant="h5" sx={{ fontWeight: 700, color: '#7c4dff', mb: 2 }}>
-          אירועים קרובים
+          {filteredEvents.length > 0 ? 'הרשמה לאירוע' : 'לא נבחר אירוע'}
         </Typography>
         <Stack spacing={2}>
-          {events
-            .filter(e => new Date(e.date) >= new Date())
-            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-            .map(event => (
-              <Card key={event.id} sx={{
-                background: 'linear-gradient(90deg, #ede7f6 0%, #e3f2fd 100%)',
-                borderRadius: 3,
-                boxShadow: 2,
-                p: 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-                <Box>
-                  <Typography variant="h6">{event.title}</Typography>
+          {filteredEvents.map(event => (
+            <Card key={event.id} sx={{
+              background: 'linear-gradient(90deg, #ede7f6 0%, #e3f2fd 100%)',
+              borderRadius: 3,
+              boxShadow: 2,
+              p: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+              <Box>
+                <Typography variant="h6">{event.title}</Typography>
+                <Typography color="text.secondary">
+                  {new Date(event.date).toLocaleDateString('he-IL')}
+                </Typography>
+                <Typography color="text.secondary">
+                  📍 {event.location}
+                </Typography>
+                {event.price && (
                   <Typography color="text.secondary">
-                    {new Date(event.date).toLocaleDateString('he-IL')}
+                    💸 מחיר: {event.price} CZK
                   </Typography>
-                  <Typography color="text.secondary">
-                    📍 {event.location}
-                  </Typography>
-                  {event.price && (
-                    <Typography color="text.secondary">
-                      💸 מחיר: {event.price} CZK
-                    </Typography>
-                  )}
-                </Box>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  sx={{
-                    borderRadius: 99,
-                    fontWeight: 700,
-                    px: 3,
-                    py: 1,
-                    background: 'linear-gradient(90deg, #7c4dff 0%, #00bcd4 100%)',
-                    color: '#fff',
-                    boxShadow: 2,
-                    '&:hover': {
-                      background: 'linear-gradient(90deg, #1976d2 0%, #00bcd4 100%)',
-                    },
-                  }}
-                  onClick={() => handleRegisterToEvent(event.id)}
-                  disabled={
-                    !currentParticipant ||
-                    (currentParticipant.registeredEvents || []).includes(event.id)
-                  }
-                >
-                  {(currentParticipant && (currentParticipant.registeredEvents || []).includes(event.id))
-                    ? 'נרשמת'
-                    : 'להרשמה'}
-                </Button>
-              </Card>
-            ))}
+                )}
+              </Box>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{
+                  borderRadius: 99,
+                  fontWeight: 700,
+                  px: 3,
+                  py: 1,
+                  background: 'linear-gradient(90deg, #7c4dff 0%, #00bcd4 100%)',
+                  color: '#fff',
+                  boxShadow: 2,
+                  '&:hover': {
+                    background: 'linear-gradient(90deg, #1976d2 0%, #00bcd4 100%)',
+                  },
+                }}
+                onClick={() => handleRegisterToEvent(event.id)}
+                disabled={
+                  !currentParticipant ||
+                  (currentParticipant.registeredEvents || []).includes(event.id)
+                }
+              >
+                {(currentParticipant && (currentParticipant.registeredEvents || []).includes(event.id))
+                  ? 'נרשמת'
+                  : 'להרשמה'}
+              </Button>
+            </Card>
+          ))}
         </Stack>
       </Box>
 
