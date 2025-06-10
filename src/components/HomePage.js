@@ -2,8 +2,6 @@ import React from 'react';
 import { Box, Typography, Button, Stack, Alert, Card, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import LoginIcon from '@mui/icons-material/Login';
 import GroupIcon from '@mui/icons-material/Group';
 import { useEvents } from '../context/EventsContext';
 
@@ -110,7 +108,7 @@ const HomePage = () => {
           ))}
         </Stack>
       </Box>
-      {/* כפתורי ניווט נוספים */}
+      {/* כפתורי ניווט בלבד */}
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         spacing={2}
@@ -174,66 +172,6 @@ const HomePage = () => {
           }}
         >
           כניסת חבר קהילה
-        </Button>
-        <Button
-          variant="outlined"
-          color="success"
-          size="large"
-          startIcon={<PersonAddAlt1Icon />}
-          onClick={() => navigate('/signup')}
-          sx={{
-            px: { xs: 2, sm: 5 },
-            py: { xs: 1.5, sm: 2 },
-            fontWeight: 700,
-            borderWidth: 2,
-            borderRadius: 99,
-            fontFamily: 'Heebo, Assistant, sans-serif',
-            fontSize: { xs: '1rem', sm: '1.1rem' },
-            borderColor: '#64B5F6',
-            color: '#1976d2',
-            background: '#fff',
-            boxShadow: '0 2px 12px 0 #64B5F655',
-            width: { xs: '100%', sm: 'auto' },
-            transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s',
-            '&:hover': {
-              transform: 'scale(1.04)',
-              boxShadow: '0 4px 20px 0 #64B5F699',
-              borderColor: '#42A5F5',
-              background: '#E3F2FD',
-            },
-          }}
-        >
-          יצירת חשבון חדש
-        </Button>
-        <Button
-          variant="outlined"
-          color="info"
-          size="large"
-          startIcon={<LoginIcon />}
-          onClick={() => navigate('/login')}
-          sx={{
-            px: { xs: 2, sm: 5 },
-            py: { xs: 1.5, sm: 2 },
-            fontWeight: 700,
-            borderWidth: 2,
-            borderRadius: 99,
-            fontFamily: 'Heebo, Assistant, sans-serif',
-            fontSize: { xs: '1rem', sm: '1.1rem' },
-            borderColor: '#64B5F6',
-            color: '#1976d2',
-            background: '#fff',
-            boxShadow: '0 2px 12px 0 #64B5F655',
-            width: { xs: '100%', sm: 'auto' },
-            transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s',
-            '&:hover': {
-              transform: 'scale(1.04)',
-              boxShadow: '0 4px 20px 0 #64B5F699',
-              borderColor: '#42A5F5',
-              background: '#E3F2FD',
-            },
-          }}
-        >
-          התחברות לחשבון קיים
         </Button>
       </Stack>
       <Box sx={{ mt: { xs: 2, sm: 4 } }}>
