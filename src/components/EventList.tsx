@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import { useEvents } from '../context/EventsContext';
+import FeedbackForm from './FeedbackForm';
 
 interface FormData {
   title: string;
@@ -40,6 +41,7 @@ const EventList = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editingEvent, setEditingEvent] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [feedbackOpen, setFeedbackOpen] = useState<{ [eventId: string]: boolean }>({});
 
   const handleSubmit = () => {
     if (!formData.title.trim() || !formData.date) return;
@@ -79,6 +81,14 @@ const EventList = () => {
     setOpenDialog(false);
     setEditingEvent(null);
     setFormData(initialFormData);
+  };
+
+  const handleOpenFeedback = (eventId: string) => {
+    setFeedbackOpen((prev) => ({ ...prev, [eventId]: true }));
+  };
+
+  const handleCloseFeedback = (eventId: string) => {
+    setFeedbackOpen((prev) => ({ ...prev, [eventId]: false }));
   };
 
   return (
@@ -143,6 +153,30 @@ const EventList = () => {
                 <IconButton onClick={() => deleteEvent(event.id)} color="error">
                   <DeleteIcon />
                 </IconButton>
+                {/* Feedback button */}
+                <Button
+                  variant="outlined"
+                  color="info"
+                  size="small"
+                  sx={{ mt: 1 }}
+                  onClick={() => handleOpenFeedback(event.id)}
+                >
+                  משוב
+                </Button>
+                <Dialog
+                  open={!!feedbackOpen[event.id]}
+                  onClose={() => handleCloseFeedback(event.id)}
+                  maxWidth="sm"
+                  fullWidth
+                >
+                  <DialogTitle>משוב על האירוע: {event.title}</DialogTitle>
+                  <DialogContent>
+                    <FeedbackForm />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => handleCloseFeedback(event.id)}>סגור</Button>
+                  </DialogActions>
+                </Dialog>
               </Box>
             </Box>
           </CardContent>

@@ -20,13 +20,12 @@ const HomePage = () => {
         py: { xs: 4, sm: 8 },
         position: 'relative',
         overflow: 'hidden',
-        borderRadius: 6,
-        boxShadow: 6,
-        border: '3px solid #64B5F6',
-        background: 'linear-gradient(135deg, #e3f2fd 0%, #f8fafc 100%)',
-        animation: 'bgMove 10s ease-in-out infinite alternate',
-        transition: 'background 1s',
+        borderRadius: 8,
+        boxShadow: 8,
+        border: '2px solid #ffb74d',
+        background: 'linear-gradient(135deg, #ffe0b2 0%, #ffd1dc 50%, #fffde7 100%)',
         zIndex: 1,
+        transition: 'background 1s',
       }}
     >
       <Typography
@@ -36,13 +35,12 @@ const HomePage = () => {
           mb: 2,
           letterSpacing: 1,
           fontFamily: 'Heebo, Assistant, sans-serif',
-          background: 'linear-gradient(90deg, #1976d2 10%, #42A5F5 60%, #64B5F6 100%)',
+          background: 'linear-gradient(90deg, #ff9800 10%, #ffb74d 60%, #ff80ab 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
-          textShadow: '0 2px 12px #90caf9',
+          textShadow: '0 2px 12px #ffd180',
           zIndex: 2,
           position: 'relative',
-          animation: 'titleFadeIn 1.2s cubic-bezier(0.4,0,0.2,1)',
         }}
       >
         ברוכים הבאים למערכת ניהול האירועים של YJCC
@@ -51,13 +49,12 @@ const HomePage = () => {
         variant="h5"
         sx={{
           mb: 4,
-          color: '#2C3E50',
-          opacity: 0.85,
+          color: '#ad1457',
+          opacity: 0.92,
           zIndex: 2,
           position: 'relative',
           fontWeight: 500,
           fontFamily: 'Assistant, Heebo, sans-serif',
-          animation: 'fadeIn 1.5s',
         }}
       >
         מערכת ניהול אירועים לקהילה הישראלית הצעירה בפראג
@@ -81,13 +78,16 @@ const HomePage = () => {
             borderRadius: 99,
             fontFamily: 'Heebo, Assistant, sans-serif',
             fontSize: '1.1rem',
-            boxShadow: 2,
+            boxShadow: '0 4px 24px 0 #ffb74d55',
             letterSpacing: 1,
-            transition: 'transform 0.2s, box-shadow 0.2s',
+            background: 'linear-gradient(90deg, #ff9800 0%, #ffb74d 100%)',
+            color: '#fff',
+            border: 'none',
+            transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
             '&:hover': {
               transform: 'scale(1.07)',
-              boxShadow: 6,
-              background: 'linear-gradient(90deg, #64B5F6 0%, #1976d2 100%)',
+              boxShadow: '0 6px 32px 0 #ffb74d99',
+              background: 'linear-gradient(90deg, #ffa726 0%, #ff80ab 100%)',
             },
           }}
         >
@@ -107,13 +107,16 @@ const HomePage = () => {
             borderRadius: 99,
             fontFamily: 'Heebo, Assistant, sans-serif',
             fontSize: '1.1rem',
-            transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
-            boxShadow: 1,
+            borderColor: '#ffb74d',
+            color: '#ad1457',
+            background: '#fffde7',
+            boxShadow: '0 2px 12px 0 #ffd18055',
+            transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s',
             '&:hover': {
               transform: 'scale(1.07)',
-              boxShadow: 4,
-              borderColor: '#388e3c',
-              background: '#e8f5e9',
+              boxShadow: '0 4px 20px 0 #ffb74d99',
+              borderColor: '#ff80ab',
+              background: '#ffe0b2',
             },
           }}
         >
@@ -133,36 +136,22 @@ const HomePage = () => {
             borderRadius: 99,
             fontFamily: 'Heebo, Assistant, sans-serif',
             fontSize: '1.1rem',
-            transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
-            boxShadow: 1,
+            borderColor: '#ffb74d',
+            color: '#1976d2',
+            background: '#fffde7',
+            boxShadow: '0 2px 12px 0 #ffd18055',
+            transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s',
             '&:hover': {
               transform: 'scale(1.07)',
-              boxShadow: 4,
-              borderColor: '#0288d1',
-              background: '#e3f2fd',
+              boxShadow: '0 4px 20px 0 #ffb74d99',
+              borderColor: '#ff80ab',
+              background: '#ffe0b2',
             },
           }}
         >
           התחברות לחשבון קיים
         </Button>
       </Stack>
-      <Box sx={{ mt: 5, zIndex: 2, position: 'relative' }}>
-        <Typography variant="subtitle1" sx={{ mb: 1 }}>
-          בחרו פעולה:
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          כניסת מנהלים - ניהול אירועים, משתתפים וסטטיסטיקות
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          יצירת חשבון - הרשמה חדשה למערכת
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          התחברות לחשבון קיים
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          כל המחירים מוצגים ב-קרונות צ'כיות (CZK)
-        </Typography>
-      </Box>
       <Box sx={{ mt: 4 }}>
         <Alert severity={isOnline ? 'success' : 'warning'}>
           {isOnline
@@ -170,22 +159,10 @@ const HomePage = () => {
             : 'אין חיבור לאינטרנט - הנתונים לא יסונכרנו!'}
         </Alert>
       </Box>
-      {/* Animation keyframes and dynamic background */}
+      {/* Animation keyframes and font import */}
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Assistant:wght@400;700&display=swap');
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px);}
-            to { opacity: 1; transform: translateY(0);}
-          }
-          @keyframes titleFadeIn {
-            from { opacity: 0; letter-spacing: 0.5em; }
-            to { opacity: 1; letter-spacing: 0.03em; }
-          }
-          @keyframes bgMove {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-          }
         `}
       </style>
     </Box>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Paper, Typography, Box, TextField, Button, Snackbar } from '@mui/material';
 
-function FeedbackForm() {
+function FeedbackForm({ eventId }) {
   const [feedback, setFeedback] = useState({
     rating: '',
     comments: '',
@@ -11,7 +11,7 @@ function FeedbackForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle feedback submission
-    console.log('Feedback submitted:', feedback);
+    console.log('Feedback submitted:', { ...feedback, eventId });
     setSnackbarOpen(true);
     setFeedback({ rating: '', comments: '' });
   };
