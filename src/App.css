@@ -23,9 +23,10 @@
 
 body {
   direction: rtl;
-  background: var(--background-gradient);
+  background: linear-gradient(135deg, #E3F2FD 0%, #FFFFFF 100%);
   min-height: 100vh;
   color: var(--text-primary);
+  font-family: 'Assistant', 'Heebo', 'Rubik', sans-serif;
 }
 
 /* MUI Component Overrides */
@@ -495,6 +496,11 @@ body {
   .dialog-title {
     font-size: 1.5rem;
   }
+
+  .MuiContainer-root {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+  }
 }
 
 /* RTL Support */
@@ -557,4 +563,70 @@ body {
     animation: none !important;
     transition: none !important;
   }
-} 
+}
+
+.MuiPaper-root, .MuiCard-root {
+  border-radius: 20px !important;
+  box-shadow: 0 8px 32px rgba(100, 181, 246, 0.15) !important;
+  background: rgba(255,255,255,0.95) !important;
+}
+
+.MuiButton-containedPrimary {
+  background: linear-gradient(90deg, #64B5F6 0%, #42A5F5 100%) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px rgba(100, 181, 246, 0.15) !important;
+}
+
+.MuiButton-outlinedPrimary {
+  border: 2px solid #64B5F6 !important;
+  color: #1976d2 !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+}
+
+.MuiTextField-root {
+  border-radius: 12px !important;
+  background: rgba(255,255,255,0.8) !important;
+}
+
+.MuiContainer-root {
+  padding-top: 32px !important;
+  padding-bottom: 32px !important;
+}
+
+/* Add a soft shadow to all cards and dialogs */
+.MuiCard-root, .MuiDialog-paper {
+  box-shadow: 0 8px 32px rgba(100, 181, 246, 0.18) !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,0.97) !important;
+}
+
+/* Add a gradient background to main containers */
+.MuiContainer-root {
+  background: linear-gradient(135deg, #E3F2FD 0%, #FFFFFF 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(100, 181, 246, 0.10);
+  padding: 32px !important;
+}
+
+/* Enhance button appearance */
+.MuiButton-containedPrimary, .MuiButton-contained {
+  background: linear-gradient(90deg, #64B5F6 0%, #42A5F5 100%) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px rgba(100, 181, 246, 0.15) !important;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.MuiButton-containedPrimary:hover, .MuiButton-contained:hover {
+  background: linear-gradient(90deg, #42A5F5 0%, #64B5F6 100%) !important;
+  box-shadow: 0 8px 24px rgba(100, 181, 246, 0.18) !important;
+}
+
+/* Add a subtle hover effect to cards */
+.MuiCard-root:hover {
+  transform: scale(1.015);
+  box-shadow: 0 12px 32px rgba(100, 181, 246, 0.22) !important;
+}
