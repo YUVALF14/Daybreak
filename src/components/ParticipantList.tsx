@@ -20,13 +20,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useWhatsApp } from '../context/WhatsAppContext';
+import { useEvents } from '../context/EventsContext';
 import { useNavigate } from 'react-router-dom';
+import { database } from '../config/firebase';
+import { ref, set, push, onValue, off } from 'firebase/database';
 
 interface Participant {
   id: string;
   name: string;
   phone: string;
   email: string;
+  registeredEvents?: string[];
 }
 
 const getInitialParticipant = () => {
@@ -38,11 +42,8 @@ const getInitialParticipant = () => {
 };
 
 const ParticipantList = () => {
-  const [participants, setParticipants] = useState<Participant[]>(() => {
-    const saved = localStorage.getItem('participants');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(() => getInitialParticipant());
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
   const [formData, setFormData] = useState({ name: '', phone: '', email: '' });
@@ -50,11 +51,41 @@ const ParticipantList = () => {
   const [success, setSuccess] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { sendMessage, isLoading } = useWhatsApp();
+  const { events } = useEvents();
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.setItem('participants', JSON.stringify(participants));
-  }, [participants]);
+    const participantsRef = ref(database, 'participants');
+    const handleValue = (snapshot: any) => {
+      const data = snapshot.val();
+      if (!data) {
+        setParticipants([]);
+        return;
+      }
+      const arr = Object.entries(data).map(([id, value]: [string, any]) => ({
+        id,
+        ...value,
+      }));
+      setParticipants(arr);
+    };
+    onValue(participantsRef, handleValue);
+    return () => off(participantsRef, 'value', handleValue);
+  }, []);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('participant');
+    if (stored) {
+      const { phone } = JSON.parse(stored);
+      if (phone) {
+        const participantRef = ref(database, `participants/${phone}`);
+        onValue(participantRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) setCurrentParticipant({ id: phone, ...data });
+        });
+        return () => off(participantRef);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (currentParticipant) {
@@ -89,18 +120,19 @@ const ParticipantList = () => {
       }
       // Add participant
       const newParticipant: Participant = {
-        id: Date.now().toString(),
-        ...formData
+        id: formData.phone,
+        ...formData,
+        registeredEvents: [],
       };
-      setParticipants([...participants, newParticipant]);
+      await set(ref(database, `participants/${formData.phone}`), newParticipant);
       setCurrentParticipant(newParticipant);
+      setSuccess(true);
+      setOpenDialog(false);
+      setFormData({ name: '', phone: '', email: '' });
       await sendMessage(
         formData.phone,
         `שלום ${formData.name}! תודה על ההרשמה לאירוע. נשמח לראותך! 🌟`
       );
-      setOpenDialog(false);
-      setFormData({ name: '', phone: '', email: '' });
-      setSuccess(true);
     } catch (err) {
       setError('אירעה שגיאה בתהליך ההרשמה');
     }
@@ -138,6 +170,27 @@ const ParticipantList = () => {
   const handleLogout = () => {
     localStorage.removeItem('participant');
     navigate('/');
+  };
+
+  // הרשמת משתתף לאירוע (עדכון ב-Firebase)
+  const handleRegisterToEvent = async (eventId: string) => {
+    if (!currentParticipant) return;
+    // עדכן את רשימת האירועים של המשתתף
+    const updatedEvents = [
+      ...(currentParticipant.registeredEvents || []),
+      eventId,
+    ];
+    await set(ref(database, `participants/${currentParticipant.id}/registeredEvents`), updatedEvents);
+    // הוסף את המשתתף לאירוע ב-Firebase
+    await set(
+      ref(database, `events/${eventId}/participants/${currentParticipant.id}`),
+      {
+        name: currentParticipant.name,
+        phone: currentParticipant.phone,
+        email: currentParticipant.email,
+      }
+    );
+    setSuccess(true);
   };
 
   return (
@@ -296,6 +349,69 @@ const ParticipantList = () => {
         </IconButton>
       </Card>
 
+      {/* אירועים קרובים למשתתף */}
+      <Box sx={{ width: '100%', mb: 3 }}>
+        <Typography variant="h5" sx={{ fontWeight: 700, color: '#7c4dff', mb: 2 }}>
+          אירועים קרובים
+        </Typography>
+        <Stack spacing={2}>
+          {events
+            .filter(e => new Date(e.date) >= new Date())
+            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+            .map(event => (
+              <Card key={event.id} sx={{
+                background: 'linear-gradient(90deg, #ede7f6 0%, #e3f2fd 100%)',
+                borderRadius: 3,
+                boxShadow: 2,
+                p: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+                <Box>
+                  <Typography variant="h6">{event.title}</Typography>
+                  <Typography color="text.secondary">
+                    {new Date(event.date).toLocaleDateString('he-IL')}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    📍 {event.location}
+                  </Typography>
+                  {event.price && (
+                    <Typography color="text.secondary">
+                      💸 מחיר: {event.price} CZK
+                    </Typography>
+                  )}
+                </Box>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    borderRadius: 99,
+                    fontWeight: 700,
+                    px: 3,
+                    py: 1,
+                    background: 'linear-gradient(90deg, #7c4dff 0%, #00bcd4 100%)',
+                    color: '#fff',
+                    boxShadow: 2,
+                    '&:hover': {
+                      background: 'linear-gradient(90deg, #1976d2 0%, #00bcd4 100%)',
+                    },
+                  }}
+                  onClick={() => handleRegisterToEvent(event.id)}
+                  disabled={
+                    !currentParticipant ||
+                    (currentParticipant.registeredEvents || []).includes(event.id)
+                  }
+                >
+                  {(currentParticipant && (currentParticipant.registeredEvents || []).includes(event.id))
+                    ? 'נרשמת'
+                    : 'להרשמה'}
+                </Button>
+              </Card>
+            ))}
+        </Stack>
+      </Box>
+
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, width: '100%' }}>
         <Typography variant="h5" component="h1" sx={{ fontWeight: 700, color: '#1976d2' }}>
           רשימת משתתפים
@@ -327,131 +443,129 @@ const ParticipantList = () => {
             borderRadius: { xs: 2, sm: 3 },
             boxShadow: 2,
             transition: 'transform 0.2s, box-shadow 0.2s',
-            '&:hover': { transform: 'scale(1.02)', boxShadow: 4 },
+            '&:hover': { transform: 'scale(1.02)', boxShadow: 3 },
+            p: 2,
             display: 'flex',
             alignItems: 'center',
-            px: 2,
-            minHeight: { xs: 70, sm: 90 },
+            justifyContent: 'space-between',
           }}>
-            <Avatar sx={{ bgcolor: '#90CAF9', width: 40, height: 40, mr: 2 }}>
-              {participant.name?.[0] || <PersonIcon />}
-            </Avatar>
-            <CardContent sx={{ flex: 1 }}>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>{participant.name}</Typography>
-              <Typography color="text.secondary">{participant.phone}</Typography>
-              {participant.email && (
-                <Typography color="text.secondary">{participant.email}</Typography>
-              )}
-            </CardContent>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar sx={{ bgcolor: '#64B5F6', width: 56, height: 56, mr: 2 }}>
+                {participant.name[0]}
+              </Avatar>
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  {participant.name}
+                </Typography>
+                <Typography color="text.secondary" sx={{ fontSize: '0.875rem' }}>
+                  {participant.phone}
+                </Typography>
+                <Typography color="text.secondary" sx={{ fontSize: '0.875rem' }}>
+                  {participant.email}
+                </Typography>
+              </Box>
+            </Box>
             <Button
-              color="error"
-              onClick={() =>
-                setParticipants(participants.filter(p => p.id !== participant.id))
-              }
+              variant="contained"
+              color="primary"
               sx={{
-                mt: 1,
-                fontWeight: 600,
                 borderRadius: 8,
-                transition: 'transform 0.2s',
-                '&:hover': { transform: 'scale(1.08)' },
+                fontWeight: 600,
+                px: 3,
+                py: 1,
+                height: 40,
+                minWidth: 100,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  boxShadow: 3,
+                },
+              }}
+              onClick={() => {
+                setCurrentParticipant(participant);
+                setOpenDialog(true);
               }}
             >
-              מחק
+              <PersonIcon sx={{ mr: 1 }} />
+              פרטים
             </Button>
           </Card>
         ))}
       </Stack>
 
-      {/* Registration Dialog */}
+      {/* דיאלוג להרשמה/עריכת פרטים */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>הרשמת משתתף חדש</DialogTitle>
+        <DialogTitle>
+          {currentParticipant ? 'ערוך פרטים' : 'הרשמה חדשה'}
+        </DialogTitle>
         <DialogContent>
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-          <TextField
-            autoFocus
-            margin="dense"
-            label="שם מלא"
-            fullWidth
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="טלפון"
-            fullWidth
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="אימייל"
-            type="email"
-            fullWidth
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          />
+          <Stack spacing={2}>
+            {error && (
+              <Alert severity="error" onClose={() => setError(null)}>
+                {error}
+              </Alert>
+            )}
+            {success && (
+              <Alert severity="success" onClose={() => setSuccess(false)}>
+                {currentParticipant ? 'הפרטים עודכנו בהצלחה!' : 'ההרשמה בוצעה בהצלחה!'}
+              </Alert>
+            )}
+            <TextField
+              label="שם מלא"
+              variant="outlined"
+              fullWidth
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              disabled={isLoading}
+            />
+            <TextField
+              label="טלפון"
+              variant="outlined"
+              fullWidth
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              disabled={isLoading}
+            />
+            <TextField
+              label="אימייל (אופציונלי)"
+              variant="outlined"
+              fullWidth
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              disabled={isLoading}
+            />
+          </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>ביטול</Button>
+          <Button onClick={() => setOpenDialog(false)} color="inherit">
+            ביטול
+          </Button>
           <Button
-            onClick={handleRegister}
+            onClick={currentParticipant ? handleSaveProfile : handleRegister}
+            color="primary"
             variant="contained"
             disabled={isLoading}
           >
-            {isLoading ? 'שולח...' : 'הרשמה'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Edit Profile Dialog */}
-      <Dialog open={editProfile} onClose={() => setEditProfile(false)}>
-        <DialogTitle>עריכת פרופיל</DialogTitle>
-        <DialogContent>
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-          <TextField
-            autoFocus
-            margin="dense"
-            label="שם מלא"
-            fullWidth
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="טלפון"
-            fullWidth
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="אימייל"
-            type="email"
-            fullWidth
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setEditProfile(false)}>ביטול</Button>
-          <Button
-            onClick={handleSaveProfile}
-            variant="contained"
-          >
-            שמור
+            {isLoading ? 'שומר...' : currentParticipant ? 'שמור פרופיל' : 'הרשמה'}
           </Button>
         </DialogActions>
       </Dialog>
 
       <Snackbar
-        open={success}
-        autoHideDuration={3000}
+        open={Boolean(success)}
+        autoHideDuration={6000}
         onClose={() => setSuccess(false)}
-        message="ההרשמה בוצעה בהצלחה!"
-      />
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSuccess(false)} severity="success" sx={{ width: '100%' }}>
+          {currentParticipant ? 'הפרטים עודכנו בהצלחה!' : 'ההרשמה בוצעה בהצלחה!'}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
 
 export default ParticipantList;
-// הוסף הצגה של מחיר/סבסוד/תקציב אם תרצה, לדוג' מתחת לנתוני המשתתף או האירוע

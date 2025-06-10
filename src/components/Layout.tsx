@@ -24,7 +24,7 @@ const Layout: React.FC<LayoutProps> = () => {
         position="static"
         color="primary"
         sx={{
-          background: 'linear-gradient(90deg, #64B5F6 0%, #42A5F5 100%)',
+          background: 'linear-gradient(90deg, #7c4dff 0%, #1976d2 100%)',
           boxShadow: 3,
           px: { xs: 1, sm: 3 },
         }}
@@ -76,10 +76,10 @@ const Layout: React.FC<LayoutProps> = () => {
         component="footer"
         sx={{
           py: 3,
-          bgcolor: 'background.paper',
+          bgcolor: '#ede7f6',
           textAlign: 'center',
           mt: 'auto',
-          opacity: 0.8,
+          opacity: 0.92,
         }}
       >
         <Typography variant="body2" color="text.secondary">

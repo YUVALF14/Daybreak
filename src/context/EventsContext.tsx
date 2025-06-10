@@ -1,4 +1,14 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { database } from '../config/firebase';
+import {
+  ref,
+  onValue,
+  push,
+  set,
+  update,
+  remove,
+  off,
+} from 'firebase/database';
 
 interface Event {
   id: string;
@@ -9,46 +19,54 @@ interface Event {
   maxParticipants?: number;
   price?: number;
   subsidy?: number;
+  [key: string]: any;
 }
 
 interface EventsContextType {
   events: Event[];
-  addEvent: (event: Omit<Event, 'id'>) => void;
-  updateEvent: (id: string, event: Partial<Event>) => void;
-  deleteEvent: (id: string) => void;
+  addEvent: (event: Omit<Event, 'id'>) => Promise<void>;
+  updateEvent: (id: string, event: Partial<Event>) => Promise<void>;
+  deleteEvent: (id: string) => Promise<void>;
 }
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
-const EVENTS_STORAGE_KEY = 'events';
-
 export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [events, setEvents] = useState<Event[]>(() => {
-    const stored = localStorage.getItem(EVENTS_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
-  }, [events]);
+    const eventsRef = ref(database, 'events');
+    const handleValue = (snapshot: any) => {
+      const data = snapshot.val();
+      if (!data) {
+        setEvents([]);
+        return;
+      }
+      // Convert object to array with id
+      const arr = Object.entries(data).map(([id, value]: [string, any]) => ({
+        id,
+        ...value,
+      }));
+      setEvents(arr);
+    };
+    onValue(eventsRef, handleValue);
+    return () => off(eventsRef, 'value', handleValue);
+  }, []);
 
-  const addEvent = (eventData: Omit<Event, 'id'>) => {
-    setEvents(prevEvents => [
-      ...prevEvents,
-      { id: Date.now().toString(), ...eventData }
-    ]);
+  const addEvent = async (eventData: Omit<Event, 'id'>) => {
+    const eventsRef = ref(database, 'events');
+    const newRef = push(eventsRef);
+    await set(newRef, eventData);
   };
 
-  const updateEvent = (id: string, eventData: Partial<Event>) => {
-    setEvents(prevEvents =>
-      prevEvents.map(event =>
-        event.id === id ? { ...event, ...eventData } : event
-      )
-    );
+  const updateEvent = async (id: string, eventData: Partial<Event>) => {
+    const eventRef = ref(database, `events/${id}`);
+    await update(eventRef, eventData);
   };
 
-  const deleteEvent = (id: string) => {
-    setEvents(prevEvents => prevEvents.filter(event => event.id !== id));
+  const deleteEvent = async (id: string) => {
+    const eventRef = ref(database, `events/${id}`);
+    await remove(eventRef);
   };
 
   return (

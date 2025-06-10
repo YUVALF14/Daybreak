@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Paper, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { database } from '../config/firebase';
+import { ref, set } from 'firebase/database';
 
 const ParticipantLogin = () => {
   const [phone, setPhone] = useState('');
@@ -8,7 +10,7 @@ const ParticipantLogin = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!/^05\d{8}$/.test(phone)) {
       setError('מספר טלפון לא תקין');
@@ -18,7 +20,8 @@ const ParticipantLogin = () => {
       setError('נא למלא שם מלא');
       return;
     }
-    // Save to localStorage or context if needed
+    // Save to Firebase
+    await set(ref(database, `participants/${phone}`), { name, phone });
     localStorage.setItem('participant', JSON.stringify({ name, phone }));
     navigate('/participant-list');
   };

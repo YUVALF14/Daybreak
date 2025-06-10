@@ -20,9 +20,9 @@ const Dashboard = () => {
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <Card sx={{ height: '100%' }}>
+          <Card sx={{ height: '100%', background: 'linear-gradient(90deg, #ede7f6 0%, #e3f2fd 100%)', borderRadius: 5, boxShadow: 4 }}>
             <CardContent>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant="h5" gutterBottom sx={{ color: '#7c4dff', fontWeight: 800 }}>
                 אירועים קרובים ✨
               </Typography>
               {upcomingEvents.length > 0 ? (
@@ -44,7 +44,7 @@ const Dashboard = () => {
                 variant="outlined"
                 color="primary"
                 onClick={() => navigate('/events')}
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, borderRadius: 99, fontWeight: 700, borderColor: '#7c4dff', color: '#7c4dff' }}
                 aria-label="לכל האירועים"
               >
                 לכל האירועים
@@ -54,9 +54,9 @@ const Dashboard = () => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Card sx={{ height: '100%' }}>
+          <Card sx={{ height: '100%', background: 'linear-gradient(90deg, #e3f2fd 0%, #ede7f6 100%)', borderRadius: 5, boxShadow: 4 }}>
             <CardContent>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant="h5" gutterBottom sx={{ color: '#1976d2', fontWeight: 800 }}>
                 פעולות מהירות 🚀
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -65,6 +65,7 @@ const Dashboard = () => {
                   color="primary"
                   onClick={() => navigate('/events')}
                   aria-label="יצירת אירוע חדש"
+                  sx={{ borderRadius: 99, fontWeight: 700, background: 'linear-gradient(90deg, #7c4dff 0%, #1976d2 100%)' }}
                 >
                   יצירת אירוע חדש
                 </Button>
@@ -73,6 +74,7 @@ const Dashboard = () => {
                   color="secondary"
                   onClick={() => navigate('/participants')}
                   aria-label="הוספת משתתף"
+                  sx={{ borderRadius: 99, fontWeight: 700, background: 'linear-gradient(90deg, #00bcd4 0%, #7c4dff 100%)' }}
                 >
                   הוספת משתתף
                 </Button>

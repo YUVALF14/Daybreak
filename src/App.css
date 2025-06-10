@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Heebo:wght@400;700;900&display=swap');
 
 :root {
-  --primary: #64B5F6;
-  --primary-dark: #1976d2;
-  --secondary: #90CAF9;
-  --accent: #42A5F5;
+  --primary: #7c4dff;
+  --primary-dark: #4527a0;
+  --secondary: #00bcd4;
+  --accent: #1976d2;
   --success: #4CAF50;
   --warning: #FFA726;
   --danger: #e57373;
