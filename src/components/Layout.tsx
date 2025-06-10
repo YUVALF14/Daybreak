@@ -24,7 +24,7 @@ const Layout: React.FC<LayoutProps> = () => {
         position="static"
         color="primary"
         sx={{
-          background: 'linear-gradient(90deg, #7c4dff 0%, #1976d2 100%)',
+          background: 'linear-gradient(90deg, #1976d2 0%, #64B5F6 100%)',
           boxShadow: 3,
           px: { xs: 1, sm: 3 },
         }}

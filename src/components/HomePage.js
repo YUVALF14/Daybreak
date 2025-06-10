@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import LoginIcon from '@mui/icons-material/Login';
+import GroupIcon from '@mui/icons-material/Group';
 import { useEvents } from '../context/EventsContext';
 
 const HomePage = () => {
@@ -29,8 +30,8 @@ const HomePage = () => {
         overflow: 'hidden',
         borderRadius: { xs: 3, sm: 8 },
         boxShadow: { xs: 3, sm: 8 },
-        border: '2px solid #ffb74d',
-        background: 'linear-gradient(135deg, #ffe0b2 0%, #ffd1dc 50%, #fffde7 100%)',
+        border: '2px solid #64B5F6',
+        background: 'linear-gradient(135deg, #E3F2FD 0%, #FFFFFF 100%)',
         zIndex: 1,
         transition: 'background 1s',
         maxWidth: 600,
@@ -44,10 +45,10 @@ const HomePage = () => {
           mb: { xs: 1, sm: 2 },
           letterSpacing: 1,
           fontFamily: 'Heebo, Assistant, sans-serif',
-          background: 'linear-gradient(90deg, #ff9800 10%, #ffb74d 60%, #ff80ab 100%)',
+          background: 'linear-gradient(90deg, #1976d2 10%, #42A5F5 60%, #64B5F6 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
-          textShadow: '0 2px 12px #ffd180',
+          textShadow: '0 2px 12px #90caf9',
           zIndex: 2,
           position: 'relative',
           fontSize: { xs: '2rem', sm: '2.5rem' },
@@ -59,7 +60,7 @@ const HomePage = () => {
         variant="h5"
         sx={{
           mb: { xs: 2, sm: 4 },
-          color: '#ad1457',
+          color: '#1976d2',
           opacity: 0.92,
           zIndex: 2,
           position: 'relative',
@@ -72,7 +73,7 @@ const HomePage = () => {
       </Typography>
       {/* הצגת אירועים פתוחים להרשמה */}
       <Box sx={{ my: 4 }}>
-        <Typography variant="h6" sx={{ mb: 2, color: '#ff9800', fontWeight: 700 }}>
+        <Typography variant="h6" sx={{ mb: 2, color: '#1976d2', fontWeight: 700 }}>
           אירועים קרובים להרשמה
         </Typography>
         {upcomingEvents.length === 0 && (
@@ -80,9 +81,9 @@ const HomePage = () => {
         )}
         <Stack spacing={2}>
           {upcomingEvents.map(event => (
-            <Card key={event.id} sx={{ background: '#fffde7', borderRadius: 3, boxShadow: 2 }}>
+            <Card key={event.id} sx={{ background: '#fff', borderRadius: 3, boxShadow: 2 }}>
               <CardContent>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1976d2' }}>
                   {event.title}
                 </Typography>
                 <Typography color="text.secondary">
@@ -98,8 +99,8 @@ const HomePage = () => {
                 )}
                 <Button
                   variant="contained"
-                  color="success"
-                  sx={{ mt: 2, borderRadius: 99, fontWeight: 700 }}
+                  color="primary"
+                  sx={{ mt: 2, borderRadius: 99, fontWeight: 700, background: 'linear-gradient(90deg, #1976d2 0%, #64B5F6 100%)' }}
                   onClick={() => navigate(`/participants?eventId=${event.id}`)}
                 >
                   להרשמה
@@ -129,21 +130,50 @@ const HomePage = () => {
             borderRadius: 99,
             fontFamily: 'Heebo, Assistant, sans-serif',
             fontSize: { xs: '1rem', sm: '1.1rem' },
-            boxShadow: '0 4px 24px 0 #ffb74d55',
+            boxShadow: '0 4px 24px 0 #64B5F655',
             letterSpacing: 1,
-            background: 'linear-gradient(90deg, #ff9800 0%, #ffb74d 100%)',
+            background: 'linear-gradient(90deg, #1976d2 0%, #64B5F6 100%)',
             color: '#fff',
             border: 'none',
             width: { xs: '100%', sm: 'auto' },
             transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
             '&:hover': {
               transform: 'scale(1.04)',
-              boxShadow: '0 6px 32px 0 #ffb74d99',
-              background: 'linear-gradient(90deg, #ffa726 0%, #ff80ab 100%)',
+              boxShadow: '0 6px 32px 0 #64B5F699',
+              background: 'linear-gradient(90deg, #42A5F5 0%, #1976d2 100%)',
             },
           }}
         >
           כניסת מנהלים
+        </Button>
+        <Button
+          variant="contained"
+          color="info"
+          size="large"
+          startIcon={<GroupIcon />}
+          onClick={() => navigate('/community')}
+          sx={{
+            px: { xs: 2, sm: 5 },
+            py: { xs: 1.5, sm: 2 },
+            fontWeight: 700,
+            borderRadius: 99,
+            fontFamily: 'Heebo, Assistant, sans-serif',
+            fontSize: { xs: '1rem', sm: '1.1rem' },
+            boxShadow: '0 4px 24px 0 #64B5F655',
+            letterSpacing: 1,
+            background: 'linear-gradient(90deg, #42A5F5 0%, #E3F2FD 100%)',
+            color: '#1976d2',
+            border: 'none',
+            width: { xs: '100%', sm: 'auto' },
+            transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
+            '&:hover': {
+              transform: 'scale(1.04)',
+              boxShadow: '0 6px 32px 0 #64B5F699',
+              background: 'linear-gradient(90deg, #1976d2 0%, #E3F2FD 100%)',
+            },
+          }}
+        >
+          כניסת חבר קהילה
         </Button>
         <Button
           variant="outlined"
@@ -159,17 +189,17 @@ const HomePage = () => {
             borderRadius: 99,
             fontFamily: 'Heebo, Assistant, sans-serif',
             fontSize: { xs: '1rem', sm: '1.1rem' },
-            borderColor: '#ffb74d',
-            color: '#ad1457',
-            background: '#fffde7',
-            boxShadow: '0 2px 12px 0 #ffd18055',
+            borderColor: '#64B5F6',
+            color: '#1976d2',
+            background: '#fff',
+            boxShadow: '0 2px 12px 0 #64B5F655',
             width: { xs: '100%', sm: 'auto' },
             transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s',
             '&:hover': {
               transform: 'scale(1.04)',
-              boxShadow: '0 4px 20px 0 #ffb74d99',
-              borderColor: '#ff80ab',
-              background: '#ffe0b2',
+              boxShadow: '0 4px 20px 0 #64B5F699',
+              borderColor: '#42A5F5',
+              background: '#E3F2FD',
             },
           }}
         >
@@ -189,17 +219,17 @@ const HomePage = () => {
             borderRadius: 99,
             fontFamily: 'Heebo, Assistant, sans-serif',
             fontSize: { xs: '1rem', sm: '1.1rem' },
-            borderColor: '#ffb74d',
+            borderColor: '#64B5F6',
             color: '#1976d2',
-            background: '#fffde7',
-            boxShadow: '0 2px 12px 0 #ffd18055',
+            background: '#fff',
+            boxShadow: '0 2px 12px 0 #64B5F655',
             width: { xs: '100%', sm: 'auto' },
             transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s',
             '&:hover': {
               transform: 'scale(1.04)',
-              boxShadow: '0 4px 20px 0 #ffb74d99',
-              borderColor: '#ff80ab',
-              background: '#ffe0b2',
+              boxShadow: '0 4px 20px 0 #64B5F699',
+              borderColor: '#42A5F5',
+              background: '#E3F2FD',
             },
           }}
         >

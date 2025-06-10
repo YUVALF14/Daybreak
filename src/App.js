@@ -42,6 +42,7 @@ import Dashboard from './components/Dashboard';
 import EventList from './components/EventList';
 import Signup from './components/Signup'; // צור קובץ זה
 import Login from './components/Login';   // צור קובץ זה
+import CommunityEvents from './components/CommunityEvents'; // צור קובץ זה
 import './App.css';
 
 // Branding colors
@@ -120,6 +121,7 @@ function App() {
               )
             }
           />
+          <Route path="community" element={<CommunityEvents />} />
           <Route path="participants" element={<ParticipantLogin />} />
           <Route path="participant-list" element={<ParticipantList />} />
           <Route path="dashboard" element={<Dashboard />} />

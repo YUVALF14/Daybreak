@@ -4,22 +4,30 @@ export const theme = createTheme({
   direction: 'rtl',
   palette: {
     primary: {
-      main: '#FF6B6B',
-      light: '#FF8E8E',
-      dark: '#FF4848',
+      main: '#1976d2',
+      light: '#64B5F6',
+      dark: '#1565c0',
     },
     secondary: {
-      main: '#4ECDC4',
-      light: '#71D7D0',
-      dark: '#3DBEB6',
+      main: '#42A5F5',
+      light: '#90CAF9',
+      dark: '#1976d2',
     },
     background: {
-      default: '#F7F7F7',
+      default: '#E3F2FD',
       paper: '#FFFFFF',
+    },
+    info: {
+      main: '#64B5F6',
+      light: '#E3F2FD',
+      dark: '#1976d2',
+    },
+    success: {
+      main: '#4CAF50',
     },
   },
   typography: {
-    fontFamily: 'Assistant, Roboto, sans-serif',
+    fontFamily: 'Assistant, Heebo, Roboto, sans-serif',
     h1: {
       fontSize: '2.5rem',
       fontWeight: 700,
@@ -51,9 +59,9 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          boxShadow: '0 4px 6px rgba(25, 118, 210, 0.08)',
         },
       },
     },
   },
-}); 
+});
