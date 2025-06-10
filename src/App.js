@@ -104,11 +104,11 @@ function App() {
 
   return (
     <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
           <Route
-            path="/admin-login"
+            path="admin-login"
             element={
               adminAuthenticated ? (
                 <EventDashboard />
@@ -117,15 +117,13 @@ function App() {
               )
             }
           />
-          <Route path="/participants" element={<ParticipantLogin />} />
-          <Route path="/participant-list" element={<ParticipantList />} />
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="events" element={<EventList />} />
-            <Route path="participants" element={<ParticipantList />} />
-          </Route>
-        </Routes>
-      </Layout>
+          <Route path="participants" element={<ParticipantLogin />} />
+          <Route path="participant-list" element={<ParticipantList />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="events" element={<EventList />} />
+          {/* Add other routes as needed */}
+        </Route>
+      </Routes>
     </Router>
   );
 }
