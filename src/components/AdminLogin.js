@@ -30,7 +30,7 @@ function AdminLogin({ onLogin }) {
     <Box
       sx={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #E3F2FD 0%, #FFFFFF 100%)',
+        background: 'radial-gradient(ellipse at 80% 10%, #e3f2fd 0%, #fff 80%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -39,17 +39,18 @@ function AdminLogin({ onLogin }) {
     >
       <Container component="main" maxWidth="xs">
         <Paper
-          elevation={6}
+          elevation={8}
           sx={{
             p: 5,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             background: 'rgba(255, 255, 255, 0.97)',
-            borderRadius: 6,
-            boxShadow: 6,
+            borderRadius: 8,
+            boxShadow: 10,
             animation: 'fadeIn 0.7s',
             position: 'relative',
+            border: '2.5px solid #e3f2fd',
           }}
         >
           <Button
@@ -61,8 +62,11 @@ function AdminLogin({ onLogin }) {
               left: 16,
               color: '#1976d2',
               fontWeight: 700,
-              borderRadius: 3,
+              borderRadius: 99,
               background: 'rgba(100,181,246,0.08)',
+              px: 2,
+              py: 0.5,
+              fontSize: '1.1rem',
               '&:hover': { background: 'rgba(100,181,246,0.18)' },
             }}
           >
@@ -72,21 +76,22 @@ function AdminLogin({ onLogin }) {
             sx={{
               m: 1,
               bgcolor: '#64B5F6',
-              width: 64,
-              height: 64,
-              boxShadow: 2,
+              width: 72,
+              height: 72,
+              boxShadow: 3,
             }}
           >
-            <LockOutlinedIcon sx={{ fontSize: 40 }} />
+            <LockOutlinedIcon sx={{ fontSize: 44 }} />
           </Avatar>
           <Typography
             component="h1"
             variant="h5"
             sx={{
-              fontWeight: 800,
+              fontWeight: 900,
               mb: 2,
               color: '#1976d2',
               letterSpacing: 1,
+              fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
             }}
           >
             כניסת מנהלים
@@ -111,15 +116,18 @@ function AdminLogin({ onLogin }) {
               error={error}
               helperText={error ? 'קוד מנהל לא תקין' : ''}
               sx={{
-                borderRadius: 2,
-                background: 'rgba(255,255,255,0.8)',
+                borderRadius: 3,
+                background: 'rgba(255,255,255,0.85)',
                 mb: 2,
+                fontWeight: 800,
+                fontSize: '1.2rem',
               }}
               inputProps={{
                 style: {
                   textAlign: 'center',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   letterSpacing: 2,
+                  fontSize: '1.2rem',
                 },
               }}
             />
@@ -131,17 +139,18 @@ function AdminLogin({ onLogin }) {
                 mt: 3,
                 mb: 2,
                 py: 1.5,
-                fontWeight: 700,
-                fontSize: '1.1rem',
-                borderRadius: 3,
+                fontWeight: 800,
+                fontSize: '1.15rem',
+                borderRadius: 99,
                 background:
                   'linear-gradient(90deg, #64B5F6 0%, #1976d2 100%)',
-                boxShadow: 2,
+                boxShadow: 3,
                 transition:
                   'transform 0.2s, box-shadow 0.2s',
+                letterSpacing: 1,
                 '&:hover': {
                   transform: 'scale(1.04)',
-                  boxShadow: 4,
+                  boxShadow: 5,
                   background:
                     'linear-gradient(90deg, #1976d2 0%, #64B5F6 100%)',
                 },

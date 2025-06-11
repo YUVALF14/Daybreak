@@ -22,6 +22,7 @@ import EventIcon from '@mui/icons-material/Event';
 import PlaceIcon from '@mui/icons-material/Place';
 import PeopleIcon from '@mui/icons-material/People';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface FormData {
   title: string;
@@ -48,7 +49,7 @@ const EventList = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editingEvent, setEditingEvent] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [feedbackOpen, setFeedbackOpen] = useState<{ [eventId: string]: boolean }>({});
+  const [feedbackOpen, setFeedbackOpen] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -79,7 +80,6 @@ const EventList = () => {
     setError(null);
     try {
       if (editingEvent) {
-        console.log('Updating event:', editingEvent, formData);
         await updateEvent(editingEvent, {
           ...formData,
           maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
@@ -87,7 +87,6 @@ const EventList = () => {
           subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
         });
       } else {
-        console.log('Creating new event:', formData);
         await addEvent({
           title: formData.title,
           date: formData.date,
@@ -99,14 +98,10 @@ const EventList = () => {
           participants: [],
         });
       }
-      setSubmitting(false); // <-- Ensure this is before handleClose
+      setSubmitting(false);
       handleClose();
-      setTimeout(() => {
-        setError(null);
-      }, 1000);
     } catch (e) {
       setError('אירעה שגיאה ביצירת האירוע');
-      console.error('Event creation error:', e);
       setSubmitting(false);
     }
   };
@@ -126,11 +121,11 @@ const EventList = () => {
   };
 
   const handleOpenFeedback = (eventId: string) => {
-    setFeedbackOpen((prev) => ({ ...prev, [eventId]: true }));
+    setFeedbackOpen((prev) => [...prev, eventId]);
   };
 
   const handleCloseFeedback = (eventId: string) => {
-    setFeedbackOpen((prev) => ({ ...prev, [eventId]: false }));
+    setFeedbackOpen((prev) => prev.filter(id => id !== eventId));
   };
 
   return (
@@ -266,7 +261,7 @@ const EventList = () => {
                       </Button>
                     </Tooltip>
                     <Dialog
-                      open={!!feedbackOpen[event.id]}
+                      open={feedbackOpen.includes(event.id)}
                       onClose={() => handleCloseFeedback(event.id)}
                       maxWidth="sm"
                       fullWidth
@@ -285,18 +280,37 @@ const EventList = () => {
             </Card>
           ))}
 
-          <Dialog open={openDialog} onClose={handleClose}>
-            <DialogTitle>
-              {editingEvent ? 'עריכת אירוע' : 'יצירת אירוע חדש'}
+          <Dialog open={openDialog} onClose={handleClose} maxWidth="sm" fullWidth>
+            <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 0 }}>
+              <Button
+                onClick={handleClose}
+                color="inherit"
+                startIcon={<ArrowBackIcon />}
+                sx={{
+                  minWidth: 0,
+                  px: 1,
+                  position: 'relative',
+                  right: 0,
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  borderRadius: 99,
+                  ml: 2,
+                }}
+                aria-label="חזור"
+              >
+                חזור
+              </Button>
+              <Box sx={{ flexGrow: 1, textAlign: 'center', pr: 4 }}>
+                {editingEvent ? 'עריכת אירוע' : 'יצירת אירוע חדש'}
+              </Box>
             </DialogTitle>
             <DialogContent>
-              {/* Show error if exists */}
               {error && (
                 <Typography color="error" sx={{ mb: 2 }}>
                   {error}
                 </Typography>
               )}
-              <Box component="form" onSubmit={handleSubmit}>
+              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <TextField
                   autoFocus
                   margin="dense"
@@ -321,7 +335,7 @@ const EventList = () => {
                   label="תיאור"
                   fullWidth
                   multiline
-                  rows={4}
+                  rows={3}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
@@ -364,12 +378,13 @@ const EventList = () => {
                       : 0} CZK
                   </Box>
                 )}
-                <DialogActions>
-                  <Button onClick={handleClose}>ביטול</Button>
+                <DialogActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
                   <Button
                     type="submit"
                     variant="contained"
+                    color="primary"
                     disabled={submitting}
+                    sx={{ minWidth: 120, fontWeight: 700, borderRadius: 99 }}
                   >
                     {submitting
                       ? (editingEvent ? 'מעדכן...' : 'יוצר...')
