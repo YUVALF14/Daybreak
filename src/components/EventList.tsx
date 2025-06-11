@@ -285,7 +285,7 @@ const EventList = () => {
             </Card>
           ))}
 
-          <Dialog open={openDialog} onClose={handleClose} fullWidth>
+          <Dialog open={openDialog} onClose={handleClose}>
             <DialogTitle>
               {editingEvent ? 'עריכת אירוע' : 'יצירת אירוע חדש'}
             </DialogTitle>
@@ -296,7 +296,7 @@ const EventList = () => {
                   {error}
                 </Typography>
               )}
-              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <Box component="form" onSubmit={handleSubmit}>
                 <TextField
                   autoFocus
                   margin="dense"
@@ -369,9 +369,11 @@ const EventList = () => {
                   <Button
                     type="submit"
                     variant="contained"
-                    disabled={!formData.title.trim() || !formData.date || submitting}
+                    disabled={submitting}
                   >
-                    {submitting ? 'יוצר...' : editingEvent ? 'עדכון' : 'יצירה'}
+                    {submitting
+                      ? (editingEvent ? 'מעדכן...' : 'יוצר...')
+                      : (editingEvent ? 'עדכון' : 'יצירה')}
                   </Button>
                 </DialogActions>
               </Box>

@@ -37,7 +37,7 @@ function EventDashboard() {
   const handleAddEvent = async (newEvent) => {
     console.log('Adding event:', newEvent);
     // Ensure event has participants array and all required fields
-    await addEvent({ ...newEvent, participants: [] });
+    await addEvent({ ...newEvent, participants: newEvent.participants || [] });
     setOpenEventForm(false);
     setSnackbar({ open: true, message: 'האירוע נוצר בהצלחה' });
   };
@@ -101,6 +101,7 @@ function EventDashboard() {
                 localStorage.removeItem('adminAuthenticated');
                 window.location.href = '/';
               }}
+              className="admin-logout-btn"
               sx={{
                 mr: 2,
                 fontWeight: 700,

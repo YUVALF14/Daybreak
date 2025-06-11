@@ -189,6 +189,25 @@ a:hover {
   }
 }
 
+/* כפתורי יציאה והתנתקות - יישור לימין */
+.logout-btn,
+.admin-logout-btn {
+  position: absolute !important;
+  top: 24px !important;
+  right: 24px !important;
+  left: auto !important;
+  z-index: 2;
+}
+
+@media (max-width: 600px) {
+  .logout-btn,
+  .admin-logout-btn {
+    right: 0 !important;
+    left: auto !important;
+    top: 12px !important;
+  }
+}
+
 input, textarea, select {
   font-family: var(--font-secondary);
   border-radius: 8px;

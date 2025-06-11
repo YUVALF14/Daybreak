@@ -230,13 +230,12 @@ const ParticipantList = () => {
             localStorage.removeItem('adminAuthenticated');
             window.location.href = '/';
           }}
+          className="logout-btn"
           sx={{
-            position: 'absolute',
-            top: 24,
-            left: 24,
-            fontWeight: 700,
-            borderRadius: 8,
-            zIndex: 2,
+            // position: 'absolute',
+            // top: 24,
+            // left: 24,
+            // ...existing code...
           }}
         >
           התנתקות מנהל
@@ -306,6 +305,7 @@ const ParticipantList = () => {
             variant="contained"
             color="error"
             onClick={handleLogout}
+            className="logout-btn"
             sx={{
               borderRadius: 8,
               fontWeight: 600,

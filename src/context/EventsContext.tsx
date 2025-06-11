@@ -57,8 +57,8 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const eventsRef = ref(database, 'events');
     const newRef = push(eventsRef);
     const id = newRef.key;
-    console.log('addEvent:', { ...eventData, id });
-    await set(newRef, { ...eventData, id });
+    // Always add participants array if not present
+    await set(newRef, { ...eventData, id, participants: eventData.participants || [] });
   };
 
   const updateEvent = async (id: string, eventData: Partial<Event>) => {
