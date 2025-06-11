@@ -99,10 +99,11 @@ function App() {
   );
   const [showBudget, setShowBudget] = useState(false); // State to control budget dashboard visibility
 
-  const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '291147';
+  // Force ADMIN_CODE to string for strict comparison
+  const ADMIN_CODE = (process.env.REACT_APP_ADMIN_CODE || '291147').toString();
 
   const handleAdminLogin = (code) => {
-    if (code === ADMIN_CODE) {
+    if (code.toString() === ADMIN_CODE) {
       setAdminAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
       return true;
