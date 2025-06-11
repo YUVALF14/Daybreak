@@ -108,9 +108,12 @@ const HomePage = () => {
               background: 'linear-gradient(90deg, #f5f5f7 0%, #eaf6ff 100%)',
             },
           }}
-          onClick={() => navigate('/participants')}
+          component="a"
+          href="https://wa.me/972542230342"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          כניסת משתתפים
+          יצירת קשר ב-WhatsApp
         </Button>
         <Button
           variant="text"
