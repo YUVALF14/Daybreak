@@ -104,8 +104,8 @@ function App() {
 
   const handleAdminLogin = (code) => {
     // Debug log for troubleshooting
-    console.log('ADMIN_CODE:', ADMIN_CODE, 'User input:', code);
-    if (code.toString().trim() === ADMIN_CODE.trim()) {
+    console.log('ADMIN_CODE:', ADMIN_CODE, 'User input:', code, typeof code, typeof ADMIN_CODE);
+    if (code && code.toString().trim() === ADMIN_CODE.trim()) {
       setAdminAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
       return true;
