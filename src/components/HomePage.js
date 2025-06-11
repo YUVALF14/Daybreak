@@ -43,16 +43,18 @@ const HomePage = () => {
         <span className="emoji" style={{ fontSize: '2.5rem', animation: 'float 2.5s ease-in-out infinite' }}>🌅</span>
       </Box>
       <Typography
-        variant="h3"
+        variant="h4"
         sx={{
-          fontWeight: 900,
+          fontWeight: 700,
           mb: { xs: 1, sm: 2 },
-          letterSpacing: '-0.03em',
+          letterSpacing: '-0.02em',
           fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
           color: '#1d1d1f',
           zIndex: 2,
           position: 'relative',
-          fontSize: { xs: '2.2rem', sm: '2.7rem' },
+          fontSize: { xs: '1.5rem', sm: '2rem' }, // smaller headline
+          lineHeight: 1.2,
+          textShadow: '0 1px 0 #fff, 0 2px 8px rgba(0,0,0,0.03)',
         }}
       >
         ברוכים הבאים למערכת ניהול האירועים של YJCC
@@ -132,7 +134,7 @@ const HomePage = () => {
       {/* כפתורי ניווט בלבד */}
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
-        spacing={3} // Increased spacing
+        spacing={4}
         justifyContent="center"
         sx={{
           mt: { xs: 2, sm: 4 },
@@ -145,7 +147,11 @@ const HomePage = () => {
           variant="contained"
           color="primary"
           size="large"
-          startIcon={<AdminPanelSettingsIcon />}
+          startIcon={
+            <span style={{ marginLeft: 8, display: 'flex', alignItems: 'center' }}>
+              <AdminPanelSettingsIcon fontSize="medium" />
+            </span>
+          }
           onClick={() => navigate('/admin-login')}
           sx={{
             px: { xs: 2, sm: 5 },
@@ -166,6 +172,10 @@ const HomePage = () => {
               boxShadow: '0 6px 32px 0 #0071e355',
               background: 'linear-gradient(90deg, #005bb5 0%, #0071e3 100%)',
             },
+            '& .MuiButton-startIcon': {
+              marginLeft: 0,
+              marginRight: 8,
+            },
           }}
         >
           כניסת מנהלים
@@ -174,7 +184,11 @@ const HomePage = () => {
           variant="contained"
           color="secondary"
           size="large"
-          startIcon={<GroupIcon />}
+          startIcon={
+            <span style={{ marginLeft: 8, display: 'flex', alignItems: 'center' }}>
+              <GroupIcon fontSize="medium" />
+            </span>
+          }
           onClick={() => navigate('/community')}
           sx={{
             px: { xs: 2, sm: 5 },
@@ -194,6 +208,10 @@ const HomePage = () => {
               transform: 'scale(1.04)',
               boxShadow: '0 6px 32px 0 #0071e355',
               background: 'linear-gradient(90deg, #eaf6ff 0%, #f5f5f7 100%)',
+            },
+            '& .MuiButton-startIcon': {
+              marginLeft: 0,
+              marginRight: 8,
             },
           }}
         >

@@ -11,7 +11,7 @@ import {
 
 function EventForm({ open, onClose, onSubmit, event }) {
   const [formData, setFormData] = useState({
-    name: '',
+    title: '',
     date: '',
     description: '',
     location: '',
@@ -23,7 +23,7 @@ function EventForm({ open, onClose, onSubmit, event }) {
   useEffect(() => {
     if (open) {
       setFormData({
-        name: event?.name || '',
+        title: event?.title || '',
         date: event?.date || '',
         description: event?.description || '',
         location: event?.location || '',
@@ -54,8 +54,8 @@ function EventForm({ open, onClose, onSubmit, event }) {
           <TextField
             fullWidth
             label="שם האירוע"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             margin="normal"
             required
           />
