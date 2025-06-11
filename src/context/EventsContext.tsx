@@ -19,7 +19,7 @@ interface Event {
   maxParticipants?: number;
   price?: number;
   subsidy?: number;
-  [key: string]: any;
+  [key: string]: any; // <-- Add index signature
 }
 
 interface EventsContextType {
@@ -58,7 +58,7 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const newRef = push(eventsRef);
     const id = newRef.key;
     // Remove undefined numeric fields before saving
-    const cleanEvent = { ...eventData, id, participants: eventData.participants || [] };
+    const cleanEvent: { [key: string]: any } = { ...eventData, id, participants: eventData.participants || [] };
     Object.keys(cleanEvent).forEach((key) => {
       if (cleanEvent[key] === undefined) delete cleanEvent[key];
     });
@@ -68,7 +68,7 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const updateEvent = async (id: string, eventData: Partial<Event>) => {
     const eventRef = ref(database, `events/${id}`);
     // Remove undefined numeric fields before updating
-    const cleanEvent: Partial<Event> = { ...eventData };
+    const cleanEvent: { [key: string]: any } = { ...eventData };
     Object.keys(cleanEvent).forEach((key) => {
       if (cleanEvent[key] === undefined) delete cleanEvent[key];
     });
