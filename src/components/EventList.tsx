@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import {
   Box,
   Card,
@@ -52,6 +52,13 @@ const EventList = () => {
   const [feedbackOpen, setFeedbackOpen] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Add state for registration dialog
+  const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
+  const [registerEventId, setRegisterEventId] = useState<string | null>(null);
+  const [registerForm, setRegisterForm] = useState({ name: '', phone: '' });
+  const [registerError, setRegisterError] = useState<string | null>(null);
+  const [registerSuccess, setRegisterSuccess] = useState(false);
 
   // Open dialog for new event
   const handleOpenDialog = () => {
@@ -121,11 +128,40 @@ const EventList = () => {
   };
 
   const handleOpenFeedback = (eventId: string) => {
-    setFeedbackOpen((prev) => [...prev, eventId]);
+    setFeedbackOpen((prev: string[]) => [...prev, eventId]);
   };
 
   const handleCloseFeedback = (eventId: string) => {
-    setFeedbackOpen((prev) => prev.filter(id => id !== eventId));
+    setFeedbackOpen((prev: string[]) => prev.filter((id: string) => id !== eventId));
+  };
+
+  // Registration handler
+  const handleRegister = async () => {
+    if (!registerForm.name || !registerForm.phone) {
+      setRegisterError('נא למלא שם ומספר טלפון');
+      return;
+    }
+    if (!/^05\d{8}$/.test(registerForm.phone)) {
+      setRegisterError('מספר טלפון לא תקין');
+      return;
+    }
+    setRegisterError(null);
+    setRegisterSuccess(false);
+    const event = events.find(e => e.id === registerEventId);
+    if (!event) return;
+    // Prevent duplicate
+    if (event.participants?.some(p => p.phone === registerForm.phone)) {
+      setRegisterError('משתתף עם מספר טלפון זה כבר רשום לאירוע');
+      return;
+    }
+    const updatedParticipants = [...(event.participants || []), { ...registerForm, paid: false, confirmed: false, attended: false }];
+    await updateEvent(event.id, { ...event, participants: updatedParticipants });
+    setRegisterSuccess(true);
+    setTimeout(() => {
+      setRegisterDialogOpen(false);
+      setRegisterForm({ name: '', phone: '' });
+      setRegisterSuccess(false);
+    }, 1200);
   };
 
   return (
@@ -178,7 +214,7 @@ const EventList = () => {
             </Button>
           </Box>
 
-          {events.map((event) => (
+          {events.map((event: any) => (
             <Card key={event.id} sx={{
               mb: 2,
               borderRadius: { xs: 2, sm: 4 },
@@ -274,6 +310,18 @@ const EventList = () => {
                         <Button onClick={() => handleCloseFeedback(event.id)}>סגור</Button>
                       </DialogActions>
                     </Dialog>
+                    {/* Registration button */}
+                    <Tooltip title="הרשמה לאירוע">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        sx={{ mt: 1, width: { xs: '100%', sm: 'auto' }, borderRadius: 99 }}
+                        onClick={() => { setRegisterEventId(event.id); setRegisterDialogOpen(true); }}
+                      >
+                        הרשמה
+                      </Button>
+                    </Tooltip>
                   </Box>
                 </Box>
               </CardContent>
@@ -317,7 +365,7 @@ const EventList = () => {
                   label="כותרת"
                   fullWidth
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
                   required
                 />
                 <TextField
@@ -327,7 +375,7 @@ const EventList = () => {
                   fullWidth
                   InputLabelProps={{ shrink: true }}
                   value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
                   required
                 />
                 <TextField
@@ -337,14 +385,14 @@ const EventList = () => {
                   multiline
                   rows={3}
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
                 />
                 <TextField
                   margin="dense"
                   label="מיקום"
                   fullWidth
                   value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, location: e.target.value })}
                 />
                 <TextField
                   margin="dense"
@@ -352,7 +400,7 @@ const EventList = () => {
                   type="number"
                   fullWidth
                   value={formData.maxParticipants}
-                  onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, maxParticipants: e.target.value })}
                 />
                 <TextField
                   margin="dense"
@@ -360,7 +408,7 @@ const EventList = () => {
                   type="number"
                   fullWidth
                   value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, price: e.target.value })}
                 />
                 <TextField
                   margin="dense"
@@ -368,7 +416,7 @@ const EventList = () => {
                   type="number"
                   fullWidth
                   value={formData.subsidy}
-                  onChange={(e) => setFormData({ ...formData, subsidy: e.target.value })}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, subsidy: e.target.value })}
                 />
                 {formData.maxParticipants && formData.subsidy && (
                   <Box sx={{ mt: 2, mb: 1 }}>
@@ -393,6 +441,33 @@ const EventList = () => {
                 </DialogActions>
               </Box>
             </DialogContent>
+          </Dialog>
+
+          {/* Registration dialog */}
+          <Dialog open={registerDialogOpen} onClose={() => setRegisterDialogOpen(false)} maxWidth="sm" fullWidth>
+            <DialogTitle>הרשמה לאירוע</DialogTitle>
+            <DialogContent>
+              <TextField
+                label="שם מלא"
+                fullWidth
+                margin="normal"
+                value={registerForm.name}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setRegisterForm({ ...registerForm, name: e.target.value })}
+              />
+              <TextField
+                label="מספר טלפון"
+                fullWidth
+                margin="normal"
+                value={registerForm.phone}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setRegisterForm({ ...registerForm, phone: e.target.value })}
+              />
+              {registerError && <Typography color="error">{registerError}</Typography>}
+              {registerSuccess && <Typography color="success.main">נרשמת בהצלחה!</Typography>}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setRegisterDialogOpen(false)}>ביטול</Button>
+              <Button onClick={handleRegister} variant="contained">הרשמה</Button>
+            </DialogActions>
           </Dialog>
         </Box>
       </Fade>
