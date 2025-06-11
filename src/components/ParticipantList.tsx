@@ -383,7 +383,7 @@ const ParticipantList = () => {
               {filteredEvents[0].participants?.length || 0} מתוך {filteredEvents[0].maxParticipants || '-'} נרשמו
             </Typography>
           </Box>
-        }
+        )}
         <Stack spacing={2}>
           {filteredEvents.map(event => (
             <Card key={event.id} sx={{
