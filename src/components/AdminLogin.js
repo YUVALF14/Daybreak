@@ -8,14 +8,18 @@ import {
   Paper,
   Container,
   Avatar,
+  IconButton,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 
 function AdminLogin({ onLogin }) {
   const [code, setCode] = useState('');
   const [error, setError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -109,8 +113,8 @@ function AdminLogin({ onLogin }) {
               margin="normal"
               required
               fullWidth
-              type="password"
               label="קוד מנהל"
+              type={showPassword ? 'text' : 'password'}
               value={code}
               autoFocus
               onChange={(e) => {
@@ -133,6 +137,17 @@ function AdminLogin({ onLogin }) {
                   letterSpacing: 2,
                   fontSize: '1.2rem',
                 },
+              }}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    aria-label="הצג/הסתר סיסמה"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                ),
               }}
             />
             <Button
