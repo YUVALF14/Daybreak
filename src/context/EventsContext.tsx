@@ -57,14 +57,22 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const eventsRef = ref(database, 'events');
     const newRef = push(eventsRef);
     const id = newRef.key;
-    // Always add participants array if not present
-    await set(newRef, { ...eventData, id, participants: eventData.participants || [] });
+    // Remove undefined numeric fields before saving
+    const cleanEvent = { ...eventData, id, participants: eventData.participants || [] };
+    Object.keys(cleanEvent).forEach((key) => {
+      if (cleanEvent[key] === undefined) delete cleanEvent[key];
+    });
+    await set(newRef, cleanEvent);
   };
 
   const updateEvent = async (id: string, eventData: Partial<Event>) => {
     const eventRef = ref(database, `events/${id}`);
-    console.log('updateEvent:', id, eventData);
-    await update(eventRef, eventData);
+    // Remove undefined numeric fields before updating
+    const cleanEvent: Partial<Event> = { ...eventData };
+    Object.keys(cleanEvent).forEach((key) => {
+      if (cleanEvent[key] === undefined) delete cleanEvent[key];
+    });
+    await update(eventRef, cleanEvent);
   };
 
   const deleteEvent = async (id: string) => {
