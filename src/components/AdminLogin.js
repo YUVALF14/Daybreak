@@ -25,7 +25,7 @@ function AdminLogin({ onLogin }) {
       setError(true);
     } else {
       setError(false);
-      // Navigate to budget page after successful login
+      // Navigate to budget page only after successful login
       navigate('/budget');
     }
   };
@@ -162,29 +162,6 @@ function AdminLogin({ onLogin }) {
             >
               כניסה
             </Button>
-            {/* Show budget management button if already authenticated */}
-            {localStorage.getItem('adminAuthenticated') === 'true' && (
-              <Button
-                fullWidth
-                variant="outlined"
-                color="success"
-                sx={{
-                  mt: 1,
-                  fontWeight: 800,
-                  borderRadius: 99,
-                  fontSize: '1.08rem',
-                  border: '2px solid #34c759',
-                  color: '#34c759',
-                  background: 'linear-gradient(90deg, #eaf6ff 0%, #f5f5f7 100%)',
-                  '&:hover': {
-                    background: 'linear-gradient(90deg, #f5f5f7 0%, #eaf6ff 100%)',
-                  },
-                }}
-                onClick={() => navigate('/budget')}
-              >
-                ניהול תקציב
-              </Button>
-            )}
           </Box>
         </Paper>
       </Container>

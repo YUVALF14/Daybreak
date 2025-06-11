@@ -26,7 +26,7 @@ import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
 import { useEvents } from '../context/EventsContext';
 
-function EventDashboard() {
+function EventDashboard({ onNavigateBudget }) {
   const { events, addEvent, updateEvent, deleteEvent } = useEvents();
   const [openEventForm, setOpenEventForm] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -195,6 +195,15 @@ function EventDashboard() {
         event={selectedEventParticipants}
         onParticipantUpdate={handleParticipantUpdate}
       />
+
+      <Button
+        variant="contained"
+        color="success"
+        sx={{ mt: 3, fontWeight: 800, borderRadius: 99 }}
+        onClick={onNavigateBudget}
+      >
+        מעבר לניהול תקציב
+      </Button>
 
       <Snackbar
         open={snackbar.open}

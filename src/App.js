@@ -44,6 +44,7 @@ import Signup from './components/Signup'; // צור קובץ זה
 import Login from './components/Login';   // צור קובץ זה
 import CommunityEvents from './components/CommunityEvents'; // צור קובץ זה
 import './App.css';
+import BudgetDashboard from './components/BudgetDashboard'; // Import the BudgetDashboard component
 
 // Branding colors
 const YJCC_COLORS = {
@@ -96,6 +97,7 @@ function App() {
   const [adminAuthenticated, setAdminAuthenticated] = React.useState(
     localStorage.getItem('adminAuthenticated') === 'true'
   );
+  const [showBudget, setShowBudget] = useState(false); // State to control budget dashboard visibility
 
   const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '291147';
 
@@ -116,13 +118,21 @@ function App() {
           path="/admin-login"
           element={
             adminAuthenticated ? (
-              <EventDashboard />
+              <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
             ) : (
               <AdminLogin onLogin={handleAdminLogin} />
             )
           }
         />
         <Route path="/community" element={<CommunityEvents />} />
+        <Route path="/events" element={<EventList />} />
+        <Route path="/participants" element={<ParticipantList />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        {/* ניהול תקציב - יוצג רק אם showBudget true */}
+        {adminAuthenticated && showBudget && (
+          <Route path="/budget" element={<BudgetDashboard onBack={() => setShowBudget(false)} />} />
+        )}
       </Routes>
     </Router>
   );
