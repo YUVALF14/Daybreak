@@ -150,7 +150,7 @@ const EventList = () => {
     const event = events.find(e => e.id === registerEventId);
     if (!event) return;
     // Prevent duplicate
-    if (event.participants?.some(p => p.phone === registerForm.phone)) {
+    if (event.participants?.some((p: any) => p.phone === registerForm.phone)) {
       setRegisterError('משתתף עם מספר טלפון זה כבר רשום לאירוע');
       return;
     }
