@@ -1,11 +1,12 @@
 // REQUIRED ENV VARIABLES FOR FIREBASE:
-// REACT_APP_FIREBASE_API_KEY=your_api_key
-// REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-// REACT_APP_FIREBASE_DATABASE_URL=https://your_project.firebaseio.com
-// REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-// REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-// REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-// REACT_APP_FIREBASE_APP_ID=your_app_id
+// יש להכניס את הערכים האמיתיים של הפרויקט שלך ב-Firebase, לדוגמה:
+// REACT_APP_FIREBASE_API_KEY=AIzaSy... (העתק מה-Firebase Console)
+// REACT_APP_FIREBASE_AUTH_DOMAIN=daybreak-3979a.firebaseapp.com
+// REACT_APP_FIREBASE_DATABASE_URL=https://daybreak-3979a.firebaseio.com
+// REACT_APP_FIREBASE_PROJECT_ID=daybreak-3979a
+// REACT_APP_FIREBASE_STORAGE_BUCKET=daybreak-3979a.appspot.com
+// REACT_APP_FIREBASE_MESSAGING_SENDER_ID=... (העתק מה-Firebase Console)
+// REACT_APP_FIREBASE_APP_ID=... (העתק מה-Firebase Console)
 
 // Firebase configuration
 import { initializeApp } from 'firebase/app';
