@@ -103,7 +103,9 @@ function App() {
   const ADMIN_CODE = (process.env.REACT_APP_ADMIN_CODE || '291147').toString();
 
   const handleAdminLogin = (code) => {
-    if (code.toString() === ADMIN_CODE) {
+    // Debug log for troubleshooting
+    console.log('ADMIN_CODE:', ADMIN_CODE, 'User input:', code);
+    if (code.toString().trim() === ADMIN_CODE.trim()) {
       setAdminAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
       return true;
