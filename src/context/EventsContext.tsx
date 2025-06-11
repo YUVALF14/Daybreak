@@ -56,7 +56,8 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const addEvent = async (eventData: Omit<Event, 'id'>) => {
     const eventsRef = ref(database, 'events');
     const newRef = push(eventsRef);
-    await set(newRef, eventData);
+    const id = newRef.key;
+    await set(newRef, { ...eventData, id });
   };
 
   const updateEvent = async (id: string, eventData: Partial<Event>) => {

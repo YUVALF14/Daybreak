@@ -52,7 +52,7 @@ const EventList = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Ensure dialog opens on button click
+  // Open dialog for new event
   const handleOpenDialog = () => {
     setEditingEvent(null);
     setFormData(initialFormData);
@@ -60,7 +60,7 @@ const EventList = () => {
     setError(null);
   };
 
-  // Ensure dialog closes and resets state
+  // Close dialog and reset state
   const handleClose = () => {
     setOpenDialog(false);
     setEditingEvent(null);
@@ -68,7 +68,7 @@ const EventList = () => {
     setError(null);
   };
 
-  // Ensure submit works for both create and edit
+  // Submit handler for both create and edit
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!formData.title.trim() || !formData.date) {
@@ -86,15 +86,16 @@ const EventList = () => {
           subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
         });
       } else {
-        const { title, date, description, location, maxParticipants, price, subsidy } = formData;
+        // Always create a new event with a unique ID
         await addEvent({
-          title,
-          date,
-          description,
-          location,
-          maxParticipants: maxParticipants ? parseInt(maxParticipants) : undefined,
-          price: price ? parseFloat(price) : undefined,
-          subsidy: subsidy ? parseFloat(subsidy) : undefined,
+          title: formData.title,
+          date: formData.date,
+          description: formData.description,
+          location: formData.location,
+          maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
+          price: formData.price ? parseFloat(formData.price) : undefined,
+          subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
+          participants: [],
         });
       }
       handleClose();
