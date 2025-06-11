@@ -8,8 +8,15 @@ const CommunityEvents = () => {
   const navigate = useNavigate();
 
   const upcomingEvents = events
-    .filter(e => new Date(e.date) >= new Date())
+    .filter(e => {
+      if (!e.date) return false;
+      return new Date(e.date) >= new Date();
+    })
     .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  React.useEffect(() => {
+    console.log('CommunityEvents upcomingEvents:', upcomingEvents);
+  }, [upcomingEvents]);
 
   return (
     <Box sx={{

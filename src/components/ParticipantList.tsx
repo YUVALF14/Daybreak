@@ -119,6 +119,7 @@ const ParticipantList = () => {
         ...formData,
         registeredEvents: [],
       };
+      console.log('Registering new participant:', newParticipant);
       await set(ref(database, `participants/${formData.phone}`), newParticipant);
       setCurrentParticipant(newParticipant);
       setSuccess(true);
@@ -130,6 +131,7 @@ const ParticipantList = () => {
       );
     } catch (err) {
       setError('אירעה שגיאה בתהליך ההרשמה');
+      console.error('Participant registration error:', err);
     }
   };
 
@@ -168,6 +170,7 @@ const ParticipantList = () => {
   // הרשמת משתתף לאירוע (עדכון ב-Firebase)
   const handleRegisterToEvent = async (eventId: string) => {
     if (!currentParticipant) return;
+    console.log('Registering participant to event:', eventId, currentParticipant);
     // עדכן את רשימת האירועים של המשתתף
     const updatedEvents = [
       ...(currentParticipant.registeredEvents || []),

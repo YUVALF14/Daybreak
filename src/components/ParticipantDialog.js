@@ -46,6 +46,7 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
       alert('משתתף עם מספר טלפון זה כבר קיים');
       return;
     }
+    console.log('Adding participant:', newParticipant);
     onParticipantUpdate(event.id, { ...newParticipant });
     setNewParticipant({
       name: '',
@@ -58,12 +59,13 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
 
   const handleParticipantChange = (participant, field) => {
     const updatedParticipant = { ...participant, [field]: !participant[field] };
+    console.log('Changing participant:', updatedParticipant);
     onParticipantUpdate(event.id, updatedParticipant);
   };
 
   const handleDeleteParticipant = (participant) => {
     if (window.confirm('האם אתה בטוח שברצונך למחוק משתתף זה?')) {
-      // Remove participant by phone
+      console.log('Deleting participant:', participant);
       onParticipantUpdate(event.id, { ...participant, delete: true }); // Signal deletion
       // You may need to handle this in the parent by filtering out participants with delete: true
     }

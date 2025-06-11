@@ -13,7 +13,10 @@ const HomePage = () => {
 
   // הצג רק אירועים עתידיים
   const upcomingEvents = events.filter(
-    e => new Date(e.date) >= new Date()
+    e => {
+      if (!e.date) return false;
+      return new Date(e.date) >= new Date();
+    }
   ).sort((a, b) => new Date(a.date) - new Date(b.date));
 
   return (

@@ -7,6 +7,10 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { events } = useEvents();
 
+  React.useEffect(() => {
+    console.log('Dashboard loaded, events:', events);
+  }, [events]);
+
   const upcomingEvents = events
     .filter(event => new Date(event.date) >= new Date())
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -43,7 +47,10 @@ const Dashboard = () => {
               <Button
                 variant="outlined"
                 color="primary"
-                onClick={() => navigate('/events')}
+                onClick={() => {
+                  console.log('Navigate to /events');
+                  navigate('/events');
+                }}
                 sx={{ mt: 2, borderRadius: 99, fontWeight: 700, borderColor: '#7c4dff', color: '#7c4dff' }}
                 aria-label="לכל האירועים"
               >
@@ -72,7 +79,10 @@ const Dashboard = () => {
                 <Button
                   variant="contained"
                   color="secondary"
-                  onClick={() => navigate('/participants')}
+                  onClick={() => {
+                    console.log('Navigate to /participants');
+                    navigate('/participants');
+                  }}
                   aria-label="הוספת משתתף"
                   sx={{ borderRadius: 99, fontWeight: 700, background: 'linear-gradient(90deg, #00bcd4 0%, #7c4dff 100%)' }}
                 >

@@ -79,6 +79,7 @@ const EventList = () => {
     setError(null);
     try {
       if (editingEvent) {
+        console.log('Updating event:', editingEvent, formData);
         await updateEvent(editingEvent, {
           ...formData,
           maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
@@ -86,7 +87,7 @@ const EventList = () => {
           subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
         });
       } else {
-        // Always create a new event with a unique ID
+        console.log('Creating new event:', formData);
         await addEvent({
           title: formData.title,
           date: formData.date,
@@ -98,10 +99,14 @@ const EventList = () => {
           participants: [],
         });
       }
+      setSubmitting(false); // <-- Ensure this is before handleClose
       handleClose();
+      setTimeout(() => {
+        setError(null);
+      }, 1000);
     } catch (e) {
       setError('אירעה שגיאה ביצירת האירוע');
-    } finally {
+      console.error('Event creation error:', e);
       setSubmitting(false);
     }
   };
