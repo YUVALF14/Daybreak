@@ -97,8 +97,10 @@ function App() {
     localStorage.getItem('adminAuthenticated') === 'true'
   );
 
+  const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '291147';
+
   const handleAdminLogin = (code) => {
-    if (code === '291147') {
+    if (code === ADMIN_CODE) {
       setAdminAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
       return true;
@@ -128,7 +130,5 @@ function App() {
 
 // REQUIRED ENV VARIABLE FOR ADMIN ACCESS (optional fallback to '291147'):
 // REACT_APP_ADMIN_CODE=your_admin_code
-
-const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '291147';
 
 export default App;
