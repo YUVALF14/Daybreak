@@ -109,27 +109,18 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route
-            path="admin-login"
-            element={
-              adminAuthenticated ? (
-                <EventDashboard />
-              ) : (
-                <AdminLogin onLogin={handleAdminLogin} />
-              )
-            }
-          />
-          <Route path="community" element={<CommunityEvents />} />
-          <Route path="participants" element={<ParticipantLogin />} />
-          <Route path="participant-list" element={<ParticipantList />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="events" element={<EventList />} />
-          <Route path="signup" element={<Signup />} />
-          <Route path="login" element={<Login />} />
-          {/* Add other routes as needed */}
-        </Route>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/admin-login"
+          element={
+            adminAuthenticated ? (
+              <EventDashboard />
+            ) : (
+              <AdminLogin onLogin={handleAdminLogin} />
+            )
+          }
+        />
+        <Route path="/community" element={<CommunityEvents />} />
       </Routes>
     </Router>
   );

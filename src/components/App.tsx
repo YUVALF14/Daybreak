@@ -2,8 +2,11 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { theme } from '../styles/theme';
-import { BrowserRouter } from 'react-router-dom';
-import { AppRoutes } from './AppRoutes';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import HomePage from './HomePage';
+import AdminLogin from './AdminLogin';
+import CommunityEvents from './CommunityEvents';
+import Layout from './Layout';
 import { WhatsAppProvider } from '../context/WhatsAppContext';
 import { EventsProvider } from '../context/EventsContext';
 
@@ -14,7 +17,14 @@ function App() {
       <WhatsAppProvider>
         <EventsProvider>
           <BrowserRouter>
-            <AppRoutes />
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<HomePage />} />
+                <Route path="admin-login" element={<AdminLogin onLogin={() => {}} />} />
+                <Route path="community" element={<CommunityEvents />} />
+                {/* אפשר להוסיף כאן עוד ראוטים בעתיד */}
+              </Route>
+            </Routes>
           </BrowserRouter>
         </EventsProvider>
       </WhatsAppProvider>
