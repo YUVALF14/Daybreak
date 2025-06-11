@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import App from './components/App'; // Use the correct App (with providers and routing)
 import './index.css';
 
 // Import fonts
@@ -14,17 +14,13 @@ import '@fontsource/heebo/700.css';
 import '@fontsource/heebo/800.css';
 
 import reportWebVitals from './reportWebVitals';
-import { EventsProvider } from './context/EventsContext';
 
+document.documentElement.setAttribute('dir', 'rtl');
 const root = ReactDOM.createRoot(document.getElementById('root'));
-document.documentElement.setAttribute('dir', 'rtl'); // Ensure RTL globally
 root.render(
   <React.StrictMode>
-    <EventsProvider>
-      <App />
-    </EventsProvider>
+    <App />
   </React.StrictMode>
 );
 
-// Optional: Log web vitals to the console or send to analytics
 reportWebVitals();
