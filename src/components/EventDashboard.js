@@ -35,13 +35,18 @@ function EventDashboard() {
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
 
   const handleAddEvent = async (newEvent) => {
+    // Ensure event has participants array and all required fields
     await addEvent({ ...newEvent, participants: [] });
     setOpenEventForm(false);
     setSnackbar({ open: true, message: 'האירוע נוצר בהצלחה' });
   };
 
   const handleUpdateEvent = async (updatedEvent) => {
-    await updateEvent(updatedEvent.id, updatedEvent);
+    // Ensure update includes the id and participants array
+    await updateEvent(updatedEvent.id, {
+      ...updatedEvent,
+      participants: updatedEvent.participants || [],
+    });
     setOpenEventForm(false);
     setSnackbar({ open: true, message: 'האירוע עודכן בהצלחה' });
   };
@@ -52,7 +57,22 @@ function EventDashboard() {
   };
 
   const handleParticipantUpdate = async (eventId, participant) => {
-    await updateEvent(eventId, { /* ...עדכן את רשימת המשתתפים... */ });
+    // Update the participants array for the event
+    const event = events.find(e => e.id === eventId);
+    if (!event) return;
+    let updatedParticipants = Array.isArray(event.participants) ? [...event.participants] : [];
+    // Handle delete
+    if (participant.delete) {
+      updatedParticipants = updatedParticipants.filter(p => p.phone !== participant.phone);
+    } else {
+      const idx = updatedParticipants.findIndex(p => p.phone === participant.phone);
+      if (idx > -1) {
+        updatedParticipants[idx] = { ...updatedParticipants[idx], ...participant };
+      } else {
+        updatedParticipants.push(participant);
+      }
+    }
+    await updateEvent(eventId, { participants: updatedParticipants });
   };
 
   const sendEventReminders = (event) => {
