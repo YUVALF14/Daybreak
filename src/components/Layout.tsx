@@ -32,33 +32,102 @@ const Layout: React.FC<LayoutProps> = () => {
           borderBottom: '1px solid #eaeaea',
         }}
       >
-        <Toolbar sx={{ flexDirection: 'row', alignItems: 'center', gap: 2, minHeight: 72 }}>
-          <Avatar
-            src="/favicon.ico"
-            alt="logo"
-            sx={{ mr: 2, bgcolor: '#fff', width: 48, height: 48, boxShadow: 1 }}
-          />
-          <Typography
-            variant="h5"
-            component="div"
+        <Toolbar
+          sx={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 2,
+            minHeight: 72,
+            justifyContent: 'space-between',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Avatar
+              src="/favicon.ico"
+              alt="logo"
+              sx={{ mr: 2, bgcolor: '#fff', width: 48, height: 48, boxShadow: 1 }}
+            />
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{
+                fontWeight: 900,
+                letterSpacing: '-0.03em',
+                fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
+                color: '#1d1d1f',
+                fontSize: { xs: '1.5rem', sm: '2.1rem' },
+                userSelect: 'none',
+                textAlign: 'center',
+                flexGrow: 1,
+                ml: 2,
+              }}
+            >
+              DAYBREAK
+            </Typography>
+          </Box>
+          <Box
             sx={{
-              flexGrow: 1,
-              fontWeight: 900,
-              letterSpacing: '-0.03em',
-              fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
-              color: '#1d1d1f',
-              fontSize: { xs: '1.5rem', sm: '2.1rem' },
-              userSelect: 'none',
+              display: 'flex',
+              gap: { xs: 1, sm: 2 },
+              alignItems: 'center',
+              ml: 2,
             }}
           >
-            DAYBREAK
-          </Typography>
-          <Button color="primary" onClick={() => navigate('/')} sx={{ mx: 1, fontWeight: 700, fontSize: '1.08rem' }} aria-label="דף הבית">
-            דף הבית
-          </Button>
-          <Button color="primary" onClick={() => navigate('/admin-login')} sx={{ mx: 1, fontWeight: 700, fontSize: '1.08rem' }} aria-label="כניסת מנהלים">
-            כניסת מנהלים
-          </Button>
+            <Button
+              color="primary"
+              onClick={() => navigate('/')}
+              sx={{
+                fontWeight: 700,
+                fontSize: '1.08rem',
+                borderRadius: 99,
+                px: 3,
+                py: 1,
+                background: 'linear-gradient(90deg, #0071e3 0%, #34c759 100%)',
+                color: '#fff',
+                boxShadow: 2,
+                mr: { xs: 0, sm: 1 },
+              }}
+              aria-label="דף הבית"
+            >
+              דף הבית
+            </Button>
+            <Button
+              color="secondary"
+              onClick={() => navigate('/admin-login')}
+              sx={{
+                fontWeight: 700,
+                fontSize: '1.08rem',
+                borderRadius: 99,
+                px: 3,
+                py: 1,
+                background: 'linear-gradient(90deg, #f5f5f7 0%, #eaf6ff 100%)',
+                color: '#0071e3',
+                boxShadow: 2,
+                ml: { xs: 0, sm: 1 },
+              }}
+              aria-label="כניסת מנהלים"
+            >
+              כניסת מנהלים
+            </Button>
+            <Button
+              color="secondary"
+              onClick={() => navigate('/participants')}
+              sx={{
+                fontWeight: 700,
+                fontSize: '1.08rem',
+                borderRadius: 99,
+                px: 3,
+                py: 1,
+                background: 'linear-gradient(90deg, #f5f5f7 0%, #eaf6ff 100%)',
+                color: '#0071e3',
+                boxShadow: 2,
+                ml: { xs: 0, sm: 1 },
+              }}
+              aria-label="כניסת משתתפים"
+            >
+              כניסת משתתפים
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
       <Container
@@ -86,7 +155,11 @@ const Layout: React.FC<LayoutProps> = () => {
           borderTop: '1px solid #eaeaea',
         }}
       >
-        <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'SF Pro Display, Assistant, sans-serif' }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontFamily: 'SF Pro Display, Assistant, sans-serif' }}
+        >
           © {new Date().getFullYear()} DAYBREAK. כל הזכויות שמורות.
         </Typography>
       </Box>

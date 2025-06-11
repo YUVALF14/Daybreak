@@ -49,26 +49,60 @@ const EventList = () => {
   const [editingEvent, setEditingEvent] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [feedbackOpen, setFeedbackOpen] = useState<{ [eventId: string]: boolean }>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = () => {
-    if (!formData.title.trim() || !formData.date) return;
-    if (editingEvent) {
-      updateEvent(editingEvent, {
-        ...formData,
-        maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
-        price: formData.price ? parseFloat(formData.price) : undefined,
-        subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
-      });
-    } else {
-      addEvent({
-        ...formData,
-        id: Date.now().toString(), // <-- Ensure new event has an id
-        maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
-        price: formData.price ? parseFloat(formData.price) : undefined,
-        subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
-      });
+  // Ensure dialog opens on button click
+  const handleOpenDialog = () => {
+    setEditingEvent(null);
+    setFormData(initialFormData);
+    setOpenDialog(true);
+    setError(null);
+  };
+
+  // Ensure dialog closes and resets state
+  const handleClose = () => {
+    setOpenDialog(false);
+    setEditingEvent(null);
+    setFormData(initialFormData);
+    setError(null);
+  };
+
+  // Ensure submit works for both create and edit
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!formData.title.trim() || !formData.date) {
+      setError('נא למלא כותרת ותאריך');
+      return;
     }
-    handleClose();
+    setSubmitting(true);
+    setError(null);
+    try {
+      if (editingEvent) {
+        await updateEvent(editingEvent, {
+          ...formData,
+          maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
+          price: formData.price ? parseFloat(formData.price) : undefined,
+          subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
+        });
+      } else {
+        const { title, date, description, location, maxParticipants, price, subsidy } = formData;
+        await addEvent({
+          title,
+          date,
+          description,
+          location,
+          maxParticipants: maxParticipants ? parseInt(maxParticipants) : undefined,
+          price: price ? parseFloat(price) : undefined,
+          subsidy: subsidy ? parseFloat(subsidy) : undefined,
+        });
+      }
+      handleClose();
+    } catch (e) {
+      setError('אירעה שגיאה ביצירת האירוע');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleEdit = (event: any) => {
@@ -85,12 +119,6 @@ const EventList = () => {
     setOpenDialog(true);
   };
 
-  const handleClose = () => {
-    setOpenDialog(false);
-    setEditingEvent(null);
-    setFormData(initialFormData);
-  };
-
   const handleOpenFeedback = (eventId: string) => {
     setFeedbackOpen((prev) => ({ ...prev, [eventId]: true }));
   };
@@ -104,21 +132,44 @@ const EventList = () => {
       {/* Add a subtle fade-in animation */}
       <Fade in timeout={700}>
         <Box>
-          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', mb: 3, gap: { xs: 2, sm: 0 } }}>
-            <Typography variant="h4" component="h1">
+          <Box sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'center',
+            alignItems: 'center',
+            mb: 3,
+            gap: { xs: 2, sm: 4 }
+          }}>
+            <Typography variant="h4" component="h1" sx={{
+              textAlign: 'center',
+              flexGrow: 1,
+              fontWeight: 900,
+              letterSpacing: '-0.03em',
+              fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
+              color: '#1d1d1f',
+              fontSize: { xs: '2rem', sm: '2.4rem' },
+              mb: { xs: 1, sm: 0 }
+            }}>
               אירועים
             </Typography>
             <Button
               variant="contained"
               color="primary"
-              onClick={() => {
-                setEditingEvent(null);
-                setFormData(initialFormData);
-                setOpenDialog(true);
-              }}
+              onClick={handleOpenDialog}
               sx={{
                 width: { xs: '100%', sm: 'auto' },
-                mt: { xs: 1, sm: 0 }
+                mt: { xs: 1, sm: 0 },
+                ml: { xs: 0, sm: 2 },
+                borderRadius: 99,
+                fontWeight: 700,
+                fontSize: '1.08rem',
+                px: 4,
+                py: 1.5,
+                boxShadow: 2,
+                background: 'linear-gradient(90deg, #0071e3 0%, #34c759 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1
               }}
               startIcon={<EventIcon />}
             >
@@ -233,78 +284,92 @@ const EventList = () => {
               {editingEvent ? 'עריכת אירוע' : 'יצירת אירוע חדש'}
             </DialogTitle>
             <DialogContent>
-              <TextField
-                autoFocus
-                margin="dense"
-                label="כותרת"
-                fullWidth
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              />
-              <TextField
-                margin="dense"
-                label="תאריך"
-                type="date"
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              />
-              <TextField
-                margin="dense"
-                label="תיאור"
-                fullWidth
-                multiline
-                rows={4}
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              />
-              <TextField
-                margin="dense"
-                label="מיקום"
-                fullWidth
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              />
-              <TextField
-                margin="dense"
-                label="מקסימום משתתפים"
-                type="number"
-                fullWidth
-                value={formData.maxParticipants}
-                onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
-              />
-              <TextField
-                margin="dense"
-                label="מחיר למשתתף (CZK)"
-                type="number"
-                fullWidth
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              />
-              <TextField
-                margin="dense"
-                label="סבסוד למשתתף (CZK)"
-                type="number"
-                fullWidth
-                value={formData.subsidy}
-                onChange={(e) => setFormData({ ...formData, subsidy: e.target.value })}
-              />
-              {formData.maxParticipants && formData.subsidy && (
-                <Box sx={{ mt: 2, mb: 1 }}>
-                  <strong>סה"כ תקציב סבסוד:</strong>{' '}
-                  {Number(formData.maxParticipants) * Number(formData.subsidy) > 0
-                    ? (Number(formData.maxParticipants) * Number(formData.subsidy)).toLocaleString()
-                    : 0} CZK
-                </Box>
+              {/* Show error if exists */}
+              {error && (
+                <Typography color="error" sx={{ mb: 2 }}>
+                  {error}
+                </Typography>
               )}
+              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="כותרת"
+                  fullWidth
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  required
+                />
+                <TextField
+                  margin="dense"
+                  label="תאריך"
+                  type="date"
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  value={formData.date}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  required
+                />
+                <TextField
+                  margin="dense"
+                  label="תיאור"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                />
+                <TextField
+                  margin="dense"
+                  label="מיקום"
+                  fullWidth
+                  value={formData.location}
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                />
+                <TextField
+                  margin="dense"
+                  label="מקסימום משתתפים"
+                  type="number"
+                  fullWidth
+                  value={formData.maxParticipants}
+                  onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
+                />
+                <TextField
+                  margin="dense"
+                  label="מחיר למשתתף (CZK)"
+                  type="number"
+                  fullWidth
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                />
+                <TextField
+                  margin="dense"
+                  label="סבסוד למשתתף (CZK)"
+                  type="number"
+                  fullWidth
+                  value={formData.subsidy}
+                  onChange={(e) => setFormData({ ...formData, subsidy: e.target.value })}
+                />
+                {formData.maxParticipants && formData.subsidy && (
+                  <Box sx={{ mt: 2, mb: 1 }}>
+                    <strong>סה"כ תקציב סבסוד:</strong>{' '}
+                    {Number(formData.maxParticipants) * Number(formData.subsidy) > 0
+                      ? (Number(formData.maxParticipants) * Number(formData.subsidy)).toLocaleString()
+                      : 0} CZK
+                  </Box>
+                )}
+                <DialogActions>
+                  <Button onClick={handleClose}>ביטול</Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={!formData.title.trim() || !formData.date || submitting}
+                  >
+                    {submitting ? 'יוצר...' : editingEvent ? 'עדכון' : 'יצירה'}
+                  </Button>
+                </DialogActions>
+              </Box>
             </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>ביטול</Button>
-              <Button onClick={handleSubmit} variant="contained" disabled={!formData.title.trim() || !formData.date}>
-                {editingEvent ? 'עדכון' : 'יצירה'}
-              </Button>
-            </DialogActions>
           </Dialog>
         </Box>
       </Fade>
