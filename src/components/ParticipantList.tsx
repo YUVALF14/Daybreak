@@ -14,10 +14,12 @@ import {
   Avatar,
   Stack,
   IconButton,
+  LinearProgress,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+import CelebrationIcon from '@mui/icons-material/Celebration';
 import { useWhatsApp } from '../context/WhatsAppContext';
 import { useEvents } from '../context/EventsContext';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -189,6 +191,16 @@ const ParticipantList = () => {
     ? events.filter(e => e.id === eventIdFromUrl)
     : [];
 
+  // Calculate registration progress for the first filtered event
+  const registrationProgress = filteredEvents.length > 0 && filteredEvents[0].maxParticipants
+    ? Math.min(
+        100 *
+          (filteredEvents[0].participants?.length || 0) /
+          filteredEvents[0].maxParticipants,
+        100
+      )
+    : 0;
+
   return (
     <Box sx={{
       maxWidth: 500,
@@ -350,6 +362,28 @@ const ParticipantList = () => {
         <Typography variant="h5" sx={{ fontWeight: 700, color: '#7c4dff', mb: 2 }}>
           {filteredEvents.length > 0 ? 'הרשמה לאירוע' : 'לא נבחר אירוע'}
         </Typography>
+        {filteredEvents.length > 0 && (
+          <Box sx={{ width: '100%', mb: 2 }}>
+            <Typography sx={{ fontWeight: 600, mb: 1, color: '#1976d2', display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CelebrationIcon color="success" /> התקדמות הרשמה
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={registrationProgress}
+              sx={{
+                height: 10,
+                borderRadius: 5,
+                background: '#eaf6ff',
+                '& .MuiLinearProgress-bar': {
+                  background: 'linear-gradient(90deg, #0071e3 0%, #34c759 100%)'
+                }
+              }}
+            />
+            <Typography sx={{ fontSize: '0.95rem', mt: 0.5, color: '#6e6e73' }}>
+              {filteredEvents[0].participants?.length || 0} מתוך {filteredEvents[0].maxParticipants || '-'} נרשמו
+            </Typography>
+          </Box>
+        }
         <Stack spacing={2}>
           {filteredEvents.map(event => (
             <Card key={event.id} sx={{
@@ -441,7 +475,22 @@ const ParticipantList = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            animation: 'fadeIn 0.7s',
+            position: 'relative'
           }}>
+            {/* Animated icon for new participants */}
+            {participant.id === currentParticipant?.id && (
+              <CelebrationIcon
+                color="success"
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  left: 8,
+                  fontSize: 32,
+                  animation: 'float 2.5s ease-in-out infinite'
+                }}
+              />
+            )}
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar sx={{ bgcolor: '#64B5F6', width: 56, height: 56, mr: 2 }}>
                 {participant.name[0]}
@@ -557,6 +606,15 @@ const ParticipantList = () => {
           {currentParticipant ? 'הפרטים עודכנו בהצלחה!' : 'ההרשמה בוצעה בהצלחה!'}
         </Alert>
       </Snackbar>
+      <style>
+        {`
+          @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-8px);}
+            100% { transform: translateY(0);}
+          }
+        `}
+      </style>
     </Box>
   );
 };

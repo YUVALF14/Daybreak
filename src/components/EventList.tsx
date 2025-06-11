@@ -11,10 +11,17 @@ import {
   DialogActions,
   TextField,
   IconButton,
+  Chip,
+  Tooltip,
+  Fade,
 } from '@mui/material';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import { useEvents } from '../context/EventsContext';
 import FeedbackForm from './FeedbackForm';
+import EventIcon from '@mui/icons-material/Event';
+import PlaceIcon from '@mui/icons-material/Place';
+import PeopleIcon from '@mui/icons-material/People';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 interface FormData {
   title: string;
@@ -93,178 +100,213 @@ const EventList = () => {
 
   return (
     <Box sx={{ px: { xs: 1, sm: 0 } }}>
-      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', mb: 3, gap: { xs: 2, sm: 0 } }}>
-        <Typography variant="h4" component="h1">
-          אירועים
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            setEditingEvent(null);
-            setFormData(initialFormData);
-            setOpenDialog(true);
-          }}
-          sx={{
-            width: { xs: '100%', sm: 'auto' },
-            mt: { xs: 1, sm: 0 }
-          }}
-        >
-          אירוע חדש 🎉
-        </Button>
-      </Box>
+      {/* Add a subtle fade-in animation */}
+      <Fade in timeout={700}>
+        <Box>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', mb: 3, gap: { xs: 2, sm: 0 } }}>
+            <Typography variant="h4" component="h1">
+              אירועים
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                setEditingEvent(null);
+                setFormData(initialFormData);
+                setOpenDialog(true);
+              }}
+              sx={{
+                width: { xs: '100%', sm: 'auto' },
+                mt: { xs: 1, sm: 0 }
+              }}
+              startIcon={<EventIcon />}
+            >
+              אירוע חדש 🎉
+            </Button>
+          </Box>
 
-      {events.map((event) => (
-        <Card key={event.id} sx={{ mb: 2, borderRadius: { xs: 2, sm: 4 }, px: { xs: 1, sm: 2 } }}>
-          <CardContent>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-              <Box>
-                <Typography variant="h6">{event.title}</Typography>
-                <Typography color="text.secondary">
-                  {new Date(event.date).toLocaleDateString('he-IL')}
-                </Typography>
-                <Typography>{event.description}</Typography>
-                <Typography color="text.secondary">
-                  📍 {event.location}
-                </Typography>
-                {event.maxParticipants && (
-                  <Typography color="text.secondary">
-                    👥 מקסימום משתתפים: {event.maxParticipants}
-                  </Typography>
-                )}
-                {event.price && (
-                  <Typography color="text.secondary">
-                    💸 מחיר למשתתף: {event.price} CZK
-                  </Typography>
-                )}
-                {event.subsidy && (
-                  <Typography color="text.secondary">
-                    🏷️ סבסוד למשתתף: {event.subsidy} CZK
-                  </Typography>
-                )}
-                {event.maxParticipants && event.subsidy && (
-                  <Typography color="text.secondary">
-                    💰 סה"כ תקציב סבסוד: {Number(event.maxParticipants) * Number(event.subsidy) > 0
-                      ? (Number(event.maxParticipants) * Number(event.subsidy)).toLocaleString()
-                      : 0} CZK
-                  </Typography>
-                )}
-              </Box>
-              <Box>
-                <IconButton onClick={() => handleEdit(event)} color="primary">
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={() => deleteEvent(event.id)} color="error">
-                  <DeleteIcon />
-                </IconButton>
-                {/* Feedback button */}
-                <Button
-                  variant="outlined"
-                  color="info"
-                  size="small"
-                  sx={{ mt: 1, width: { xs: '100%', sm: 'auto' } }}
-                  onClick={() => handleOpenFeedback(event.id)}
-                >
-                  משוב
-                </Button>
-                <Dialog
-                  open={!!feedbackOpen[event.id]}
-                  onClose={() => handleCloseFeedback(event.id)}
-                  maxWidth="sm"
-                  fullWidth
-                >
-                  <DialogTitle>משוב על האירוע: {event.title}</DialogTitle>
-                  <DialogContent>
-                    <FeedbackForm eventId={event.id} />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={() => handleCloseFeedback(event.id)}>סגור</Button>
-                  </DialogActions>
-                </Dialog>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
-      ))}
+          {events.map((event) => (
+            <Card key={event.id} sx={{
+              mb: 2,
+              borderRadius: { xs: 2, sm: 4 },
+              px: { xs: 1, sm: 2 },
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              '&:hover': { transform: 'scale(1.02)', boxShadow: 6 },
+              animation: 'fadeIn 0.7s',
+              position: 'relative'
+            }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                  <Box>
+                    <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <EventIcon color="primary" sx={{ mr: 0.5 }} />
+                      {event.title}
+                    </Typography>
+                    <Typography color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <EventIcon fontSize="small" sx={{ opacity: 0.7 }} />
+                      {new Date(event.date).toLocaleDateString('he-IL')}
+                    </Typography>
+                    <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <PlaceIcon fontSize="small" sx={{ opacity: 0.7 }} />
+                      {event.location}
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
+                      {event.maxParticipants && (
+                        <Chip
+                          icon={<PeopleIcon />}
+                          label={`מקסימום: ${event.maxParticipants}`}
+                          color="info"
+                          size="small"
+                          sx={{ fontWeight: 600 }}
+                        />
+                      )}
+                      {event.price && (
+                        <Chip
+                          icon={<MonetizationOnIcon />}
+                          label={`מחיר: ${event.price} CZK`}
+                          color="success"
+                          size="small"
+                          sx={{ fontWeight: 600 }}
+                        />
+                      )}
+                      {event.subsidy && (
+                        <Chip
+                          label={`סבסוד: ${event.subsidy} CZK`}
+                          color="secondary"
+                          size="small"
+                          sx={{ fontWeight: 600 }}
+                        />
+                      )}
+                    </Box>
+                    {event.description && (
+                      <Typography sx={{ mt: 1, color: '#6e6e73', fontSize: '1rem' }}>
+                        {event.description}
+                      </Typography>
+                    )}
+                  </Box>
+                  <Box>
+                    <Tooltip title="ערוך אירוע">
+                      <IconButton onClick={() => handleEdit(event)} color="primary">
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="מחק אירוע">
+                      <IconButton onClick={() => deleteEvent(event.id)} color="error">
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                    {/* Feedback button */}
+                    <Tooltip title="משוב">
+                      <Button
+                        variant="outlined"
+                        color="info"
+                        size="small"
+                        sx={{ mt: 1, width: { xs: '100%', sm: 'auto' } }}
+                        onClick={() => handleOpenFeedback(event.id)}
+                      >
+                        משוב
+                      </Button>
+                    </Tooltip>
+                    <Dialog
+                      open={!!feedbackOpen[event.id]}
+                      onClose={() => handleCloseFeedback(event.id)}
+                      maxWidth="sm"
+                      fullWidth
+                    >
+                      <DialogTitle>משוב על האירוע: {event.title}</DialogTitle>
+                      <DialogContent>
+                        <FeedbackForm eventId={event.id} />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={() => handleCloseFeedback(event.id)}>סגור</Button>
+                      </DialogActions>
+                    </Dialog>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          ))}
 
-      <Dialog open={openDialog} onClose={handleClose} fullWidth>
-        <DialogTitle>
-          {editingEvent ? 'עריכת אירוע' : 'יצירת אירוע חדש'}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="כותרת"
-            fullWidth
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="תאריך"
-            type="date"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-            value={formData.date}
-            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="תיאור"
-            fullWidth
-            multiline
-            rows={4}
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="מיקום"
-            fullWidth
-            value={formData.location}
-            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="מקסימום משתתפים"
-            type="number"
-            fullWidth
-            value={formData.maxParticipants}
-            onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="מחיר למשתתף (CZK)"
-            type="number"
-            fullWidth
-            value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="סבסוד למשתתף (CZK)"
-            type="number"
-            fullWidth
-            value={formData.subsidy}
-            onChange={(e) => setFormData({ ...formData, subsidy: e.target.value })}
-          />
-          {formData.maxParticipants && formData.subsidy && (
-            <Box sx={{ mt: 2, mb: 1 }}>
-              <strong>סה"כ תקציב סבסוד:</strong>{' '}
-              {Number(formData.maxParticipants) * Number(formData.subsidy) > 0
-                ? (Number(formData.maxParticipants) * Number(formData.subsidy)).toLocaleString()
-                : 0} CZK
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>ביטול</Button>
-          <Button onClick={handleSubmit} variant="contained" disabled={!formData.title.trim() || !formData.date}>
-            {editingEvent ? 'עדכון' : 'יצירה'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <Dialog open={openDialog} onClose={handleClose} fullWidth>
+            <DialogTitle>
+              {editingEvent ? 'עריכת אירוע' : 'יצירת אירוע חדש'}
+            </DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="כותרת"
+                fullWidth
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              />
+              <TextField
+                margin="dense"
+                label="תאריך"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={formData.date}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              />
+              <TextField
+                margin="dense"
+                label="תיאור"
+                fullWidth
+                multiline
+                rows={4}
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              />
+              <TextField
+                margin="dense"
+                label="מיקום"
+                fullWidth
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              />
+              <TextField
+                margin="dense"
+                label="מקסימום משתתפים"
+                type="number"
+                fullWidth
+                value={formData.maxParticipants}
+                onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
+              />
+              <TextField
+                margin="dense"
+                label="מחיר למשתתף (CZK)"
+                type="number"
+                fullWidth
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              />
+              <TextField
+                margin="dense"
+                label="סבסוד למשתתף (CZK)"
+                type="number"
+                fullWidth
+                value={formData.subsidy}
+                onChange={(e) => setFormData({ ...formData, subsidy: e.target.value })}
+              />
+              {formData.maxParticipants && formData.subsidy && (
+                <Box sx={{ mt: 2, mb: 1 }}>
+                  <strong>סה"כ תקציב סבסוד:</strong>{' '}
+                  {Number(formData.maxParticipants) * Number(formData.subsidy) > 0
+                    ? (Number(formData.maxParticipants) * Number(formData.subsidy)).toLocaleString()
+                    : 0} CZK
+                </Box>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>ביטול</Button>
+              <Button onClick={handleSubmit} variant="contained" disabled={!formData.title.trim() || !formData.date}>
+                {editingEvent ? 'עדכון' : 'יצירה'}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
+      </Fade>
     </Box>
   );
 };

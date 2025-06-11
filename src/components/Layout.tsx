@@ -15,25 +15,28 @@ const Layout: React.FC<LayoutProps> = () => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        background: 'linear-gradient(120deg, #E3F2FD 0%, #bbdefb 50%, #f8fafc 100%)',
+        background: 'linear-gradient(120deg, #f5f5f7 0%, #fff 100%)',
         animation: 'bgMove 12s ease-in-out infinite alternate',
         transition: 'background 1s',
       }}
     >
       <AppBar
         position="static"
-        color="primary"
+        color="transparent"
+        elevation={0}
         sx={{
-          background: 'linear-gradient(90deg, #1976d2 0%, #64B5F6 100%)',
-          boxShadow: 3,
-          px: { xs: 1, sm: 3 },
+          background: 'rgba(255,255,255,0.85)',
+          boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
+          px: { xs: 1, sm: 4 },
+          py: 1,
+          borderBottom: '1px solid #eaeaea',
         }}
       >
-        <Toolbar sx={{ flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'stretch', sm: 'center' }, gap: { xs: 1, sm: 0 } }}>
+        <Toolbar sx={{ flexDirection: 'row', alignItems: 'center', gap: 2, minHeight: 72 }}>
           <Avatar
             src="/favicon.ico"
             alt="logo"
-            sx={{ mr: { xs: 0, sm: 2 }, mb: { xs: 1, sm: 0 }, bgcolor: '#fff', width: 40, height: 40, boxShadow: 2 }}
+            sx={{ mr: 2, bgcolor: '#fff', width: 48, height: 48, boxShadow: 1 }}
           />
           <Typography
             variant="h5"
@@ -41,20 +44,19 @@ const Layout: React.FC<LayoutProps> = () => {
             sx={{
               flexGrow: 1,
               fontWeight: 900,
-              letterSpacing: 1,
-              background: 'linear-gradient(90deg, #1976d2 10%, #42A5F5 60%, #64B5F6 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              textShadow: '0 2px 12px #90caf9',
-              fontSize: { xs: '1.3rem', sm: '2rem' },
+              letterSpacing: '-0.03em',
+              fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
+              color: '#1d1d1f',
+              fontSize: { xs: '1.5rem', sm: '2.1rem' },
+              userSelect: 'none',
             }}
           >
             DAYBREAK
           </Typography>
-          <Button color="inherit" onClick={() => navigate('/')} sx={{ mx: 1, width: { xs: '100%', sm: 'auto' }, my: { xs: 0.5, sm: 0 } }} aria-label="דף הבית">
+          <Button color="primary" onClick={() => navigate('/')} sx={{ mx: 1, fontWeight: 700, fontSize: '1.08rem' }} aria-label="דף הבית">
             דף הבית
           </Button>
-          <Button color="inherit" onClick={() => navigate('/admin-login')} sx={{ mx: 1, width: { xs: '100%', sm: 'auto' }, my: { xs: 0.5, sm: 0 } }} aria-label="כניסת מנהלים">
+          <Button color="primary" onClick={() => navigate('/admin-login')} sx={{ mx: 1, fontWeight: 700, fontSize: '1.08rem' }} aria-label="כניסת מנהלים">
             כניסת מנהלים
           </Button>
         </Toolbar>
@@ -62,12 +64,13 @@ const Layout: React.FC<LayoutProps> = () => {
       <Container
         component="main"
         sx={{
-          mt: 4,
-          mb: 4,
+          mt: 6,
+          mb: 6,
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          minHeight: '70vh',
         }}
       >
         <Outlet />
@@ -76,22 +79,19 @@ const Layout: React.FC<LayoutProps> = () => {
         component="footer"
         sx={{
           py: 3,
-          bgcolor: '#ede7f6',
+          bgcolor: '#f5f5f7',
           textAlign: 'center',
           mt: 'auto',
-          opacity: 0.92,
+          opacity: 0.97,
+          borderTop: '1px solid #eaeaea',
         }}
       >
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'SF Pro Display, Assistant, sans-serif' }}>
           © {new Date().getFullYear()} DAYBREAK. כל הזכויות שמורות.
         </Typography>
       </Box>
       <style>
         {`
-          @keyframes titleFadeIn {
-            from { opacity: 0; letter-spacing: 0.5em; }
-            to { opacity: 1; letter-spacing: 0.03em; }
-          }
           @keyframes bgMove {
             0% { background-position: 0% 50%; }
             100% { background-position: 100% 50%; }
