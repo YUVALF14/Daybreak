@@ -1,3 +1,7 @@
+import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
+import { getAuth } from "firebase/auth";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCl_KY51O2W5koBIZf9Pdp1GYiqeIPZz3I",
   authDomain: "daybreak-3979a.firebaseapp.com",
@@ -8,3 +12,9 @@ const firebaseConfig = {
   appId: "1:1065548372608:web:487d243faf9b0d89bee465",
   measurementId: "G-B7FYNWLX6V"
 };
+
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const auth = getAuth(app);
+
+export { database, auth };
