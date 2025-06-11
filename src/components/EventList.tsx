@@ -62,6 +62,7 @@ const EventList = () => {
     } else {
       addEvent({
         ...formData,
+        id: Date.now().toString(), // <-- Ensure new event has an id
         maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : undefined,
         price: formData.price ? parseFloat(formData.price) : undefined,
         subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,

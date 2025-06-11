@@ -20,7 +20,8 @@ const HomePage = () => {
     <Box
       sx={{
         fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
-        textAlign: 'center',
+        textAlign: 'right', // RTL alignment
+        direction: 'rtl',
         mt: { xs: 4, sm: 10 },
         minHeight: { xs: '70vh', sm: '80vh' },
         px: { xs: 2, sm: 8 },
@@ -131,9 +132,14 @@ const HomePage = () => {
       {/* כפתורי ניווט בלבד */}
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
-        spacing={2}
+        spacing={3} // Increased spacing
         justifyContent="center"
-        sx={{ mt: { xs: 2, sm: 4 }, zIndex: 2, position: 'relative' }}
+        sx={{
+          mt: { xs: 2, sm: 4 },
+          zIndex: 2,
+          position: 'relative',
+          width: '100%',
+        }}
       >
         <Button
           variant="contained"
@@ -226,6 +232,22 @@ const HomePage = () => {
             ? 'המערכת מחוברת לאינטרנט ומסונכרנת ☁️'
             : 'אין חיבור לאינטרנט - הנתונים לא יסונכרנו!'}
         </Alert>
+      </Box>
+      {/* Footer */}
+      <Box
+        sx={{
+          mt: 6,
+          pt: 3,
+          textAlign: 'center',
+          color: '#6e6e73',
+          fontSize: '1rem',
+          opacity: 0.85,
+          borderTop: '1px solid #eaeaea',
+        }}
+      >
+        <span>
+          כל הזכויות שמורות &copy; {new Date().getFullYear()} | נעשה באהבה <span style={{color:'#e25555'}}>♥</span> בשביל הקהילה הישראלית הצעירה בפראג
+        </span>
       </Box>
       <style>
         {`
