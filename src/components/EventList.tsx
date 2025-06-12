@@ -60,7 +60,6 @@ const EventList = () => {
 
   // Add state for registration dialog
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
-  const [registerEventId, setRegisterEventId] = useState<string | null>(null); // Restore registerEventId state
   const [registerForm, setRegisterForm] = useState({ name: '', phone: '' });
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [registerSuccess, setRegisterSuccess] = useState(false);
