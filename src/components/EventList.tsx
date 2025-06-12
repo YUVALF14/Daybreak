@@ -14,6 +14,11 @@ import {
   Chip,
   Tooltip,
   Fade,
+  DialogContentText,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction
 } from '@mui/material';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import { useEvents } from '../context/EventsContext';
@@ -23,6 +28,8 @@ import PlaceIcon from '@mui/icons-material/Place';
 import PeopleIcon from '@mui/icons-material/People';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import GroupIcon from '@mui/icons-material/Group';
 
 interface FormData {
   title: string;
@@ -59,6 +66,12 @@ const EventList = () => {
   const [registerForm, setRegisterForm] = useState({ name: '', phone: '' });
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [registerSuccess, setRegisterSuccess] = useState(false);
+
+  // State for participants dialog
+  const [participantsDialogOpen, setParticipantsDialogOpen] = useState(false);
+  const [participantsEvent, setParticipantsEvent] = useState<any | null>(null);
+  const [newParticipant, setNewParticipant] = useState({ name: '', phone: '' });
+  const [participantError, setParticipantError] = useState<string | null>(null);
 
   // Open dialog for new event
   const handleOpenDialog = () => {
@@ -164,11 +177,38 @@ const EventList = () => {
     }, 1200);
   };
 
+  // Add participant to event
+  const handleAddParticipant = async () => {
+    if (!newParticipant.name || !newParticipant.phone) {
+      setParticipantError('נא למלא שם ומספר טלפון');
+      return;
+    }
+    if (!/^05\d{8}$/.test(newParticipant.phone)) {
+      setParticipantError('מספר טלפון לא תקין');
+      return;
+    }
+    if (participantsEvent.participants?.some((p: any) => p.phone === newParticipant.phone)) {
+      setParticipantError('משתתף עם מספר טלפון זה כבר קיים');
+      return;
+    }
+    const updatedParticipants = [...(participantsEvent.participants || []), { ...newParticipant, paid: false, confirmed: false, attended: false }];
+    await updateEvent(participantsEvent.id, { ...participantsEvent, participants: updatedParticipants });
+    setNewParticipant({ name: '', phone: '' });
+    setParticipantError(null);
+  };
+
+  // Remove participant from event
+  const handleRemoveParticipant = async (phone: string) => {
+    const updatedParticipants = (participantsEvent.participants || []).filter((p: any) => p.phone !== phone);
+    await updateEvent(participantsEvent.id, { ...participantsEvent, participants: updatedParticipants });
+  };
+
   return (
     <Box sx={{ px: { xs: 1, sm: 0 } }}>
       {/* Add a subtle fade-in animation */}
       <Fade in timeout={700}>
         <Box>
+          {/* כפתור יצירת אירוע חדש */}
           <Box sx={{
             display: 'flex',
             flexDirection: { xs: 'column', sm: 'row' },
@@ -214,6 +254,7 @@ const EventList = () => {
             </Button>
           </Box>
 
+          {/* רשימת האירועים */}
           {events.map((event: any) => (
             <Card key={event.id} sx={{
               mb: 2,
@@ -284,43 +325,33 @@ const EventList = () => {
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
-                    {/* Feedback button */}
-                    <Tooltip title="משוב">
-                      <Button
-                        variant="outlined"
+                    {/* צפייה במשתתפים */}
+                    <Tooltip title="משתתפים">
+                      <IconButton
                         color="info"
-                        size="small"
-                        sx={{ mt: 1, width: { xs: '100%', sm: 'auto' } }}
-                        onClick={() => handleOpenFeedback(event.id)}
+                        onClick={() => {
+                          setParticipantsEvent(event);
+                          setParticipantsDialogOpen(true);
+                          setNewParticipant({ name: '', phone: '' });
+                          setParticipantError(null);
+                        }}
                       >
-                        משוב
-                      </Button>
+                        <GroupIcon />
+                      </IconButton>
                     </Tooltip>
-                    <Dialog
-                      open={feedbackOpen.includes(event.id)}
-                      onClose={() => handleCloseFeedback(event.id)}
-                      maxWidth="sm"
-                      fullWidth
-                    >
-                      <DialogTitle>משוב על האירוע: {event.title}</DialogTitle>
-                      <DialogContent>
-                        <FeedbackForm eventId={event.id} />
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={() => handleCloseFeedback(event.id)}>סגור</Button>
-                      </DialogActions>
-                    </Dialog>
-                    {/* Registration button */}
-                    <Tooltip title="הרשמה לאירוע">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        sx={{ mt: 1, width: { xs: '100%', sm: 'auto' }, borderRadius: 99 }}
-                        onClick={() => { setRegisterEventId(event.id); setRegisterDialogOpen(true); }}
+                    {/* הרשמה מהירה */}
+                    <Tooltip title="הוסף משתתף">
+                      <IconButton
+                        color="success"
+                        onClick={() => {
+                          setParticipantsEvent(event);
+                          setParticipantsDialogOpen(true);
+                          setNewParticipant({ name: '', phone: '' });
+                          setParticipantError(null);
+                        }}
                       >
-                        הרשמה
-                      </Button>
+                        <PersonAddIcon />
+                      </IconButton>
                     </Tooltip>
                   </Box>
                 </Box>
@@ -328,6 +359,7 @@ const EventList = () => {
             </Card>
           ))}
 
+          {/* דיאלוג יצירת/עריכת אירוע */}
           <Dialog open={openDialog} onClose={handleClose} maxWidth="sm" fullWidth>
             <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 0 }}>
               <Button
@@ -441,6 +473,47 @@ const EventList = () => {
                 </DialogActions>
               </Box>
             </DialogContent>
+          </Dialog>
+
+          {/* דיאלוג צפייה/הוספת משתתפים */}
+          <Dialog open={participantsDialogOpen} onClose={() => setParticipantsDialogOpen(false)} maxWidth="sm" fullWidth>
+            <DialogTitle>משתתפי האירוע: {participantsEvent?.title}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                כאן ניתן להוסיף משתתפים חדשים או להסיר משתתפים קיימים.
+              </DialogContentText>
+              <List>
+                {(participantsEvent?.participants || []).map((p: any) => (
+                  <ListItem key={p.phone}>
+                    <ListItemText primary={p.name} secondary={p.phone} />
+                    <ListItemSecondaryAction>
+                      <IconButton edge="end" color="error" onClick={() => handleRemoveParticipant(p.phone)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+              </List>
+              <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+                <TextField
+                  label="שם מלא"
+                  value={newParticipant.name}
+                  onChange={e => setNewParticipant({ ...newParticipant, name: e.target.value })}
+                  size="small"
+                />
+                <TextField
+                  label="טלפון"
+                  value={newParticipant.phone}
+                  onChange={e => setNewParticipant({ ...newParticipant, phone: e.target.value })}
+                  size="small"
+                />
+                <Button variant="contained" onClick={handleAddParticipant}>הוסף</Button>
+              </Box>
+              {participantError && <Typography color="error">{participantError}</Typography>}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setParticipantsDialogOpen(false)}>סגור</Button>
+            </DialogActions>
           </Dialog>
 
           {/* Registration dialog */}
