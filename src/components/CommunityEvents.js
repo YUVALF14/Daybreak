@@ -1,11 +1,9 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, Stack, Button } from '@mui/material';
 import { useEvents } from '../context/EventsContext';
-import { useNavigate } from 'react-router-dom';
 
 const CommunityEvents = () => {
   const { events } = useEvents();
-  const navigate = useNavigate();
 
   const upcomingEvents = events
     .filter(e => {

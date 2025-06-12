@@ -83,9 +83,9 @@ const HomePage = () => {
               background: 'linear-gradient(90deg, #34c759 0%, #0071e3 100%)',
             },
           }}
-          onClick={() => navigate('/events')}
+          onClick={() => navigate('/admin-login')}
         >
-          לאירועים הקרובים
+          כניסת מנהלים
         </Button>
         <Button
           variant="outlined"
@@ -107,24 +107,35 @@ const HomePage = () => {
               background: 'linear-gradient(90deg, #eaf6ff 0%, #f5f5f7 100%)',
             },
           }}
-          onClick={() => navigate('/community')}
+          onClick={() => navigate('/events')}
         >
-          אירועי קהילה
+          כניסה ללוח האירועים
         </Button>
         <Button
-          variant="text"
-          color="secondary"
+          variant="contained"
+          color="success"
+          size="large"
           sx={{
-            mt: 2,
-            fontWeight: 600,
-            fontSize: '1.05rem',
-            color: '#1976d2',
-            textDecoration: 'underline',
-            '&:hover': { color: '#005bb5', background: 'none' },
+            borderRadius: 99,
+            fontWeight: 800,
+            fontSize: '1.15rem',
+            py: 1.7,
+            letterSpacing: 1,
+            boxShadow: 2,
+            background: 'linear-gradient(90deg, #25d366 0%, #128c7e 100%)',
+            color: '#fff',
+            transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
+            '&:hover': {
+              transform: 'scale(1.04)',
+              boxShadow: '0 6px 32px 0 #25d36655',
+              background: 'linear-gradient(90deg, #128c7e 0%, #25d366 100%)',
+            },
           }}
-          onClick={() => navigate('/admin-login')}
+          href="https://wa.me/972542230342"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          כניסת מנהלים
+          יצירת קשר בווצאפ
         </Button>
       </Stack>
       <Box
