@@ -92,7 +92,7 @@ function BudgetDashboard({ onBack }) {
           px: 4,
           py: 1.2,
         }}
-        onClick={onBack}
+        onClick={() => { if (onBack) onBack(); }}
       >
         חזור
       </Button>

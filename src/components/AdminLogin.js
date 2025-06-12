@@ -29,7 +29,8 @@ function AdminLogin({ onLogin }) {
       setError(true);
     } else {
       setError(false);
-      navigate('/events'); // Redirect to event dashboard after login
+      // Navigate to admin dashboard ("/admin-login" will show dashboard if authenticated)
+      navigate('/admin-login');
     }
   };
 
@@ -113,7 +114,7 @@ function AdminLogin({ onLogin }) {
               required
               fullWidth
               label="קוד מנהל"
-              type={showPassword ? 'text' : '071024'}
+              type={showPassword ? 'text' : 'password'}
               value={code}
               autoFocus
               onChange={(e) => {
