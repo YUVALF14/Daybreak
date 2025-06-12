@@ -34,7 +34,6 @@ interface Participant {
   registeredEvents?: string[];
 }
 
-const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '071024';
 const ParticipantList = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(null);

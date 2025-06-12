@@ -22,7 +22,6 @@ import {
 } from '@mui/material';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import { useEvents } from '../context/EventsContext';
-import FeedbackForm from './FeedbackForm';
 import EventIcon from '@mui/icons-material/Event';
 import PlaceIcon from '@mui/icons-material/Place';
 import PeopleIcon from '@mui/icons-material/People';
@@ -56,13 +55,11 @@ const EventList = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editingEvent, setEditingEvent] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [feedbackOpen, setFeedbackOpen] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Add state for registration dialog
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
-  const [registerEventId, setRegisterEventId] = useState<string | null>(null);
   const [registerForm, setRegisterForm] = useState({ name: '', phone: '' });
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [registerSuccess, setRegisterSuccess] = useState(false);
@@ -138,14 +135,6 @@ const EventList = () => {
       subsidy: event.subsidy?.toString() || '',
     });
     setOpenDialog(true);
-  };
-
-  const handleOpenFeedback = (eventId: string) => {
-    setFeedbackOpen((prev: string[]) => [...prev, eventId]);
-  };
-
-  const handleCloseFeedback = (eventId: string) => {
-    setFeedbackOpen((prev: string[]) => prev.filter((id: string) => id !== eventId));
   };
 
   // Registration handler
