@@ -23,8 +23,8 @@ import CelebrationIcon from '@mui/icons-material/Celebration';
 import { useWhatsApp } from '../context/WhatsAppContext';
 import { useEvents } from '../context/EventsContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { database } from '../config/firebase';
 import { ref, set, onValue, off } from 'firebase/database';
+import { database } from '../config/firebase';
 
 interface Participant {
   id: string;
@@ -34,7 +34,7 @@ interface Participant {
   registeredEvents?: string[];
 }
 
-const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '071024'`  
+const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '071024';
 const ParticipantList = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [currentParticipant, setCurrentParticipant] = useState<Participant | null>(null);
@@ -585,7 +585,7 @@ const ParticipantList = () => {
               variant="outlined"
               fullWidth
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
               disabled={isLoading}
             />
             <TextField
@@ -593,7 +593,7 @@ const ParticipantList = () => {
               variant="outlined"
               fullWidth
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, phone: e.target.value })}
               disabled={isLoading}
             />
             <TextField
@@ -601,7 +601,7 @@ const ParticipantList = () => {
               variant="outlined"
               fullWidth
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
               disabled={isLoading}
             />
           </Stack>
