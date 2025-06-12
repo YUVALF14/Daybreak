@@ -1,9 +1,3 @@
-/* eslint-disable no-unused-vars */
-// Remove unused import
-// import FormControlLabel from '@mui/material/FormControlLabel'; // <-- Unused, remove
-
-// Remove unused variable
-// const PRICE_TYPES = ["free", "paid"]; // <-- Unused, remove
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,

@@ -77,7 +77,6 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const deleteEvent = async (id: string) => {
     const eventRef = ref(database, `events/${id}`);
-    console.log('deleteEvent:', id);
     await remove(eventRef);
   };
 

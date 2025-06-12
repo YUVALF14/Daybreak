@@ -37,16 +37,12 @@ function EventDashboard({ onNavigateBudget }) {
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
 
   const handleAddEvent = async (newEvent) => {
-    console.log('Adding event:', newEvent);
-    // Ensure event has participants array and all required fields
     await addEvent({ ...newEvent, participants: newEvent.participants || [] });
     setOpenEventForm(false);
     setSnackbar({ open: true, message: 'האירוע נוצר בהצלחה' });
   };
 
   const handleUpdateEvent = async (updatedEvent) => {
-    console.log('Updating event:', updatedEvent);
-    // Ensure update includes the id and participants array
     await updateEvent(updatedEvent.id, {
       ...updatedEvent,
       participants: updatedEvent.participants || [],
@@ -56,13 +52,11 @@ function EventDashboard({ onNavigateBudget }) {
   };
 
   const handleDeleteEvent = async (eventId) => {
-    console.log('Deleting event:', eventId);
     await deleteEvent(eventId);
     setSnackbar({ open: true, message: 'האירוע נמחק בהצלחה' });
   };
 
   const handleParticipantUpdate = async (eventId, participant) => {
-    console.log('Updating participant:', eventId, participant);
     // Update the participants array for the event
     const event = events.find(e => e.id === eventId);
     if (!event) return;
