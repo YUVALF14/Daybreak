@@ -100,8 +100,9 @@ const CommunityEvents = () => {
         ))}
       </Stack>
       <Button
-        variant="outlined"
-        color="primary"
+        variant="contained"
+        color="success"
+        startIcon={<span style={{ display: 'flex', alignItems: 'center' }}><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style={{ width: 24, height: 24 }} /></span>}
         sx={{
           mt: 4,
           borderRadius: 99,
@@ -111,19 +112,21 @@ const CommunityEvents = () => {
           py: 1.5,
           boxShadow: 2,
           letterSpacing: 1,
-          background: 'linear-gradient(90deg, #eaf6ff 0%, #f5f5f7 100%)',
-          color: '#0071e3',
-          border: '2px solid #0071e3',
+          background: 'linear-gradient(90deg, #25d366 0%, #128c7e 100%)',
+          color: '#fff',
+          border: '2px solid #25d366',
           transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
           '&:hover': {
             transform: 'scale(1.04)',
-            boxShadow: '0 6px 32px 0 #0071e355',
-            background: 'linear-gradient(90deg, #f5f5f7 0%, #eaf6ff 100%)',
+            boxShadow: '0 6px 32px 0 #25d36655',
+            background: 'linear-gradient(90deg, #128c7e 0%, #25d366 100%)',
           },
         }}
-        onClick={() => navigate('/')}
+        href="https://wa.me/972542230342"
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        חזרה לדף הבית
+        צור קשר ב-WhatsApp
       </Button>
     </Box>
   );
