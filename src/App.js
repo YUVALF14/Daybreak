@@ -1,17 +1,16 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import AdminLogin from './components/AdminLogin';
 import EventDashboard from './components/EventDashboard';
 import CommunityEvents from './components/CommunityEvents';
 import BudgetDashboard from './components/BudgetDashboard';
-import { EventsProvider } from './context/EventsContext'; // <-- add this import
+import { EventsProvider } from './context/EventsContext';
 import './App.css';
 
 function App() {
-  const [showBudget, setShowBudget] = useState(false);
-
   const ADMIN_CODE = '071024';
+  const [showBudget, setShowBudget] = useState(false);
 
   const handleAdminLogin = useCallback((code) => {
     if (code === ADMIN_CODE) {
@@ -40,24 +39,25 @@ function App() {
               )
             }
           />
-          {/* Show budget dashboard only if admin and showBudget is true */}
-          {isAdmin && showBudget && (
-            <Route
-              path="/budget"
-              element={
+          <Route
+            path="/budget"
+            element={
+              isAdmin && showBudget ? (
                 <BudgetDashboard onBack={() => setShowBudget(false)} />
-              }
-            />
-          )}
+              ) : (
+                // Non-admins or direct access: redirect to home or events
+                <HomePage />
+              )
+            }
+          />
+          {/* Non-admins see only the event list */}
           <Route path="/community" element={<CommunityEvents />} />
-          {/* ...add more routes as needed... */}
+          {/* fallback: non-admins see CommunityEvents for /events */}
+          <Route path="/events" element={<CommunityEvents />} />
         </Routes>
       </Router>
     </EventsProvider>
   );
 }
-
-// REQUIRED ENV VARIABLE FOR ADMIN ACCESS (optional fallback to '071024'):
-// REACT_APP_ADMIN_CODE=your_admin_code
 
 export default App;

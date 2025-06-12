@@ -82,6 +82,9 @@ function EventDashboard({ onNavigateBudget }) {
     });
   };
 
+  // Only show budget button for admins
+  const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
+
   return (
     <Container>
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -190,17 +193,23 @@ function EventDashboard({ onNavigateBudget }) {
         onParticipantUpdate={handleParticipantUpdate}
       />
 
-      <Button
-        variant="contained"
-        color="success"
-        sx={{ mt: 3, fontWeight: 800, borderRadius: 99 }}
-        onClick={() => {
-          // Use the prop to trigger navigation to budget dashboard
-          if (onNavigateBudget) onNavigateBudget();
-        }}
-      >
-        מעבר לניהול תקציב
-      </Button>
+      {/* Budget button for admins */}
+      {isAdmin && (
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ mt: 3, fontWeight: 800, borderRadius: 99 }}
+          onClick={() => {
+            if (onNavigateBudget) {
+              // Navigate to /budget route
+              window.location.href = '/budget';
+              onNavigateBudget();
+            }
+          }}
+        >
+          ניהול תקציב
+        </Button>
+      )}
 
       <Snackbar
         open={snackbar.open}

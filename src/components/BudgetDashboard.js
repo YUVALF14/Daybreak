@@ -1,12 +1,24 @@
 import React from 'react';
-import { Box, Typography, Paper, Button, Stack, Divider } from '@mui/material';
+import { Box, Typography, Paper, Button, Stack, Divider, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { useEvents } from '../context/EventsContext';
 
 function BudgetDashboard({ onBack }) {
+  const { events } = useEvents();
+
+  // Calculate budget summary
+  const totalBudget = events.reduce((sum, e) =>
+    sum + ((e.maxParticipants && e.subsidy) ? (parseInt(e.maxParticipants) * parseFloat(e.subsidy)) : 0), 0
+  );
+  const totalExpenses = events.reduce((sum, e) =>
+    sum + ((e.participants && e.subsidy) ? (e.participants.length * parseFloat(e.subsidy)) : 0), 0
+  );
+  const balance = totalBudget - totalExpenses;
+
   return (
     <Box
       sx={{
-        maxWidth: 600,
+        maxWidth: 900,
         mx: 'auto',
         mt: { xs: 2, sm: 6 },
         mb: { xs: 2, sm: 6 },
@@ -44,18 +56,53 @@ function BudgetDashboard({ onBack }) {
           </Typography>
           <Divider />
           <Typography>
-            <strong>סה"כ תקציב:</strong> <span style={{ color: '#388e3c' }}>CZK 0</span>
+            <strong>סה"כ תקציב:</strong> <span style={{ color: '#388e3c' }}>CZK {totalBudget.toLocaleString()}</span>
           </Typography>
           <Typography>
-            <strong>הוצאות:</strong> <span style={{ color: '#d32f2f' }}>CZK 0</span>
+            <strong>הוצאות בפועל:</strong> <span style={{ color: '#d32f2f' }}>CZK {totalExpenses.toLocaleString()}</span>
           </Typography>
           <Typography>
-            <strong>יתרה:</strong> <span style={{ color: '#1976d2' }}>CZK 0</span>
-          </Typography>
-          <Typography color="text.secondary" sx={{ fontSize: '0.95rem' }}>
-            * בקרוב תוצג כאן סטטיסטיקת תקציב מפורטת לכל אירוע.
+            <strong>יתרה:</strong> <span style={{ color: '#1976d2' }}>CZK {balance.toLocaleString()}</span>
           </Typography>
         </Stack>
+      </Paper>
+      {/* Table of event budgets */}
+      <Paper sx={{ width: '100%', mb: 3, p: 2, borderRadius: 5, boxShadow: 2 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+          פירוט אירועים
+        </Typography>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>שם האירוע</TableCell>
+              <TableCell>תאריך</TableCell>
+              <TableCell>סבסוד למשתתף</TableCell>
+              <TableCell>משתתפים בפועל</TableCell>
+              <TableCell>תקציב מקסימלי</TableCell>
+              <TableCell>הוצאה בפועל</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {events.map(e => (
+              <TableRow key={e.id}>
+                <TableCell>{e.title}</TableCell>
+                <TableCell>{e.date ? new Date(e.date).toLocaleDateString('he-IL') : '-'}</TableCell>
+                <TableCell>{e.subsidy ? `${e.subsidy} CZK` : '-'}</TableCell>
+                <TableCell>{e.participants ? e.participants.length : 0}</TableCell>
+                <TableCell>
+                  {e.maxParticipants && e.subsidy
+                    ? `${(parseInt(e.maxParticipants) * parseFloat(e.subsidy)).toLocaleString()} CZK`
+                    : '-'}
+                </TableCell>
+                <TableCell>
+                  {e.participants && e.subsidy
+                    ? `${(e.participants.length * parseFloat(e.subsidy)).toLocaleString()} CZK`
+                    : '0 CZK'}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </Paper>
       <Button
         variant="contained"
@@ -92,7 +139,7 @@ function BudgetDashboard({ onBack }) {
           px: 4,
           py: 1.2,
         }}
-        onClick={() => { if (onBack) onBack(); }}
+        onClick={onBack}
       >
         חזור
       </Button>
