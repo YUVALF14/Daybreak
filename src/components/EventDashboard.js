@@ -24,15 +24,19 @@ import {
 } from '@mui/icons-material';
 import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
+import NewEventForm from './NewEventForm';
+import BudgetDashboard from './BudgetDashboard';
 import { useEvents } from '../context/EventsContext';
 
-function EventDashboard({ onNavigateBudget }) {
+function EventDashboard() {
   const { events, addEvent, updateEvent, deleteEvent } = useEvents();
   const [openEventForm, setOpenEventForm] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [openParticipants, setOpenParticipants] = useState(false);
   const [selectedEventParticipants, setSelectedEventParticipants] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
+  const [openNewEventForm, setOpenNewEventForm] = useState(false);
+  const [openBudgetForm, setOpenBudgetForm] = useState(false);
 
   const handleAddEvent = async (newEvent) => {
     console.log('EventDashboard handleAddEvent called with:', newEvent); // DEBUG
@@ -84,6 +88,13 @@ function EventDashboard({ onNavigateBudget }) {
     });
   };
 
+  const handleNewEvent = async (newEvent) => {
+    console.log('EventDashboard handleNewEvent called with:', newEvent); // DEBUG
+    await addEvent({ ...newEvent, participants: [] });
+    setOpenNewEventForm(false);
+    setSnackbar({ open: true, message: 'האירוע החדש נוצר בהצלחה' });
+  };
+
   // Only show budget button for admins
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
 
@@ -110,10 +121,7 @@ function EventDashboard({ onNavigateBudget }) {
               התנתקות מנהל
             </Button>
           )}
-          <Fab color="primary" onClick={() => {
-            setSelectedEvent(null);
-            setOpenEventForm(true);
-          }}>
+          <Fab color="primary" onClick={() => setOpenNewEventForm(true)}>
             <AddIcon />
           </Fab>
         </Box>
@@ -195,22 +203,25 @@ function EventDashboard({ onNavigateBudget }) {
         onParticipantUpdate={handleParticipantUpdate}
       />
 
+      <NewEventForm
+        open={openNewEventForm}
+        onClose={() => setOpenNewEventForm(false)}
+        onSubmit={handleNewEvent}
+      />
+
       {/* Budget button for admins */}
       {isAdmin && (
         <Button
           variant="contained"
           color="success"
           sx={{ mt: 3, fontWeight: 800, borderRadius: 99 }}
-          onClick={() => {
-            if (onNavigateBudget) {
-              // Navigate to /budget route
-              window.location.href = '/budget';
-              onNavigateBudget();
-            }
-          }}
+          onClick={() => setOpenBudgetForm(true)}
         >
           ניהול תקציב
         </Button>
+      )}
+      {openBudgetForm && (
+        <BudgetDashboard onBack={() => setOpenBudgetForm(false)} />
       )}
 
       <Snackbar
