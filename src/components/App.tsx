@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { theme } from '../styles/theme';
@@ -11,15 +11,10 @@ import { WhatsAppProvider } from '../context/WhatsAppContext';
 import { EventsProvider } from '../context/EventsContext';
 
 function App() {
-  const [adminAuthenticated, setAdminAuthenticated] = useState(
-    localStorage.getItem('adminAuthenticated') === 'true'
-  );
-
   const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '071024';
 
   const handleAdminLogin = useCallback((code: string) => {
     if (code === ADMIN_CODE) {
-      setAdminAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
       return true;
     }
