@@ -1,41 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Box,
   Typography,
-  Button,
-  Snackbar,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Paper,
-  Container,
 } from '@mui/material';
-import {
-  Add as AddIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  WhatsApp as WhatsAppIcon,
-  Close as CloseIcon,
-  Assessment as AssessmentIcon,
-  CloudUpload as CloudUploadIcon,
-  CloudDownload as CloudDownloadIcon,
-} from '@mui/icons-material';
-import { loadEventsFromCloud, saveEventsToCloud } from './services/database';
 import { useEvents } from './context/EventsContext';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import Layout from './components/Layout';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import AdminLogin from './components/AdminLogin';
 import EventDashboard from './components/EventDashboard';
-import ParticipantLogin from './components/ParticipantLogin';
-import Signup from './components/Signup'; // צור קובץ זה
-import Login from './components/Login';   // צור קובץ זה
-import CommunityEvents from './components/CommunityEvents'; // צור קובץ זה
+import CommunityEvents from './components/CommunityEvents';
+import BudgetDashboard from './components/BudgetDashboard';
 import './App.css';
-import BudgetDashboard from './components/BudgetDashboard'; // Import the BudgetDashboard component
 
 // Branding colors
 const YJCC_COLORS = {
@@ -89,7 +64,6 @@ function App() {
 
   const ADMIN_CODE = '071024';
 
-  // Return boolean for success/failure, but do NOT navigate here
   const handleAdminLogin = useCallback((code) => {
     if (code === ADMIN_CODE) {
       localStorage.setItem('adminAuthenticated', 'true');
@@ -126,9 +100,7 @@ function App() {
           />
         )}
         <Route path="/community" element={<CommunityEvents />} />
-        <Route path="/events" element={<EventList />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        {/* ...add more routes as needed... */}
       </Routes>
     </Router>
   );
