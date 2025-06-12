@@ -31,7 +31,6 @@ import HomePage from './components/HomePage';
 import AdminLogin from './components/AdminLogin';
 import EventDashboard from './components/EventDashboard';
 import ParticipantLogin from './components/ParticipantLogin';
-import ParticipantList from './components/ParticipantList';
 import Dashboard from './components/Dashboard';
 import EventList from './components/EventList';
 import Signup from './components/Signup'; // צור קובץ זה
@@ -130,7 +129,6 @@ function App() {
         )}
         <Route path="/community" element={<CommunityEvents />} />
         <Route path="/events" element={<EventList />} />
-        <Route path="/participants" element={<ParticipantList />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
       </Routes>
