@@ -5,6 +5,7 @@ import AdminLogin from './components/AdminLogin';
 import EventDashboard from './components/EventDashboard';
 import CommunityEvents from './components/CommunityEvents';
 import BudgetDashboard from './components/BudgetDashboard';
+import { EventsProvider } from './context/EventsContext'; // <-- add this import
 import './App.css';
 
 function App() {
@@ -25,32 +26,34 @@ function App() {
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/admin-login"
-          element={
-            isAdmin ? (
-              <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
-            ) : (
-              <AdminLogin onLogin={handleAdminLogin} />
-            )
-          }
-        />
-        {/* Show budget dashboard only if admin and showBudget is true */}
-        {isAdmin && showBudget && (
+    <EventsProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
           <Route
-            path="/budget"
+            path="/admin-login"
             element={
-              <BudgetDashboard onBack={() => setShowBudget(false)} />
+              isAdmin ? (
+                <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
+              ) : (
+                <AdminLogin onLogin={handleAdminLogin} />
+              )
             }
           />
-        )}
-        <Route path="/community" element={<CommunityEvents />} />
-        {/* ...add more routes as needed... */}
-      </Routes>
-    </Router>
+          {/* Show budget dashboard only if admin and showBudget is true */}
+          {isAdmin && showBudget && (
+            <Route
+              path="/budget"
+              element={
+                <BudgetDashboard onBack={() => setShowBudget(false)} />
+              }
+            />
+          )}
+          <Route path="/community" element={<CommunityEvents />} />
+          {/* ...add more routes as needed... */}
+        </Routes>
+      </Router>
+    </EventsProvider>
   );
 }
 
