@@ -88,18 +88,14 @@ const YJCCLogo = () => (
 
 function App() {
   const { events } = useEvents();
-  const [adminAuthenticated, setAdminAuthenticated] = React.useState(
-    localStorage.getItem('adminAuthenticated') === 'true'
-  );
   const [showBudget, setShowBudget] = useState(false); // State to control budget dashboard visibility
-
 
   const ADMIN_CODE = '071024';
 
   const handleAdminLogin = useCallback((code) => {
     if (code === ADMIN_CODE) {
-      setAdminAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
+      window.location.reload(); // Reload the page to update the adminAuthenticated state
     } else {
       alert('Invalid admin code. Please try again.');
     }
@@ -112,7 +108,7 @@ function App() {
         <Route
           path="/admin-login"
           element={
-            adminAuthenticated ? (
+            localStorage.getItem('adminAuthenticated') === 'true' ? (
               <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
             ) : (
               <AdminLogin onLogin={handleAdminLogin} />
@@ -125,7 +121,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         {/* ניהול תקציב - יוצג רק אם showBudget true */}
-        {adminAuthenticated && showBudget && (
+        {localStorage.getItem('adminAuthenticated') === 'true' && showBudget && (
           <Route path="/budget" element={<BudgetDashboard onBack={() => setShowBudget(false)} />} />
         )}
       </Routes>
