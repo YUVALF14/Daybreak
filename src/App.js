@@ -99,10 +99,12 @@ function App() {
   );
   const [showBudget, setShowBudget] = useState(false); // State to control budget dashboard visibility
 
-  // Force ADMIN_CODE to string for strict comparison
-  const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '071024';
+
+  const ADMIN_CODE = '071024';
 
   const handleAdminLogin = (code) => {
+    // Debug: Log both codes for troubleshooting
+    console.log('Admin login attempt:', { entered: code, expected: ADMIN_CODE });
     if (code && code.toString().trim() === ADMIN_CODE.trim()) {
       setAdminAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
@@ -139,7 +141,7 @@ function App() {
   );
 }
 
-// REQUIRED ENV VARIABLE FOR ADMIN ACCESS (optional fallback to '291147'):
+// REQUIRED ENV VARIABLE FOR ADMIN ACCESS (optional fallback to '071024'):
 // REACT_APP_ADMIN_CODE=your_admin_code
 
 export default App;
