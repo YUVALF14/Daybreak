@@ -25,20 +25,18 @@ import {
 } from '@mui/icons-material';
 import { loadEventsFromCloud, saveEventsToCloud } from './services/database';
 import { useEvents } from './context/EventsContext';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import Layout from './components/Layout';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import AdminLogin from './components/AdminLogin';
 import EventDashboard from './components/EventDashboard';
 import ParticipantLogin from './components/ParticipantLogin';
 import ParticipantList from './components/ParticipantList';
-import Dashboard from './components/Dashboard';
 import EventList from './components/EventList';
-import Signup from './components/Signup'; // צור קובץ זה
-import Login from './components/Login';   // צור קובץ זה
-import CommunityEvents from './components/CommunityEvents'; // צור קובץ זה
+import Signup from './components/Signup';
+import Login from './components/Login';
+import CommunityEvents from './components/CommunityEvents';
+import BudgetDashboard from './components/BudgetDashboard';
 import './App.css';
-import BudgetDashboard from './components/BudgetDashboard'; // Import the BudgetDashboard component
 
 // Branding colors
 const YJCC_COLORS = {
@@ -89,10 +87,8 @@ const YJCCLogo = () => (
 function App() {
   const { events } = useEvents();
   const [showBudget, setShowBudget] = useState(false);
-
   const ADMIN_CODE = '071024';
 
-  // Return boolean for success/failure, but do NOT navigate here
   const handleAdminLogin = useCallback((code) => {
     if (code === ADMIN_CODE) {
       localStorage.setItem('adminAuthenticated', 'true');
@@ -119,13 +115,10 @@ function App() {
             )
           }
         />
-        {/* Show budget dashboard only if admin and showBudget is true */}
         {isAdmin && showBudget && (
           <Route
             path="/budget"
-            element={
-              <BudgetDashboard onBack={() => setShowBudget(false)} />
-            }
+            element={<BudgetDashboard onBack={() => setShowBudget(false)} />}
           />
         )}
         <Route path="/community" element={<CommunityEvents />} />
@@ -133,12 +126,11 @@ function App() {
         <Route path="/participants" element={<ParticipantList />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/participant-list" element={<ParticipantList />} />
+        <Route path="/participant-login" element={<ParticipantLogin />} />
       </Routes>
     </Router>
   );
 }
-
-// REQUIRED ENV VARIABLE FOR ADMIN ACCESS (optional fallback to '071024'):
-// REACT_APP_ADMIN_CODE=your_admin_code
 
 export default App;
