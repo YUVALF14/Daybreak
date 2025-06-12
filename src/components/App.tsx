@@ -50,3 +50,5 @@ function App() {
 }
 
 export default App;
+
+// This file is a duplicate of App.js and can be deleted if App.js is used as the main entry point.

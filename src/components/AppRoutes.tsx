@@ -15,4 +15,4 @@ export const AppRoutes = () => {
       </Route>
     </Routes>
   );
-}; 
+};

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './components/App'; // Use the correct App (with providers and routing)
+import App from './App'; // Change from './components/App' to './App' if App.js is in src/
 import './index.css';
 
 // Import fonts

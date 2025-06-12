@@ -203,9 +203,20 @@ const EventList = () => {
     await updateEvent(participantsEvent.id, { ...participantsEvent, participants: updatedParticipants });
   };
 
+  // Debug: log events to verify they are loaded
+  React.useEffect(() => {
+    console.log('EventList events:', events);
+  }, [events]);
+
   return (
     <Box sx={{ px: { xs: 1, sm: 0 } }}>
-      {/* Add a subtle fade-in animation */}
+      {/* Add a fallback if no events */}
+      {events.length === 0 && (
+        <Typography variant="h6" sx={{ textAlign: 'center', mt: 4, color: '#888' }}>
+          אין אירועים להצגה כרגע.
+        </Typography>
+      )}
+      {/* Only render event cards if events exist */}
       <Fade in timeout={700}>
         <Box>
           {/* כפתור יצירת אירוע חדש */}
@@ -255,7 +266,7 @@ const EventList = () => {
           </Box>
 
           {/* רשימת האירועים */}
-          {events.map((event: any) => (
+          {events.length > 0 && events.map((event: any) => (
             <Card key={event.id} sx={{
               mb: 2,
               borderRadius: { xs: 2, sm: 4 },
