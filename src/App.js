@@ -102,16 +102,14 @@ function App() {
 
   const ADMIN_CODE = '071024';
 
-  const handleAdminLogin = (code) => {
-    // Debug: Log both codes for troubleshooting
-    console.log('Admin login attempt:', { entered: code, expected: ADMIN_CODE });
-    if (code && code.toString().trim() === ADMIN_CODE.trim()) {
+  const handleAdminLogin = useCallback((code) => {
+    if (code === ADMIN_CODE) {
       setAdminAuthenticated(true);
       localStorage.setItem('adminAuthenticated', 'true');
-      return true;
+    } else {
+      alert('Invalid admin code. Please try again.');
     }
-    return false;
-  };
+  }, [ADMIN_CODE]);
 
   return (
     <Router>
