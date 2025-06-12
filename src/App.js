@@ -8,15 +8,14 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import CommunityEvents from './components/CommunityEvents';
 import ParticipantList from './components/ParticipantList';
-import './App.css';
 import BudgetDashboard from './components/BudgetDashboard';
+import './App.css';
 
 function App() {
   const [showBudget, setShowBudget] = useState(false);
 
   const ADMIN_CODE = '071024';
 
-  // Return boolean for success/failure, but do NOT navigate here
   const handleAdminLogin = useCallback((code) => {
     if (code === ADMIN_CODE) {
       localStorage.setItem('adminAuthenticated', 'true');
@@ -43,7 +42,6 @@ function App() {
             )
           }
         />
-        {/* Show budget dashboard only if admin and showBudget is true */}
         {isAdmin && showBudget && (
           <Route
             path="/budget"

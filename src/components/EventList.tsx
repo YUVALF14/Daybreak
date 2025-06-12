@@ -60,6 +60,7 @@ const EventList = () => {
 
   // Add state for registration dialog
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
+  const [registerEventId, setRegisterEventId] = useState<string | null>(null); // Restore registerEventId state
   const [registerForm, setRegisterForm] = useState({ name: '', phone: '' });
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [registerSuccess, setRegisterSuccess] = useState(false);
@@ -149,6 +150,7 @@ const EventList = () => {
     }
     setRegisterError(null);
     setRegisterSuccess(false);
+    // registerEventId is now defined
     const event = events.find(e => e.id === registerEventId);
     if (!event) return;
     // Prevent duplicate
@@ -191,11 +193,6 @@ const EventList = () => {
     const updatedParticipants = (participantsEvent.participants || []).filter((p: any) => p.phone !== phone);
     await updateEvent(participantsEvent.id, { ...participantsEvent, participants: updatedParticipants });
   };
-
-  // Debug: log events to verify they are loaded
-  React.useEffect(() => {
-    console.log('EventList events:', events);
-  }, [events]);
 
   return (
     <Box sx={{ px: { xs: 1, sm: 0 } }}>
