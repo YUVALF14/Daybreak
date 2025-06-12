@@ -114,7 +114,7 @@ function AdminLogin({ onLogin }) {
               required
               fullWidth
               label="קוד מנהל"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? 'text' : '071024'}
               value={code}
               autoFocus
               onChange={(e) => {
