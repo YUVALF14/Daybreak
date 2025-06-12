@@ -29,7 +29,6 @@ function AdminLogin({ onLogin }) {
       setError(true);
     } else {
       setError(false);
-      // Navigate to budget page only after successful login
       navigate('/budget');
     }
   };

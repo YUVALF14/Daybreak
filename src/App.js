@@ -25,7 +25,7 @@ import {
 } from '@mui/icons-material';
 import { loadEventsFromCloud, saveEventsToCloud } from './services/database';
 import { useEvents } from './context/EventsContext';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './components/HomePage';
 import AdminLogin from './components/AdminLogin';
@@ -88,18 +88,25 @@ const YJCCLogo = () => (
 
 function App() {
   const { events } = useEvents();
-  const [showBudget, setShowBudget] = useState(false); // State to control budget dashboard visibility
+  const [showBudget, setShowBudget] = useState(false);
+  const navigate = useNavigate?.() || (() => {}); // fallback for non-hook usage
 
   const ADMIN_CODE = '071024';
 
+  // Return boolean for success/failure
   const handleAdminLogin = useCallback((code) => {
     if (code === ADMIN_CODE) {
       localStorage.setItem('adminAuthenticated', 'true');
-      window.location.reload(); // Reload the page to update the adminAuthenticated state
+      // Redirect to event dashboard after login
+      navigate('/admin-login');
+      return true;
     } else {
       alert('Invalid admin code. Please try again.');
+      return false;
     }
-  }, [ADMIN_CODE]);
+  }, [ADMIN_CODE, navigate]);
+
+  const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
 
   return (
     <Router>
@@ -108,8 +115,18 @@ function App() {
         <Route
           path="/admin-login"
           element={
-            localStorage.getItem('adminAuthenticated') === 'true' ? (
-              <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
+            isAdmin ? (
+              <EventDashboard onNavigateBudget={() => navigate('/budget')} />
+            ) : (
+              <AdminLogin onLogin={handleAdminLogin} />
+            )
+          }
+        />
+        <Route
+          path="/budget"
+          element={
+            isAdmin ? (
+              <BudgetDashboard onBack={() => navigate('/admin-login')} />
             ) : (
               <AdminLogin onLogin={handleAdminLogin} />
             )
@@ -120,10 +137,6 @@ function App() {
         <Route path="/participants" element={<ParticipantList />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        {/* ניהול תקציב - יוצג רק אם showBudget true */}
-        {localStorage.getItem('adminAuthenticated') === 'true' && showBudget && (
-          <Route path="/budget" element={<BudgetDashboard onBack={() => setShowBudget(false)} />} />
-        )}
       </Routes>
     </Router>
   );
