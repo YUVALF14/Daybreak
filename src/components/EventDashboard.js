@@ -196,7 +196,10 @@ function EventDashboard({ onNavigateBudget }) {
         variant="contained"
         color="success"
         sx={{ mt: 3, fontWeight: 800, borderRadius: 99 }}
-        onClick={onNavigateBudget}
+        onClick={() => {
+          // Use the prop to trigger navigation to budget dashboard
+          if (onNavigateBudget) onNavigateBudget();
+        }}
       >
         מעבר לניהול תקציב
       </Button>

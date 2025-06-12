@@ -29,7 +29,7 @@ function AdminLogin({ onLogin }) {
       setError(true);
     } else {
       setError(false);
-      navigate('/budget');
+      navigate('/events'); // Redirect to event dashboard after login
     }
   };
 

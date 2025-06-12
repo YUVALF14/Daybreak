@@ -89,22 +89,19 @@ const YJCCLogo = () => (
 function App() {
   const { events } = useEvents();
   const [showBudget, setShowBudget] = useState(false);
-  const navigate = useNavigate?.() || (() => {}); // fallback for non-hook usage
 
   const ADMIN_CODE = '071024';
 
-  // Return boolean for success/failure
+  // Return boolean for success/failure, but do NOT navigate here
   const handleAdminLogin = useCallback((code) => {
     if (code === ADMIN_CODE) {
       localStorage.setItem('adminAuthenticated', 'true');
-      // Redirect to event list after login
-      navigate('/events');
       return true;
     } else {
       alert('Invalid admin code. Please try again.');
       return false;
     }
-  }, [ADMIN_CODE, navigate]);
+  }, [ADMIN_CODE]);
 
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
 
@@ -116,22 +113,21 @@ function App() {
           path="/admin-login"
           element={
             isAdmin ? (
-              <EventDashboard onNavigateBudget={() => navigate('/budget')} />
+              <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
             ) : (
               <AdminLogin onLogin={handleAdminLogin} />
             )
           }
         />
-        <Route
-          path="/budget"
-          element={
-            isAdmin ? (
-              <BudgetDashboard onBack={() => navigate('/admin-login')} />
-            ) : (
-              <AdminLogin onLogin={handleAdminLogin} />
-            )
-          }
-        />
+        {/* Show budget dashboard only if admin and showBudget is true */}
+        {isAdmin && showBudget && (
+          <Route
+            path="/budget"
+            element={
+              <BudgetDashboard onBack={() => setShowBudget(false)} />
+            }
+          />
+        )}
         <Route path="/community" element={<CommunityEvents />} />
         <Route path="/events" element={<EventList />} />
         <Route path="/participants" element={<ParticipantList />} />
