@@ -10,5 +10,3 @@ const Layout = () => (
 );
 
 export default Layout;
-
-// This file is a duplicate of Layout.tsx and can be deleted if Layout.tsx is used.
