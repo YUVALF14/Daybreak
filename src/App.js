@@ -97,8 +97,8 @@ function App() {
   const handleAdminLogin = useCallback((code) => {
     if (code === ADMIN_CODE) {
       localStorage.setItem('adminAuthenticated', 'true');
-      // Redirect to event dashboard after login
-      navigate('/admin-login');
+      // Redirect to event list after login
+      navigate('/events');
       return true;
     } else {
       alert('Invalid admin code. Please try again.');
