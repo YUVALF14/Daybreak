@@ -35,12 +35,14 @@ function EventDashboard({ onNavigateBudget }) {
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
 
   const handleAddEvent = async (newEvent) => {
+    console.log('EventDashboard handleAddEvent called with:', newEvent); // DEBUG
     await addEvent({ ...newEvent, participants: newEvent.participants || [] });
     setOpenEventForm(false);
     setSnackbar({ open: true, message: 'האירוע נוצר בהצלחה' });
   };
 
   const handleUpdateEvent = async (updatedEvent) => {
+    console.log('EventDashboard handleUpdateEvent called with:', updatedEvent); // DEBUG
     await updateEvent(updatedEvent.id, {
       ...updatedEvent,
       participants: updatedEvent.participants || [],

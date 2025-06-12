@@ -38,6 +38,7 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const eventsRef = ref(database, 'events');
     const handleValue = (snapshot: any) => {
       const data = snapshot.val();
+      console.log('Firebase events data:', data); // DEBUG
       if (!data) {
         setEvents([]);
         return;
@@ -54,6 +55,7 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   const addEvent = async (eventData: Omit<Event, 'id'>) => {
+    console.log('EventsContext addEvent called with:', eventData); // DEBUG
     const eventsRef = ref(database, 'events');
     const newRef = push(eventsRef);
     const id = newRef.key;
@@ -66,6 +68,7 @@ export const EventsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const updateEvent = async (id: string, eventData: Partial<Event>) => {
+    console.log('EventsContext updateEvent called with:', id, eventData); // DEBUG
     const eventRef = ref(database, `events/${id}`);
     // Remove undefined numeric fields before updating
     const cleanEvent: { [key: string]: any } = { ...eventData };

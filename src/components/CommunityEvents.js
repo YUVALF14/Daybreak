@@ -13,8 +13,9 @@ const CommunityEvents = () => {
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   React.useEffect(() => {
-    // console.log('CommunityEvents upcomingEvents:', upcomingEvents);
-  }, [upcomingEvents]);
+    console.log('CommunityEvents events array:', events); // DEBUG
+    console.log('CommunityEvents upcomingEvents:', upcomingEvents); // DEBUG
+  }, [events, upcomingEvents]);
 
   return (
     <Box sx={{
