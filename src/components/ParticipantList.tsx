@@ -34,7 +34,7 @@ interface Participant {
   registeredEvents?: string[];
 }
 
-const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '050667';
+const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '071024';
 
 const ParticipantList = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -301,6 +301,27 @@ const ParticipantList = () => {
           }}
         >
           חזור
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => navigate('/admin-login')}
+          sx={{
+            borderRadius: 8,
+            fontWeight: 600,
+            boxShadow: 2,
+            width: { xs: '100%', sm: 'auto' },
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            background: 'linear-gradient(90deg, #1976d2 0%, #64B5F6 100%)',
+            color: '#fff',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              boxShadow: 4,
+              background: 'linear-gradient(90deg, #64B5F6 0%, #1976d2 100%)',
+            },
+          }}
+        >
+          כניסת מנהלים
         </Button>
         {currentParticipant && (
           <Button

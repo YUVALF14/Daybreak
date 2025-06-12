@@ -83,37 +83,33 @@ const HomePage = () => {
               background: 'linear-gradient(90deg, #34c759 0%, #0071e3 100%)',
             },
           }}
-          onClick={() => navigate('/community')}
+          onClick={() => navigate('/events')}
         >
-          לאירועי קהילה פתוחים
+          לאירועים הקרובים
         </Button>
         <Button
           variant="outlined"
-          color="primary"
+          color="secondary"
           size="large"
           sx={{
             borderRadius: 99,
-            fontWeight: 700,
-            fontSize: '1.08rem',
-            py: 1.5,
+            fontWeight: 800,
+            fontSize: '1.15rem',
+            py: 1.7,
             letterSpacing: 1,
-            boxShadow: 1,
-            background: 'linear-gradient(90deg, #eaf6ff 0%, #f5f5f7 100%)',
+            boxShadow: 2,
+            background: 'linear-gradient(90deg, #f5f5f7 0%, #eaf6ff 100%)',
             color: '#0071e3',
-            border: '2px solid #0071e3',
             transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
             '&:hover': {
               transform: 'scale(1.04)',
               boxShadow: '0 6px 32px 0 #0071e355',
-              background: 'linear-gradient(90deg, #f5f5f7 0%, #eaf6ff 100%)',
+              background: 'linear-gradient(90deg, #eaf6ff 0%, #f5f5f7 100%)',
             },
           }}
-          component="a"
-          href="https://wa.me/972542230342"
-          target="_blank"
-          rel="noopener noreferrer"
+          onClick={() => navigate('/community')}
         >
-          יצירת קשר ב-WhatsApp
+          אירועי קהילה
         </Button>
         <Button
           variant="text"
