@@ -32,7 +32,6 @@ import AdminLogin from './components/AdminLogin';
 import EventDashboard from './components/EventDashboard';
 import ParticipantLogin from './components/ParticipantLogin';
 import Dashboard from './components/Dashboard';
-import EventList from './components/EventList';
 import Signup from './components/Signup'; // צור קובץ זה
 import Login from './components/Login';   // צור קובץ זה
 import CommunityEvents from './components/CommunityEvents'; // צור קובץ זה
