@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import { useEvents } from './context/EventsContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import AdminLogin from './components/AdminLogin';
@@ -24,42 +23,7 @@ const YJCC_COLORS = {
   warning: '#FFA726',
 };
 
-const YJCCLogo = () => (
-  <Box sx={{ textAlign: 'center', mb: 4 }}>
-    <Typography
-      variant="h2"
-      component="h1"
-      sx={{
-        fontFamily: 'Heebo',
-        fontWeight: 800,
-        fontSize: { xs: '2rem', sm: '2.5rem' },
-        background: `linear-gradient(45deg, ${YJCC_COLORS.primary}, ${YJCC_COLORS.secondary})`,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        mb: 2,
-        letterSpacing: '-0.02em',
-      }}
-    >
-      YJCC Events
-    </Typography>
-    <Typography
-      variant="h6"
-      sx={{
-        fontFamily: 'Assistant',
-        fontWeight: 500,
-        color: YJCC_COLORS.text,
-        letterSpacing: '0.02em',
-        fontSize: { xs: '1.1rem', sm: '1.25rem' },
-        lineHeight: 1.4,
-      }}
-    >
-      הקהילה הישראלית הצעירה בפראג 🌟
-    </Typography>
-  </Box>
-);
-
 function App() {
-  const { events } = useEvents();
   const [showBudget, setShowBudget] = useState(false);
 
   const ADMIN_CODE = '071024';

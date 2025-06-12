@@ -26,8 +26,6 @@ import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
 import { useEvents } from '../context/EventsContext';
 
-const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '050667';
-
 function EventDashboard({ onNavigateBudget }) {
   const { events, addEvent, updateEvent, deleteEvent } = useEvents();
   const [openEventForm, setOpenEventForm] = useState(false);
