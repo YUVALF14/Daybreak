@@ -15,7 +15,7 @@ function App() {
     localStorage.getItem('adminAuthenticated') === 'true'
   );
 
-  const ADMIN_CODE = '071024';
+  const ADMIN_CODE = process.env.REACT_APP_ADMIN_CODE || '071024';
 
   const handleAdminLogin = useCallback((code: string) => {
     if (code === ADMIN_CODE) {
@@ -24,7 +24,7 @@ function App() {
       return true;
     }
     return false;
-  }, []);
+  }, [ADMIN_CODE]);
 
   return (
     <ThemeProvider theme={theme}>
