@@ -317,8 +317,7 @@ const HomePage = () => {
           >
             🎉 צפייה באירועים
           </Button>            <Button
-            onClick={() => window.open('https://wa.me/972542230342', '_blank')}
-            variant="outlined"
+            onClick={() => window.open('https://wa.me/972542230342', '_blank')}            variant="contained"
             size="large"
             sx={{
               width: '100%',
@@ -328,9 +327,9 @@ const HomePage = () => {
               fontSize: '1.25rem',
               fontWeight: 800,
               borderRadius: 5,
-              border: '3px solid transparent',
-              background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #25D366 0%, #128C7E 100%) border-box',
-              color: '#075E54',
+              background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+              color: 'white',
+              boxShadow: '0 12px 28px rgba(37,211,102,0.4), 0 6px 12px rgba(18,140,126,0.2)',
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               position: 'relative',
               overflow: 'hidden',
@@ -341,27 +340,36 @@ const HomePage = () => {
                 left: '-100%',
                 width: '100%',
                 height: '100%',
-                background: 'linear-gradient(90deg, transparent, rgba(37,211,102,0.1), transparent)',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
                 transition: 'left 0.6s'
-              },              '&:hover': {
+              },
+              '&:hover': {
                 transform: 'translateY(-4px) scale(1.02)',
-                background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+                background: 'linear-gradient(135deg, #1ebe5a 0%, #0f7552 100%)',
                 color: 'white',
-                boxShadow: '0 20px 40px rgba(37,211,102,0.4), 0 10px 20px rgba(18,140,126,0.2)',
+                boxShadow: '0 20px 40px rgba(37,211,102,0.5), 0 10px 20px rgba(18,140,126,0.3)',
                 '&::before': {
                   left: '100%'
                 },
                 '&::after': {
-                  content: '"📱"',
+                  content: '"�"',
                   position: 'absolute',
                   top: '50%',
                   right: '20px',
                   transform: 'translateY(-50%)',
-                  fontSize: '1rem',
+                  fontSize: '1.2rem',
                   animation: 'sparkle 0.6s ease-out'
                 }
               }
             }}
+            startIcon={
+              <Box sx={{ 
+                fontSize: '1.5rem',
+                filter: 'drop-shadow(0 2px 4px rgba(255,255,255,0.3))'
+              }}>
+                💬
+              </Box>
+            }
           >
             � צור קשר בוואטסאפ
           </Button>

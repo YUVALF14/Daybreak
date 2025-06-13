@@ -33,73 +33,197 @@ function AdminLogin({ onLogin }) {
       window.location.href = '/admin-dashboard';
     }
   };
-
   return (
     <Box
       sx={{
         minHeight: '100vh',
-        background: 'radial-gradient(ellipse at 80% 10%, #e3f2fd 0%, #fff 80%)',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        py: 6,
+        background: 'linear-gradient(135deg, #ff9a56 0%, #ffad56 25%, #c2416b 75%, #8b1538 100%)',
+        padding: 4,
+        position: 'relative',
+        overflow: 'hidden',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,154,86,0.2) 0%, transparent 50%)',
+          pointerEvents: 'none'
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          top: '15%',
+          right: '10%',
+          width: '200px',
+          height: '200px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)',
+          animation: 'float 8s ease-in-out infinite',
+          pointerEvents: 'none'
+        },
+        '@keyframes float': {
+          '0%, 100%': { transform: 'translate(0, 0) rotate(0deg)' },
+          '50%': { transform: 'translate(-20px, -15px) rotate(180deg)' }
+        }
       }}
     >
       <Container component="main" maxWidth="xs">
         <Paper
           elevation={8}
           sx={{
-            p: 5,
+            background: 'rgba(255,255,255,0.98)',
+            backdropFilter: 'blur(25px)',
+            borderRadius: 8,
+            padding: { xs: 4, sm: 6 },
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            background: 'rgba(255, 255, 255, 0.97)',
-            borderRadius: 8,
-            boxShadow: 10,
-            animation: 'fadeIn 0.7s',
+            boxShadow: '0 30px 60px rgba(255,154,86,0.25), 0 15px 30px rgba(139,21,56,0.15), inset 0 1px 0 rgba(255,255,255,0.6)',
+            border: '1px solid rgba(255,255,255,0.3)',
             position: 'relative',
-            border: '2.5px solid #e3f2fd',
+            zIndex: 1,
+            animation: 'slideUp 0.8s ease-out',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderRadius: 8,
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,154,86,0.05) 100%)',
+              pointerEvents: 'none'
+            },
+            '@keyframes slideUp': {
+              '0%': { 
+                opacity: 0, 
+                transform: 'translateY(30px) scale(0.95)' 
+              },
+              '100%': { 
+                opacity: 1, 
+                transform: 'translateY(0) scale(1)' 
+              }
+            }
           }}
-        >
-          <Button
+        >          <Button
             startIcon={<ArrowBackIcon />}
             onClick={() => window.history.back()}
             sx={{
               position: 'absolute',
               top: 16,
               left: 16,
-              color: '#1976d2',
               fontWeight: 700,
-              borderRadius: 99,
-              background: 'rgba(100,181,246,0.08)',
-              px: 2,
-              py: 0.5,
-              fontSize: '1.1rem',
-              '&:hover': { background: 'rgba(100,181,246,0.18)' },
+              borderRadius: 3,
+              px: 3,
+              py: 1,
+              background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
+              color: 'white',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(255,154,86,0.3)',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: '0 8px 20px rgba(255,154,86,0.4)',
+                background: 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)',
+              }
             }}
           >
-            חזור
+            חזרה
           </Button>
-          <Avatar
+          <Box
             sx={{
-              m: 1,
-              bgcolor: '#64B5F6',
-              width: 72,
-              height: 72,
-              boxShadow: 3,
+              width: 80,
+              height: 80,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 50%, #8b1538 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 24px auto',
+              boxShadow: '0 18px 40px rgba(255,154,86,0.5), 0 8px 16px rgba(139,21,56,0.3)',
+              position: 'relative',
+              animation: 'pulse 2s ease-in-out infinite',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                top: -4,
+                left: -4,
+                right: -4,
+                bottom: -4,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, rgba(255,154,86,0.3) 0%, rgba(194,65,107,0.2) 100%)',
+                zIndex: -1,
+                filter: 'blur(8px)',
+                animation: 'rotate 8s linear infinite'
+              },
+              '@keyframes pulse': {
+                '0%, 100%': { 
+                  transform: 'scale(1)',
+                  boxShadow: '0 18px 40px rgba(255,154,86,0.5), 0 8px 16px rgba(139,21,56,0.3)'
+                },
+                '50%': { 
+                  transform: 'scale(1.05)',
+                  boxShadow: '0 22px 50px rgba(255,154,86,0.6), 0 12px 24px rgba(139,21,56,0.4)'
+                }
+              },
+              '@keyframes rotate': {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' }
+              }
             }}
           >
-            <LockOutlinedIcon sx={{ fontSize: 44 }} />
-          </Avatar>
-          <Typography
+            <LockOutlinedIcon sx={{ fontSize: 44, color: 'white' }} />
+          </Box>          <Typography
             component="h1"
             variant="h5"
             sx={{
               fontWeight: 900,
-              mb: 2,
-              color: '#1976d2',
-              letterSpacing: 1,
-              fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
+              mb: 3,
+              background: 'linear-gradient(135deg, #c2416b 0%, #8b1538 60%, #ff9a56 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontSize: '2rem',
+              letterSpacing: '-0.02em',
+              textAlign: 'center',
+              position: 'relative',
+              animation: 'textGlow 3s ease-in-out infinite alternate',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: -8,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '40px',
+                height: '2px',
+                background: 'linear-gradient(90deg, transparent, #c2416b, transparent)',
+                borderRadius: '2px',
+                animation: 'underlineGrow 2s ease-out 0.5s both'
+              },
+              '@keyframes textGlow': {
+                '0%': { 
+                  filter: 'drop-shadow(0 0 5px rgba(194,65,107,0.3))'
+                },
+                '100%': { 
+                  filter: 'drop-shadow(0 0 15px rgba(194,65,107,0.5))'
+                }
+              },
+              '@keyframes underlineGrow': {
+                '0%': { 
+                  width: '0px',
+                  opacity: 0
+                },
+                '100%': { 
+                  width: '40px',
+                  opacity: 1
+                }
+              }
             }}
           >
             כניסת מנהלים
@@ -149,30 +273,41 @@ function AdminLogin({ onLogin }) {
                   </IconButton>
                 ),
               }}
-            />
-            <Button
+            />            <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{
                 mt: 3,
                 mb: 2,
-                py: 1.5,
+                py: 2,
+                px: 4,
                 fontWeight: 800,
-                fontSize: '1.15rem',
-                borderRadius: 99,
-                background:
-                  'linear-gradient(90deg, #64B5F6 0%, #1976d2 100%)',
-                boxShadow: 3,
-                transition:
-                  'transform 0.2s, box-shadow 0.2s',
-                letterSpacing: 1,
-                '&:hover': {
-                  transform: 'scale(1.04)',
-                  boxShadow: 5,
-                  background:
-                    'linear-gradient(90deg, #1976d2 0%, #64B5F6 100%)',
+                fontSize: '1.2rem',
+                borderRadius: 5,
+                background: 'linear-gradient(135deg, #c2416b 0%, #8b1538 100%)',
+                boxShadow: '0 12px 28px rgba(194,65,107,0.4), 0 6px 12px rgba(139,21,56,0.2)',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                position: 'relative',
+                overflow: 'hidden',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: '-100%',
+                  width: '100%',
+                  height: '100%',
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                  transition: 'left 0.6s'
                 },
+                '&:hover': {
+                  transform: 'translateY(-4px) scale(1.02)',
+                  boxShadow: '0 20px 40px rgba(194,65,107,0.5), 0 10px 20px rgba(139,21,56,0.3)',
+                  background: 'linear-gradient(135deg, #d1537a 0%, #9c1e47 100%)',
+                  '&::before': {
+                    left: '100%'
+                  }
+                }
               }}
             >
               כניסה
