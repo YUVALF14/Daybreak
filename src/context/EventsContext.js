@@ -2,17 +2,19 @@ import React, { createContext, useContext, useState } from 'react';
 
 const EventsContext = createContext();
 
-export const EventsProvider = ({ children }) => {
-  // Mock data for now to ensure the app loads
+export const EventsProvider = ({ children }) => {  // Mock data for now to ensure the app loads
   const [events, setEvents] = useState([
     {
       id: '1',
       title: 'אירוע לדוגמה',
+      name: 'אירוע לדוגמה',
       date: '2025-06-20',
+      time: '20:00',
       location: 'פראג',
       description: 'אירוע לדוגמה לבדיקת המערכת',
       price: 100,
       subsidy: 50,
+      maxParticipants: 50,
       participants: []
     }
   ]);

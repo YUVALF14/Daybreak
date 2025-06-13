@@ -135,22 +135,24 @@ const CommunityEvents = () => {
           >
             📱 צור קשר
           </Button>
-        </Box>
-
-        {/* Title */}
+        </Box>        {/* Title */}
         <Typography
           variant="h3"
           component="h1"
           sx={{
             textAlign: 'center',
             mb: 4,
-            fontWeight: 800,
-            background: 'linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: '0 4px 20px rgba(0,0,0,0.1)',
+            fontWeight: 900,
+            color: '#1a252f',
+            textShadow: '0 4px 12px rgba(255,255,255,0.9), 0 2px 8px rgba(0,0,0,0.8), 0 1px 4px rgba(255,255,255,0.7)',
+            background: 'rgba(255,255,255,0.95)',
+            borderRadius: 4,
+            p: 3,
+            border: '3px solid rgba(255,255,255,0.4)',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)',
             animation: 'fadeInUp 0.8s ease-out 0.2s both',
+            backdropFilter: 'blur(15px)',
+            letterSpacing: '0.5px'
           }}
         >
           🎉 האירועים הקהילתיים שלנו
