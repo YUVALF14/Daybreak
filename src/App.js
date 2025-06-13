@@ -27,11 +27,20 @@ function App() {
   return (
     <div>
       <EventsProvider>
-        <Router>
-          <Routes>
+        <Router>          <Routes>
             <Route path="/" element={<HomePage />} />
             <Route
               path="/admin-login"
+              element={
+                isAdmin ? (
+                  <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
+                ) : (
+                  <AdminLogin onLogin={handleAdminLogin} />
+                )
+              }
+            />
+            <Route
+              path="/admin-dashboard"
               element={
                 isAdmin ? (
                   <EventDashboard onNavigateBudget={() => setShowBudget(true)} />

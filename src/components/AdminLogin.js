@@ -20,9 +20,7 @@ function AdminLogin({ onLogin }) {
   const [code, setCode] = useState('');
   const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();  const handleSubmit = (e) => {
     e.preventDefault();
     console.log('AdminLogin handleSubmit called, code:', code); // DEBUG
     const success = onLogin(code);
@@ -30,9 +28,9 @@ function AdminLogin({ onLogin }) {
       setError(true);
     } else {
       setError(false);
-      // Navigate to admin dashboard ("/admin-login" will show dashboard if authenticated)
-      console.log('AdminLogin success, navigating to /admin-login'); // DEBUG
-      navigate('/admin-login');
+      console.log('AdminLogin success, navigating to /admin-dashboard'); // DEBUG
+      // Force a page refresh to update the authentication state
+      window.location.href = '/admin-dashboard';
     }
   };
 
