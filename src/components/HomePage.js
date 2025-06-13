@@ -26,8 +26,7 @@ const HomePage = () => {
         overflow: 'hidden',
         animation: 'fadeIn 1s',
       }}
-    >
-      <CelebrationIcon
+    >      <Celebration
         color="success"
         sx={{
           fontSize: 56,
