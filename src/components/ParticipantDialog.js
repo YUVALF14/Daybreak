@@ -13,8 +13,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Checkbox,
-  Slide
+  Checkbox
 } from '@mui/material';
 
 function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
