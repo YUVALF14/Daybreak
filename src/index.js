@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.js';
+import App from './App';
 import './index.css';
 
 // Import fonts
@@ -13,7 +13,7 @@ import '@fontsource/heebo/500.css';
 import '@fontsource/heebo/700.css';
 import '@fontsource/heebo/800.css';
 
-import reportWebVitals from './reportWebVitals.js';
+import reportWebVitals from './reportWebVitals';
 
 document.documentElement.setAttribute('dir', 'rtl');
 const root = ReactDOM.createRoot(document.getElementById('root'));
