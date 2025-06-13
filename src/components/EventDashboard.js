@@ -15,10 +15,8 @@ import {
   Button,
   IconButton,
   Snackbar,
-  Grid,
-  Card,
+  Grid,  Card,
   CardContent,
-  CardActions,
   Chip,
   Dialog,
   DialogTitle,
@@ -35,10 +33,8 @@ import {
   Delete as DeleteIcon,
   WhatsApp as WhatsAppIcon,
   Close as CloseIcon,
-  ArrowBack as ArrowBackIcon,
-  CalendarMonth as CalendarIcon,
+  ArrowBack as ArrowBackIcon,  CalendarMonth as CalendarIcon,
   Event as EventIcon,
-  Schedule as ScheduleIcon,
   LocationOn as LocationIcon,
   Group as GroupIcon,
   AttachMoney as MoneyIcon
@@ -78,10 +74,8 @@ function EventDashboard() {
   const getCurrentMonth = () => {
     return new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
   };
-
   const getDaysInMonth = () => {
     const startOfMonth = getCurrentMonth();
-    const endOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
     const startDate = new Date(startOfMonth);
     startDate.setDate(startDate.getDate() - startOfMonth.getDay());
     
@@ -548,11 +542,9 @@ function EventDashboard() {
             boxShadow: '0 20px 60px rgba(25,118,210,0.3)'
           }
         }}
-      >
-        <DialogTitle sx={{ 
+      >        <DialogTitle sx={{ 
           textAlign: 'center', 
           fontWeight: 800, 
-          color: '#1976d2',
           background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
           color: 'white',
           m: -3,
