@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const HomePage = () => {
   const navigate = useNavigate();
 
-  return (
-    <Box
+  return (    <Box
       sx={{
         minHeight: '100vh',
         display: 'flex',
@@ -16,6 +15,7 @@ const HomePage = () => {
         background: 'linear-gradient(135deg, #ff9a56 0%, #ffad56 25%, #c2416b 75%, #8b1538 100%)',
         padding: 4,
         position: 'relative',
+        overflow: 'hidden',
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -25,6 +25,23 @@ const HomePage = () => {
           bottom: 0,
           background: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,154,86,0.2) 0%, transparent 50%)',
           pointerEvents: 'none'
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          top: '10%',
+          left: '5%',
+          width: '300px',
+          height: '300px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+          animation: 'float 6s ease-in-out infinite',
+          pointerEvents: 'none'
+        },
+        '@keyframes float': {
+          '0%, 100%': { transform: 'translate(0, 0) rotate(0deg)' },
+          '33%': { transform: 'translate(30px, -30px) rotate(120deg)' },
+          '66%': { transform: 'translate(-20px, 20px) rotate(240deg)' }
         }
       }}
     >      <Box
@@ -36,10 +53,32 @@ const HomePage = () => {
           maxWidth: 520,
           width: '100%',
           textAlign: 'center',
-          boxShadow: '0 30px 60px rgba(255,154,86,0.25), 0 15px 30px rgba(139,21,56,0.15)',
+          boxShadow: '0 30px 60px rgba(255,154,86,0.25), 0 15px 30px rgba(139,21,56,0.15), inset 0 1px 0 rgba(255,255,255,0.6)',
           border: '1px solid rgba(255,255,255,0.3)',
           position: 'relative',
-          zIndex: 1
+          zIndex: 1,
+          animation: 'slideUp 0.8s ease-out',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            borderRadius: 8,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,154,86,0.05) 100%)',
+            pointerEvents: 'none'
+          },
+          '@keyframes slideUp': {
+            '0%': { 
+              opacity: 0, 
+              transform: 'translateY(30px) scale(0.95)' 
+            },
+            '100%': { 
+              opacity: 1, 
+              transform: 'translateY(0) scale(1)' 
+            }
+          }
         }}
       >        {/* Premium Icon */}
         <Box
@@ -54,9 +93,11 @@ const HomePage = () => {
             margin: '0 auto 28px auto',
             boxShadow: '0 18px 40px rgba(255,154,86,0.5), 0 8px 16px rgba(139,21,56,0.3)',
             position: 'relative',
+            animation: 'pulse 2s ease-in-out infinite',
             '&::before': {
               content: '"🌅"',
               fontSize: '2.4rem',
+              animation: 'bounce 2s ease-in-out infinite',
             },
             '&::after': {
               content: '""',
@@ -68,12 +109,29 @@ const HomePage = () => {
               borderRadius: '50%',
               background: 'linear-gradient(135deg, rgba(255,154,86,0.3) 0%, rgba(194,65,107,0.2) 100%)',
               zIndex: -1,
-              filter: 'blur(8px)'
+              filter: 'blur(8px)',
+              animation: 'rotate 8s linear infinite'
+            },
+            '@keyframes pulse': {
+              '0%, 100%': { 
+                transform: 'scale(1)',
+                boxShadow: '0 18px 40px rgba(255,154,86,0.5), 0 8px 16px rgba(139,21,56,0.3)'
+              },
+              '50%': { 
+                transform: 'scale(1.05)',
+                boxShadow: '0 22px 50px rgba(255,154,86,0.6), 0 12px 24px rgba(139,21,56,0.4)'
+              }
+            },
+            '@keyframes bounce': {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-3px)' }
+            },
+            '@keyframes rotate': {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' }
             }
           }}
-        />
-
-        <Typography 
+        />        <Typography 
           variant="h2" 
           sx={{ 
             mb: 3, 
@@ -84,11 +142,43 @@ const HomePage = () => {
             WebkitTextFillColor: 'transparent',
             fontSize: { xs: '2.8rem', sm: '3.8rem' },
             letterSpacing: '-0.03em',
-            textShadow: '0 4px 8px rgba(139,21,56,0.1)'
+            textShadow: '0 4px 8px rgba(139,21,56,0.1)',
+            position: 'relative',
+            animation: 'textGlow 3s ease-in-out infinite alternate',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: -8,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '60px',
+              height: '3px',
+              background: 'linear-gradient(90deg, transparent, #c2416b, transparent)',
+              borderRadius: '2px',
+              animation: 'underlineGrow 2s ease-out 0.5s both'
+            },
+            '@keyframes textGlow': {
+              '0%': { 
+                filter: 'drop-shadow(0 0 5px rgba(194,65,107,0.3))'
+              },
+              '100%': { 
+                filter: 'drop-shadow(0 0 15px rgba(194,65,107,0.5))'
+              }
+            },
+            '@keyframes underlineGrow': {
+              '0%': { 
+                width: '0px',
+                opacity: 0
+              },
+              '100%': { 
+                width: '60px',
+                opacity: 1
+              }
+            }
           }}
         >
           DAYBREAK
-        </Typography>        
+        </Typography>
         <Typography 
           variant="h6" 
           sx={{ 
@@ -106,7 +196,29 @@ const HomePage = () => {
           <span style={{ color: '#c2416b', fontWeight: 700 }}>הקהילה הישראלית הצעירה בפראג</span>
         </Typography>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3.5, alignItems: 'center', width: '100%' }}>          <Button
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 3.5, 
+          alignItems: 'center', 
+          width: '100%',
+          '& > button': {
+            animation: 'fadeInUp 0.6s ease-out both',
+            '&:nth-of-type(1)': { animationDelay: '0.2s' },
+            '&:nth-of-type(2)': { animationDelay: '0.4s' },
+            '&:nth-of-type(3)': { animationDelay: '0.6s' }
+          },
+          '@keyframes fadeInUp': {
+            '0%': {
+              opacity: 0,
+              transform: 'translateY(20px)'
+            },
+            '100%': {
+              opacity: 1,
+              transform: 'translateY(0)'
+            }
+          }
+        }}>          <Button
             onClick={() => navigate('/admin-login')}
             variant="contained"
             size="large"
@@ -132,14 +244,27 @@ const HomePage = () => {
                 height: '100%',
                 background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
                 transition: 'left 0.6s'
-              },
-              '&:hover': {
+              },              '&:hover': {
                 transform: 'translateY(-4px) scale(1.02)',
                 boxShadow: '0 20px 40px rgba(194,65,107,0.5), 0 10px 20px rgba(139,21,56,0.3)',
                 background: 'linear-gradient(135deg, #d1537a 0%, #9c1e47 100%)',
                 '&::before': {
                   left: '100%'
+                },
+                '&::after': {
+                  content: '"✨"',
+                  position: 'absolute',
+                  top: '50%',
+                  right: '20px',
+                  transform: 'translateY(-50%)',
+                  fontSize: '1rem',
+                  animation: 'sparkle 0.6s ease-out'
                 }
+              },
+              '@keyframes sparkle': {
+                '0%': { opacity: 0, transform: 'translateY(-50%) scale(0)' },
+                '50%': { opacity: 1, transform: 'translateY(-50%) scale(1.2)' },
+                '100%': { opacity: 0, transform: 'translateY(-50%) scale(1)' }
               }
             }}
           >
@@ -171,13 +296,21 @@ const HomePage = () => {
                 height: '100%',
                 background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
                 transition: 'left 0.6s'
-              },
-              '&:hover': {
+              },              '&:hover': {
                 transform: 'translateY(-4px) scale(1.02)',
                 boxShadow: '0 20px 40px rgba(255,154,86,0.5), 0 10px 20px rgba(255,173,86,0.3)',
                 background: 'linear-gradient(135deg, #ff8a3d 0%, #ffbc5d 100%)',
                 '&::before': {
                   left: '100%'
+                },
+                '&::after': {
+                  content: '"🎊"',
+                  position: 'absolute',
+                  top: '50%',
+                  right: '20px',
+                  transform: 'translateY(-50%)',
+                  fontSize: '1rem',
+                  animation: 'sparkle 0.6s ease-out'
                 }
               }
             }}
@@ -210,14 +343,22 @@ const HomePage = () => {
                 height: '100%',
                 background: 'linear-gradient(90deg, transparent, rgba(37,211,102,0.1), transparent)',
                 transition: 'left 0.6s'
-              },
-              '&:hover': {
+              },              '&:hover': {
                 transform: 'translateY(-4px) scale(1.02)',
                 background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
                 color: 'white',
                 boxShadow: '0 20px 40px rgba(37,211,102,0.4), 0 10px 20px rgba(18,140,126,0.2)',
                 '&::before': {
                   left: '100%'
+                },
+                '&::after': {
+                  content: '"📱"',
+                  position: 'absolute',
+                  top: '50%',
+                  right: '20px',
+                  transform: 'translateY(-50%)',
+                  fontSize: '1rem',
+                  animation: 'sparkle 0.6s ease-out'
                 }
               }
             }}
@@ -232,7 +373,19 @@ const HomePage = () => {
             fontSize: '0.95rem',
             fontWeight: 500,
             textAlign: 'center',
-            lineHeight: 1.6
+            lineHeight: 1.6,
+            animation: 'fadeIn 1s ease-out 1s both',
+            '& span': {
+              animation: 'heartbeat 2s ease-in-out infinite',
+            },
+            '@keyframes fadeIn': {
+              '0%': { opacity: 0 },
+              '100%': { opacity: 1 }
+            },
+            '@keyframes heartbeat': {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' }
+            }
           }}
         >
           © 2025 YJCC Prague Events System<br />
