@@ -14,19 +14,8 @@ import {
   TableHead,
   TableRow,
   Checkbox,
-  Slide,
-  Fab,
-  Typography,
-  Chip,
-  Avatar,
-  Fade,
-  Divider
+  Slide
 } from '@mui/material';
-import { PersonAdd, Delete, CheckCircle, Cancel, Phone, Person } from '@mui/icons-material';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
   const [newParticipant, setNewParticipant] = useState({
