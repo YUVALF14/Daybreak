@@ -7,7 +7,6 @@ import {
   Typography,
   Paper,
   Container,
-  Avatar,
   IconButton,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
