@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './components/HomePage';
-import AdminLogin from './components/AdminLogin';
-import EventDashboard from './components/EventDashboard';
-import CommunityEvents from './components/CommunityEvents';
-import BudgetDashboard from './components/BudgetDashboard';
-import { EventsProvider } from './context/EventsContext';
+import HomePage from './components/HomePage.js';
+import AdminLogin from './components/AdminLogin.js';
+import EventDashboard from './components/EventDashboard.js';
+import CommunityEvents from './components/CommunityEvents.js';
+import BudgetDashboard from './components/BudgetDashboard.js';
+import { EventsProvider } from './context/EventsContext.js';
 import './App.css';
 
 function App() {
