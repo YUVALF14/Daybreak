@@ -13,8 +13,20 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Checkbox
+  Checkbox,
+  Slide,
+  Fab,
+  Typography,
+  Chip,
+  Avatar,
+  Fade,
+  Divider
 } from '@mui/material';
+import { PersonAdd, Delete, CheckCircle, Cancel, Phone, Person } from '@mui/icons-material';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
   const [newParticipant, setNewParticipant] = useState({
@@ -22,7 +34,8 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
     phone: '',
     paid: false,
     confirmed: false,
-    attended: false
+    attended: false,
+    email: ''
   });
 
   useEffect(() => {
@@ -32,7 +45,8 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
         phone: '',
         paid: false,
         confirmed: false,
-        attended: false
+        attended: false,
+        email: ''
       });
     }
   }, [open]);
@@ -42,17 +56,20 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
   const handleAddParticipant = (e) => {
     e.preventDefault();
     // Prevent duplicate phone numbers
-    if (event.participants.some(p => p.phone === newParticipant.phone)) {
+    if (event.participants?.some(p => p.phone === newParticipant.phone)) {
       alert('משתתף עם מספר טלפון זה כבר קיים');
       return;
     }
-    onParticipantUpdate(event.id, { ...newParticipant });
-    setNewParticipant({
-      name: '',
+    onParticipantUpdate(event.id, { 
+      ...newParticipant,
+      registrationDate: new Date().toISOString()
+    });
+    setNewParticipant({      name: '',
       phone: '',
       paid: false,
       confirmed: false,
-      attended: false
+      attended: false,
+      email: ''
     });
   };
 

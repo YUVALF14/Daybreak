@@ -1,13 +1,13 @@
 import React from 'react';
-import { Box, Typography, Button, Stack } from '@mui/material';
+import { Box, Typography, Button, Stack, Fade, Grow } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import CelebrationIcon from '@mui/icons-material/Celebration';
+import { Celebration, Event, AdminPanelSettings, Group } from '@mui/icons-material';
 
 const HomePage = () => {
   const navigate = useNavigate();
-
   return (
-    <Box
+    <Fade in timeout={1000}>
+      <Box
       sx={{
         minHeight: '80vh',
         display: 'flex',
@@ -62,82 +62,118 @@ const HomePage = () => {
       >
         מערכת קהילתית לניהול אירועים<br />
         הקהילה הישראלית הצעירה בפראג
-      </Typography>
-      <Stack spacing={2} sx={{ width: '100%' }}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          sx={{
-            borderRadius: 99,
-            fontWeight: 800,
-            fontSize: '1.15rem',
-            py: 1.7,
-            letterSpacing: 1,
-            boxShadow: 2,
-            background: 'linear-gradient(90deg, #0071e3 0%, #34c759 100%)',
-            transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
-            '&:hover': {
-              transform: 'scale(1.04)',
-              boxShadow: '0 6px 32px 0 #0071e355',
-              background: 'linear-gradient(90deg, #34c759 0%, #0071e3 100%)',
-            },
-          }}
-          onClick={() => navigate('/admin-login')}
-        >
-          כניסת מנהלים
-        </Button>
-        <Button
-          variant="outlined"
-          color="secondary"
-          size="large"
-          sx={{
-            borderRadius: 99,
-            fontWeight: 800,
-            fontSize: '1.15rem',
-            py: 1.7,
-            letterSpacing: 1,
-            boxShadow: 2,
-            background: 'linear-gradient(90deg, #f5f5f7 0%, #eaf6ff 100%)',
-            color: '#0071e3',
-            transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
-            '&:hover': {
-              transform: 'scale(1.04)',
-              boxShadow: '0 6px 32px 0 #0071e355',
-              background: 'linear-gradient(90deg, #eaf6ff 0%, #f5f5f7 100%)',
-            },
-          }}
-          onClick={() => navigate('/events')}
-        >
-          כניסה ללוח האירועים
-        </Button>
-        <Button
-          variant="contained"
-          color="success"
-          size="large"
-          sx={{
-            borderRadius: 99,
-            fontWeight: 800,
-            fontSize: '1.15rem',
-            py: 1.7,
-            letterSpacing: 1,
-            boxShadow: 2,
-            background: 'linear-gradient(90deg, #25d366 0%, #128c7e 100%)',
-            color: '#fff',
-            transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
-            '&:hover': {
-              transform: 'scale(1.04)',
-              boxShadow: '0 6px 32px 0 #25d36655',
-              background: 'linear-gradient(90deg, #128c7e 0%, #25d366 100%)',
-            },
-          }}
-          href="https://wa.me/972542230342"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          יצירת קשר בווצאפ
-        </Button>
+      </Typography>      <Stack spacing={3} sx={{ width: '100%' }}>
+        <Grow in timeout={1200}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<AdminPanelSettings />}
+            sx={{
+              borderRadius: 99,
+              fontWeight: 800,
+              fontSize: '1.15rem',
+              py: 2,
+              letterSpacing: 1,
+              boxShadow: '0 4px 15px rgba(0, 113, 227, 0.3)',
+              background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              '&:hover': {
+                transform: 'translateY(-3px) scale(1.02)',
+                boxShadow: '0 12px 30px rgba(0, 113, 227, 0.4)',
+                background: 'linear-gradient(45deg, #1565c0 30%, #1976d2 90%)',
+              },
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: '-100%',
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                transition: 'left 0.5s',
+              },
+              '&:hover::before': {
+                left: '100%',
+              }
+            }}
+            onClick={() => navigate('/admin-login')}
+          >
+            כניסת מנהלים
+          </Button>
+        </Grow>        <Grow in timeout={1400}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="large"
+            startIcon={<Event />}
+            sx={{
+              borderRadius: 99,
+              fontWeight: 800,
+              fontSize: '1.15rem',
+              py: 2,
+              letterSpacing: 1,
+              boxShadow: '0 4px 15px rgba(52, 199, 89, 0.2)',
+              background: 'linear-gradient(45deg, #4caf50 30%, #81c784 90%)',
+              color: 'white',
+              border: 'none',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              '&:hover': {
+                transform: 'translateY(-3px) scale(1.02)',
+                boxShadow: '0 12px 30px rgba(52, 199, 89, 0.4)',
+                background: 'linear-gradient(45deg, #388e3c 30%, #4caf50 90%)',
+                border: 'none',
+              },
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: '-100%',
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                transition: 'left 0.5s',
+              },
+              '&:hover::before': {
+                left: '100%',
+              }
+            }}
+            onClick={() => navigate('/community')}
+          >
+            צפייה באירועים
+          </Button>
+        </Grow>        <Grow in timeout={1600}>
+          <Button
+            variant="text"
+            size="large"
+            startIcon={<Group />}
+            sx={{
+              borderRadius: 99,
+              fontWeight: 800,
+              fontSize: '1.15rem',
+              py: 2,
+              letterSpacing: 1,
+              color: '#1976d2',
+              background: 'rgba(25, 118, 210, 0.05)',
+              border: '2px solid rgba(25, 118, 210, 0.2)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              '&:hover': {
+                transform: 'translateY(-3px) scale(1.02)',
+                background: 'rgba(25, 118, 210, 0.1)',
+                border: '2px solid rgba(25, 118, 210, 0.4)',
+                boxShadow: '0 8px 20px rgba(25, 118, 210, 0.2)',
+              }
+            }}
+            onClick={() => navigate('/events')}
+          >
+            לוח האירועים
+          </Button>        </Grow>
       </Stack>
+      
       <Box
         sx={{
           mt: 6,
@@ -161,9 +197,9 @@ const HomePage = () => {
             50% { transform: translateY(-10px);}
             100% { transform: translateY(0);}
           }
-        `}
-      </style>
+        `}      </style>
     </Box>
+    </Fade>
   );
 };
 
