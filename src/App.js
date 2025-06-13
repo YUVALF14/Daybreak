@@ -5,6 +5,7 @@ import AdminLogin from './components/AdminLogin';
 import EventDashboard from './components/EventDashboard';
 import CommunityEvents from './components/CommunityEvents';
 import BudgetDashboard from './components/BudgetDashboard';
+import ErrorBoundary from './ErrorBoundary';
 import { EventsProvider } from './context/EventsContext';
 import './App.css';
 
@@ -22,13 +23,13 @@ function App() {
   }, [ADMIN_CODE]);
 
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
-
   return (
-    <div>
-      <EventsProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<HomePage />} />            <Route
+    <ErrorBoundary>
+      <div>
+        <EventsProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<HomePage />} /><Route
               path="/admin-login"
               element={
                 isAdmin ? (
@@ -60,12 +61,12 @@ function App() {
             />
             {/* Non-admins see only the event list */}
             <Route path="/community" element={<CommunityEvents />} />
-            {/* fallback: non-admins see CommunityEvents for /events */}
-            <Route path="/events" element={<CommunityEvents />} />
+            {/* fallback: non-admins see CommunityEvents for /events */}            <Route path="/events" element={<CommunityEvents />} />
           </Routes>
         </Router>
       </EventsProvider>
     </div>
+    </ErrorBoundary>
   );
 }
 

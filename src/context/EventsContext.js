@@ -1,49 +1,32 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { database } from '../config/firebase';
-import {
-  ref,
-  onValue,
-  push,
-  set,
-  update,
-  remove,
-  off,
-} from 'firebase/database';
+import React, { createContext, useContext, useState } from 'react';
 
 const EventsContext = createContext();
 
 export const EventsProvider = ({ children }) => {
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    const eventsRef = ref(database, 'events');
-    
-    const unsubscribe = onValue(eventsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const eventsList = Object.keys(data).map(key => ({
-          id: key,
-          ...data[key]
-        }));
-        setEvents(eventsList);
-      } else {
-        setEvents([]);
-      }
-    });
-
-    return () => off(eventsRef, 'value', unsubscribe);
-  }, []);
+  // Mock data for now to ensure the app loads
+  const [events, setEvents] = useState([
+    {
+      id: '1',
+      title: 'אירוע לדוגמה',
+      date: '2025-06-20',
+      location: 'פראג',
+      description: 'אירוע לדוגמה לבדיקת המערכת',
+      price: 100,
+      subsidy: 50,
+      participants: []
+    }
+  ]);
 
   const addEvent = async (eventData) => {
     try {
-      const eventsRef = ref(database, 'events');
-      const newEventRef = push(eventsRef);
-      await set(newEventRef, {
+      const newEvent = {
         ...eventData,
+        id: Date.now().toString(),
         createdAt: new Date().toISOString(),
         participants: eventData.participants || []
-      });
-      return newEventRef.key;
+      };
+      setEvents(prev => [...prev, newEvent]);
+      return newEvent.id;
     } catch (error) {
       console.error('Error adding event:', error);
       throw error;
@@ -52,11 +35,11 @@ export const EventsProvider = ({ children }) => {
 
   const updateEvent = async (eventId, updates) => {
     try {
-      const eventRef = ref(database, `events/${eventId}`);
-      await update(eventRef, {
-        ...updates,
-        updatedAt: new Date().toISOString()
-      });
+      setEvents(prev => prev.map(event => 
+        event.id === eventId 
+          ? { ...event, ...updates, updatedAt: new Date().toISOString() }
+          : event
+      ));
     } catch (error) {
       console.error('Error updating event:', error);
       throw error;
@@ -65,8 +48,7 @@ export const EventsProvider = ({ children }) => {
 
   const deleteEvent = async (eventId) => {
     try {
-      const eventRef = ref(database, `events/${eventId}`);
-      await remove(eventRef);
+      setEvents(prev => prev.filter(event => event.id !== eventId));
     } catch (error) {
       console.error('Error deleting event:', error);
       throw error;
