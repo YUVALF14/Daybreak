@@ -21,7 +21,7 @@ import {
   Delete as DeleteIcon,
   WhatsApp as WhatsAppIcon,
   Close as CloseIcon,
-} from '@mui/icons-material';
+} from '@mui/icons-material/index.js';
 import EventForm from './EventForm.js';
 import ParticipantDialog from './ParticipantDialog.js';
 import NewEventForm from './NewEventForm.js';

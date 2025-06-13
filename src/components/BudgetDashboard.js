@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Paper, Button, Stack, Divider, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp.js';
 import { useEvents } from '../context/EventsContext.tsx';
 
 function BudgetDashboard({ onBack }) {
