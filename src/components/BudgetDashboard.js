@@ -117,17 +117,37 @@ function BudgetDashboard({ onBack }) {
               }}
             >
               ניהול תקציב
-            </Typography>
-          </Box>
-          <Button
-            variant="outlined"
-            onClick={onBack}
-            sx={{
-              fontWeight: 700,
-              borderRadius: 3,
-              px: 3,
-              background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
-              color: 'white',
+            </Typography>          </Box>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button
+              variant="contained"
+              onClick={() => window.open('https://wa.me/972507123456', '_blank')}
+              sx={{
+                background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+                borderRadius: 3,
+                px: 3,
+                py: 1.5,
+                color: 'white',
+                fontWeight: 700,
+                boxShadow: '0 8px 32px rgba(37, 211, 102, 0.3)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 12px 40px rgba(37, 211, 102, 0.4)',
+                }
+              }}
+            >
+              📱 צור קשר
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={onBack}
+              sx={{
+                fontWeight: 700,
+                borderRadius: 3,
+                px: 3,
+                background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
+                color: 'white',
               border: 'none',
               boxShadow: '0 4px 12px rgba(255,154,86,0.3)',
               transition: 'all 0.3s ease',
@@ -138,9 +158,9 @@ function BudgetDashboard({ onBack }) {
                 border: 'none'
               }
             }}
-          >
-            חזרה
+          >            חזרה
           </Button>
+          </Box>
         </Box>
 
         {/* Budget Overview Cards */}
@@ -160,9 +180,8 @@ function BudgetDashboard({ onBack }) {
               <AttachMoneyIcon sx={{ fontSize: '3rem', mb: 1, opacity: 0.9 }} />
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                 תקציב כולל
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 900 }}>
-                ₪{totalBudget.toLocaleString()}
+              </Typography>              <Typography variant="h4" sx={{ fontWeight: 900 }}>
+                {totalBudget.toLocaleString()} CZK
               </Typography>
             </CardContent>
           </Card>
@@ -182,9 +201,8 @@ function BudgetDashboard({ onBack }) {
               <TrendingUpIcon sx={{ fontSize: '3rem', mb: 1, opacity: 0.9 }} />
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                 הוצאות
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 900 }}>
-                ₪{totalExpenses.toLocaleString()}
+              </Typography>              <Typography variant="h4" sx={{ fontWeight: 900 }}>
+                {totalExpenses.toLocaleString()} CZK
               </Typography>
             </CardContent>
           </Card>
@@ -204,9 +222,8 @@ function BudgetDashboard({ onBack }) {
               <EventAvailableIcon sx={{ fontSize: '3rem', mb: 1, opacity: 0.9 }} />
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                 יתרה
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 900 }}>
-                ₪{balance.toLocaleString()}
+              </Typography>              <Typography variant="h4" sx={{ fontWeight: 900 }}>
+                {balance.toLocaleString()} CZK
               </Typography>
             </CardContent>
           </Card>
@@ -255,11 +272,11 @@ function BudgetDashboard({ onBack }) {
             פירוט אירועים
           </Typography>
           <Box sx={{ overflowX: 'auto' }}>
-            <Table>
-              <TableHead>
+            <Table>              <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>שם האירוע</TableCell>
                   <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>תאריך</TableCell>
+                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>כמות קרונות</TableCell>
                   <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>סבסוד למשתתף</TableCell>
                   <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>משתתפים בפועל</TableCell>
                   <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>תקציב מקסימלי</TableCell>
@@ -277,10 +294,9 @@ function BudgetDashboard({ onBack }) {
                     }}
                   >
                     <TableCell sx={{ fontWeight: 600 }}>{e.title}</TableCell>
-                    <TableCell>{e.date ? new Date(e.date).toLocaleDateString('he-IL') : '-'}</TableCell>
-                    <TableCell>
+                    <TableCell>{e.date ? new Date(e.date).toLocaleDateString('he-IL') : '-'}</TableCell>                    <TableCell>
                       <Chip 
-                        label={e.subsidy ? `₪${e.subsidy}` : '-'}
+                        label={e.subsidy ? `${e.subsidy} CZK` : '-'}
                         size="small"
                         sx={{ 
                           background: e.subsidy ? 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)' : 'rgba(0,0,0,0.1)',
@@ -300,19 +316,17 @@ function BudgetDashboard({ onBack }) {
                           </Typography>
                         )}
                       </Box>
-                    </TableCell>
-                    <TableCell>
+                    </TableCell>                    <TableCell>
                       <Typography sx={{ fontWeight: 600, color: '#2E7D32' }}>
                         {e.maxParticipants && e.subsidy
-                          ? `₪${(parseInt(e.maxParticipants) * parseFloat(e.subsidy)).toLocaleString()}`
+                          ? `${(parseInt(e.maxParticipants) * parseFloat(e.subsidy)).toLocaleString()} CZK`
                           : '-'}
                       </Typography>
-                    </TableCell>
-                    <TableCell>
+                    </TableCell>                    <TableCell>
                       <Typography sx={{ fontWeight: 600, color: '#d32f2f' }}>
                         {e.participants && e.subsidy
-                          ? `₪${(e.participants.length * parseFloat(e.subsidy)).toLocaleString()}`
-                          : '₪0'}
+                          ? `${(e.participants.length * parseFloat(e.subsidy)).toLocaleString()} CZK`
+                          : '0 CZK'}
                       </Typography>
                     </TableCell>
                   </TableRow>

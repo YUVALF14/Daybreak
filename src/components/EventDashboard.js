@@ -137,31 +137,7 @@ function EventDashboard() {
           }}>
             אירועי YJCC
           </Typography>
-        </Box>
-          <Box>
-            {localStorage.getItem('adminAuthenticated') === 'true' && (
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={() => {
-                  localStorage.removeItem('adminAuthenticated');
-                  window.location.href = '/';
-                }}
-                className="admin-logout-btn"
-                sx={{
-                  mr: 2,
-                  fontWeight: 700,
-                  borderRadius: 3,
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 12px rgba(211, 47, 47, 0.3)'
-                  }
-                }}
-              >
-                התנתקות מנהל
-              </Button>
-            )}
+        </Box>          <Box>
             <Fab 
               color="primary" 
               onClick={() => setOpenNewEventForm(true)}
