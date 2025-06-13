@@ -14,13 +14,13 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useNavigate } from 'react-router-dom';
 
 function AdminLogin({ onLogin }) {
   const [code, setCode] = useState('');
   const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();  const handleSubmit = (e) => {
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     console.log('AdminLogin handleSubmit called, code:', code); // DEBUG
     const success = onLogin(code);
