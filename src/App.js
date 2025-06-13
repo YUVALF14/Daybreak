@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import AdminLogin from './components/AdminLogin';
@@ -10,7 +10,6 @@ import './App.css';
 
 function App() {
   const ADMIN_CODE = '071024';
-  const [showBudget, setShowBudget] = useState(false);
 
   const handleAdminLogin = useCallback((code) => {
     if (code === ADMIN_CODE) {
@@ -29,12 +28,11 @@ function App() {
       <EventsProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route
+            <Route path="/" element={<HomePage />} />            <Route
               path="/admin-login"
               element={
                 isAdmin ? (
-                  <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
+                  <EventDashboard />
                 ) : (
                   <AdminLogin onLogin={handleAdminLogin} />
                 )
@@ -44,17 +42,16 @@ function App() {
               path="/admin-dashboard"
               element={
                 isAdmin ? (
-                  <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
+                  <EventDashboard />
                 ) : (
                   <AdminLogin onLogin={handleAdminLogin} />
                 )
               }
-            />
-            <Route
+            />            <Route
               path="/budget"
               element={
-                isAdmin && showBudget ? (
-                  <BudgetDashboard onBack={() => setShowBudget(false)} />
+                isAdmin ? (
+                  <BudgetDashboard onBack={() => window.history.back()} />
                 ) : (
                   // Non-admins or direct access: redirect to home or events
                   <HomePage />
