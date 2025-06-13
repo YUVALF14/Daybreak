@@ -1,7 +1,6 @@
 import React from 'react';
-import { Box, Typography, Button, Stack } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Celebration, Event, AdminPanelSettings, Group } from '@mui/icons-material';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -9,131 +8,121 @@ const HomePage = () => {
   return (
     <Box
       sx={{
-        minHeight: '80vh',
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        px: { xs: 2, sm: 4 },
-        py: { xs: 4, sm: 8 },
-        background: 'radial-gradient(ellipse at 80% 10%, #e3f2fd 0%, #fff 80%)',
-          borderRadius: { xs: 8, sm: 20 },
-          boxShadow: { xs: 6, sm: 18 },
-          mx: { xs: 1, sm: 4 },
-          my: { xs: 2, sm: 4 },
-          border: '2.5px solid #e3f2fd',
-          maxWidth: 600,
-          marginX: 'auto',
+        background: 'linear-gradient(135deg, #ff9a56 0%, #ffad56 25%, #c2416b 75%, #8b1538 100%)',
+        padding: 4,
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,154,86,0.2) 0%, transparent 50%)',
+          pointerEvents: 'none'
+        }
+      }}
+    >      <Box
+        sx={{
+          background: 'rgba(255,255,255,0.98)',
+          backdropFilter: 'blur(25px)',
+          borderRadius: 8,
+          padding: { xs: 5, sm: 7 },
+          maxWidth: 520,
+          width: '100%',
+          textAlign: 'center',
+          boxShadow: '0 30px 60px rgba(255,154,86,0.25), 0 15px 30px rgba(139,21,56,0.15)',
+          border: '1px solid rgba(255,255,255,0.3)',
           position: 'relative',
-          overflow: 'hidden',
-          animation: 'fadeIn 1s',
+          zIndex: 1
         }}
-      >
-        <Celebration
-          color="success"
+      >        {/* Premium Icon */}
+        <Box
           sx={{
-            fontSize: 56,
-            mb: 2,
-            animation: 'float 2.5s ease-in-out infinite',
-            color: '#1976d2',
+            width: 90,
+            height: 90,
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 50%, #8b1538 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 28px auto',
+            boxShadow: '0 18px 40px rgba(255,154,86,0.5), 0 8px 16px rgba(139,21,56,0.3)',
+            position: 'relative',
+            '&::before': {
+              content: '"🌅"',
+              fontSize: '2.4rem',
+            },
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              top: -4,
+              left: -4,
+              right: -4,
+              bottom: -4,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, rgba(255,154,86,0.3) 0%, rgba(194,65,107,0.2) 100%)',
+              zIndex: -1,
+              filter: 'blur(8px)'
+            }
           }}
         />
-        <Typography
-          variant="h3"
-          sx={{
+
+        <Typography 
+          variant="h2" 
+          sx={{ 
+            mb: 3, 
             fontWeight: 900,
-            fontFamily: 'Heebo, Assistant, sans-serif',
-            color: '#1976d2',
-            fontSize: { xs: '2.1rem', sm: '2.5rem' },
+            background: 'linear-gradient(135deg, #c2416b 0%, #8b1538 60%, #ff9a56 100%)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontSize: { xs: '2.8rem', sm: '3.8rem' },
             letterSpacing: '-0.03em',
-            mb: 1,
-            textAlign: 'center',
+            textShadow: '0 4px 8px rgba(139,21,56,0.1)'
           }}
         >
           DAYBREAK
-        </Typography>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 400,
-            color: '#6e6e73',
-            fontFamily: 'Assistant, Heebo, sans-serif',
-            fontSize: { xs: '1.08rem', sm: '1.18rem' },
-            mb: 4,
+        </Typography>        
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            mb: 5, 
+            color: '#8b5a3c',
+            fontWeight: 600,
+            lineHeight: 1.7,
+            fontSize: { xs: '1.15rem', sm: '1.3rem' },
             textAlign: 'center',
+            maxWidth: 400,
+            margin: '0 auto 40px auto'
           }}
         >
           מערכת קהילתית לניהול אירועים<br />
-          הקהילה הישראלית הצעירה בפראג
+          <span style={{ color: '#c2416b', fontWeight: 700 }}>הקהילה הישראלית הצעירה בפראג</span>
         </Typography>
-        <Stack spacing={3} sx={{ width: '100%' }}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            startIcon={<AdminPanelSettings />}
-            sx={{
-              borderRadius: 99,
-              fontWeight: 800,
-              fontSize: '1.15rem',
-              py: 2,
-              letterSpacing: 1,
-              boxShadow: '0 4px 15px rgba(0, 113, 227, 0.3)',
-              background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              position: 'relative',
-              overflow: 'hidden',
-              opacity: 0,
-              animation: 'fadeInUp 0.6s ease-out 0.2s forwards',
-              '&:hover': {
-                transform: 'translateY(-3px) scale(1.02)',
-                boxShadow: '0 12px 30px rgba(0, 113, 227, 0.4)',
-                background: 'linear-gradient(45deg, #1565c0 30%, #1976d2 90%)',
-              },
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: '-100%',
-                width: '100%',
-                height: '100%',
-                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
-                transition: 'left 0.5s',
-              },
-              '&:hover::before': {
-                left: '100%',
-              }
-            }}
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3.5, alignItems: 'center', width: '100%' }}>          <Button
             onClick={() => navigate('/admin-login')}
-          >
-            כניסת מנהלים
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
+            variant="contained"
             size="large"
-            startIcon={<Event />}
             sx={{
-              borderRadius: 99,
+              width: '100%',
+              maxWidth: 380,
+              py: 2.5,
+              px: 5,
+              fontSize: '1.25rem',
               fontWeight: 800,
-              fontSize: '1.15rem',
-              py: 2,
-              letterSpacing: 1,
-              boxShadow: '0 4px 15px rgba(52, 199, 89, 0.2)',
-              background: 'linear-gradient(45deg, #4caf50 30%, #81c784 90%)',
-              color: 'white',
-              border: 'none',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              borderRadius: 5,
+              background: 'linear-gradient(135deg, #c2416b 0%, #8b1538 100%)',
+              boxShadow: '0 12px 28px rgba(194,65,107,0.4), 0 6px 12px rgba(139,21,56,0.2)',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               position: 'relative',
               overflow: 'hidden',
-              opacity: 0,
-              animation: 'fadeInUp 0.6s ease-out 0.4s forwards',
-              '&:hover': {
-                transform: 'translateY(-3px) scale(1.02)',
-                boxShadow: '0 12px 30px rgba(52, 199, 89, 0.4)',
-                background: 'linear-gradient(45deg, #388e3c 30%, #4caf50 90%)',
-                border: 'none',
-              },
               '&::before': {
                 content: '""',
                 position: 'absolute',
@@ -142,67 +131,115 @@ const HomePage = () => {
                 width: '100%',
                 height: '100%',
                 background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
-                transition: 'left 0.5s',
+                transition: 'left 0.6s'
               },
-              '&:hover::before': {
-                left: '100%',
-              }
-            }}
-            onClick={() => navigate('/community')}
-          >
-            צפייה באירועים
-          </Button>
-          <Button
-            variant="text"
-            size="large"
-            startIcon={<Group />}
-            sx={{
-              borderRadius: 99,
-              fontWeight: 800,
-              fontSize: '1.15rem',
-              py: 2,
-              letterSpacing: 1,
-              color: '#1976d2',
-              background: 'rgba(25, 118, 210, 0.05)',
-              border: '2px solid rgba(25, 118, 210, 0.2)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              opacity: 0,
-              animation: 'fadeInUp 0.6s ease-out 0.6s forwards',
               '&:hover': {
-                transform: 'translateY(-3px) scale(1.02)',
-                background: 'rgba(25, 118, 210, 0.1)',
-                border: '2px solid rgba(25, 118, 210, 0.4)',
-                boxShadow: '0 8px 20px rgba(25, 118, 210, 0.2)',
+                transform: 'translateY(-4px) scale(1.02)',
+                boxShadow: '0 20px 40px rgba(194,65,107,0.5), 0 10px 20px rgba(139,21,56,0.3)',
+                background: 'linear-gradient(135deg, #d1537a 0%, #9c1e47 100%)',
+                '&::before': {
+                  left: '100%'
+                }
               }
             }}
-            onClick={() => navigate('/events')}
           >
-            לוח האירועים
+            🔐 כניסת מנהלים
+          </Button>          
+          <Button
+            onClick={() => navigate('/community')}
+            variant="contained"
+            size="large"
+            sx={{
+              width: '100%',
+              maxWidth: 380,
+              py: 2.5,
+              px: 5,
+              fontSize: '1.25rem',
+              fontWeight: 800,
+              borderRadius: 5,
+              background: 'linear-gradient(135deg, #ff9a56 0%, #ffad56 100%)',
+              boxShadow: '0 12px 28px rgba(255,154,86,0.4), 0 6px 12px rgba(255,173,86,0.2)',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: '-100%',
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                transition: 'left 0.6s'
+              },
+              '&:hover': {
+                transform: 'translateY(-4px) scale(1.02)',
+                boxShadow: '0 20px 40px rgba(255,154,86,0.5), 0 10px 20px rgba(255,173,86,0.3)',
+                background: 'linear-gradient(135deg, #ff8a3d 0%, #ffbc5d 100%)',
+                '&::before': {
+                  left: '100%'
+                }
+              }
+            }}
+          >
+            🎉 צפייה באירועים
+          </Button>            <Button
+            onClick={() => window.open('https://wa.me/972542230342', '_blank')}
+            variant="outlined"
+            size="large"
+            sx={{
+              width: '100%',
+              maxWidth: 380,
+              py: 2.5,
+              px: 5,
+              fontSize: '1.25rem',
+              fontWeight: 800,
+              borderRadius: 5,
+              border: '3px solid transparent',
+              background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #25D366 0%, #128C7E 100%) border-box',
+              color: '#075E54',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: '-100%',
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(37,211,102,0.1), transparent)',
+                transition: 'left 0.6s'
+              },
+              '&:hover': {
+                transform: 'translateY(-4px) scale(1.02)',
+                background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+                color: 'white',
+                boxShadow: '0 20px 40px rgba(37,211,102,0.4), 0 10px 20px rgba(18,140,126,0.2)',
+                '&::before': {
+                  left: '100%'
+                }
+              }
+            }}
+          >
+            � צור קשר בוואטסאפ
           </Button>
-        </Stack>
-        
-        <Box
-          sx={{
-            mt: 6,
-            pt: 2,
+        </Box>        <Typography 
+          variant="body2" 
+          sx={{ 
+            mt: 5, 
+            color: '#b8906d',
+            fontSize: '0.95rem',
+            fontWeight: 500,
             textAlign: 'center',
+            lineHeight: 1.6
           }}
         >
-          <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.7 }}>
-            © 2024 YJCC Prague Events System
-          </Typography>
-        </Box>
-
-        <style jsx>{`
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }          }
-          @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-          }
-        `}</style>
+          © 2025 YJCC Prague Events System<br />
+          <span style={{ color: '#c2416b', fontSize: '0.9rem' }}>נעשה ב❤️ למען הקהילה הישראלית בפראג</span>
+        </Typography>
       </Box>
+    </Box>
   );
 };
 

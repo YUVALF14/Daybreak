@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Box,
@@ -20,6 +21,7 @@ import {
   Delete as DeleteIcon,
   WhatsApp as WhatsAppIcon,
   Close as CloseIcon,
+  ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
@@ -28,6 +30,7 @@ import BudgetDashboard from './BudgetDashboard';
 import { useEvents } from '../context/EventsContext';
 
 function EventDashboard() {
+  const navigate = useNavigate();
   const { events, addEvent, updateEvent, deleteEvent } = useEvents();
   const [openEventForm, setOpenEventForm] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -96,7 +99,33 @@ function EventDashboard() {
 
   // Only show budget button for admins
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';  return (
-    <Container><Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Container>
+      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+          <Button
+            variant="outlined"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate('/')}
+            sx={{
+              fontWeight: 700,
+              borderRadius: 3,
+              px: 3,
+              py: 1,
+              background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
+              color: 'white',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(255,154,86,0.3)',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: '0 8px 20px rgba(255,154,86,0.4)',
+                background: 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)',
+                border: 'none'
+              }
+            }}
+          >
+            חזרה לעמוד הבית
+          </Button>
           <Typography variant="h4" sx={{ 
             fontWeight: 900,
             background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
@@ -107,6 +136,7 @@ function EventDashboard() {
           }}>
             אירועי YJCC
           </Typography>
+        </Box>
           <Box>
             {localStorage.getItem('adminAuthenticated') === 'true' && (
               <Button
