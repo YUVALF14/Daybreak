@@ -6,7 +6,7 @@ import EventDashboard from './components/EventDashboard.js';
 import CommunityEvents from './components/CommunityEvents.js';
 import BudgetDashboard from './components/BudgetDashboard.js';
 import { EventsProvider } from './context/EventsContext.tsx';
-import ErrorBoundary from './ErrorBoundary';
+import ErrorBoundary from './ErrorBoundary.js';
 import './App.css';
 
 function App() {
