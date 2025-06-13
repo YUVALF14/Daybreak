@@ -1,13 +1,77 @@
-import React from 'react';
-import { Box, Typography, Paper, Button, Table, TableHead, TableRow, TableCell, TableBody, Card, CardContent, LinearProgress, Chip } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Paper, Button, Table, TableHead, TableRow, TableCell, TableBody, Card, CardContent, LinearProgress, Chip, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Grid } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import EditIcon from '@mui/icons-material/Edit';
 import { useEvents } from '../context/EventsContext';
 
 function BudgetDashboard({ onBack }) {
   const { events } = useEvents();
+  const [monthlyBudgets, setMonthlyBudgets] = useState(() => {
+    const saved = localStorage.getItem('monthlyBudgets');
+    return saved ? JSON.parse(saved) : {};
+  });
+  const [budgetDialog, setBudgetDialog] = useState({ open: false, month: '', budget: '' });
+
+  // Save to localStorage whenever monthlyBudgets changes
+  useEffect(() => {
+    localStorage.setItem('monthlyBudgets', JSON.stringify(monthlyBudgets));
+  }, [monthlyBudgets]);
+
+  // Get current month key
+  const getCurrentMonth = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  };
+
+  // Get month name in Hebrew
+  const getMonthName = (monthKey) => {
+    const [year, month] = monthKey.split('-');
+    const monthNames = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+    return `${monthNames[parseInt(month) - 1]} ${year}`;
+  };
+
+  // Calculate current month expenses
+  const getCurrentMonthExpenses = () => {
+    const currentMonth = getCurrentMonth();
+    const [year, month] = currentMonth.split('-');
+    
+    return events
+      .filter(e => {
+        if (!e.date || !e.participants || !e.subsidy) return false;
+        const eventDate = new Date(e.date);
+        const eventMonth = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}`;
+        return eventMonth === currentMonth;
+      })
+      .reduce((sum, e) => sum + (e.participants.length * parseFloat(e.subsidy)), 0);
+  };
+
+  const currentMonth = getCurrentMonth();
+  const currentMonthBudget = monthlyBudgets[currentMonth] || 0;
+  const currentMonthExpenses = getCurrentMonthExpenses();
+  const currentMonthBalance = currentMonthBudget - currentMonthExpenses;
+  const currentMonthUsage = currentMonthBudget > 0 ? (currentMonthExpenses / currentMonthBudget) * 100 : 0;
+
+  const handleSetMonthlyBudget = () => {
+    if (budgetDialog.budget && parseFloat(budgetDialog.budget) > 0) {
+      setMonthlyBudgets(prev => ({
+        ...prev,
+        [budgetDialog.month]: parseFloat(budgetDialog.budget)
+      }));
+    }
+    setBudgetDialog({ open: false, month: '', budget: '' });
+  };
+
+  const openBudgetDialog = (month = currentMonth) => {
+    setBudgetDialog({
+      open: true,
+      month,
+      budget: monthlyBudgets[month]?.toString() || ''
+    });
+  };
 
   // Calculate budget summary
   const totalBudget = events.reduce((sum, e) =>
@@ -161,10 +225,8 @@ function BudgetDashboard({ onBack }) {
           >            חזרה
           </Button>
           </Box>
-        </Box>
-
-        {/* Budget Overview Cards */}
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3, mb: 4 }}>
+        </Box>        {/* Budget Overview Cards */}
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)', 
             color: 'white',
@@ -219,15 +281,88 @@ function BudgetDashboard({ onBack }) {
             }
           }}>
             <CardContent sx={{ textAlign: 'center', py: 3 }}>
-              <EventAvailableIcon sx={{ fontSize: '3rem', mb: 1, opacity: 0.9 }} />
-              <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-                יתרה
+              <EventAvailableIcon sx={{ fontSize: '3rem', mb: 1, opacity: 0.9 }} />              <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                יתרה כללית
               </Typography>              <Typography variant="h4" sx={{ fontWeight: 900 }}>
                 {balance.toLocaleString()} CZK
               </Typography>
             </CardContent>
           </Card>
+
+          {/* New Monthly Budget Card */}
+          <Card sx={{ 
+            background: 'linear-gradient(135deg, #9c27b0 0%, #673ab7 100%)', 
+            color: 'white',
+            borderRadius: 4,
+            boxShadow: '0 12px 24px rgba(156,39,176,0.3)',
+            transition: 'all 0.3s ease',
+            cursor: 'pointer',
+            '&:hover': {
+              transform: 'translateY(-5px)',
+              boxShadow: '0 20px 40px rgba(156,39,176,0.4)'
+            }
+          }}
+          onClick={() => openBudgetDialog()}>
+            <CardContent sx={{ textAlign: 'center', py: 3 }}>
+              <CalendarMonthIcon sx={{ fontSize: '3rem', mb: 1, opacity: 0.9 }} />
+              <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                תקציב חודשי
+              </Typography>
+              <Typography variant="h4" sx={{ fontWeight: 900 }}>
+                {currentMonthBudget.toLocaleString()} CZK
+              </Typography>
+              <EditIcon sx={{ fontSize: '1rem', mt: 1, opacity: 0.7 }} />
+            </CardContent>
+          </Card>
         </Box>
+
+        {/* Monthly Budget Progress */}
+        {currentMonthBudget > 0 && (
+          <Paper sx={{ p: 3, mb: 4, borderRadius: 4, background: 'linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#4a148c' }}>
+                מעקב תקציב חודשי - {getMonthName(currentMonth)}
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                <Chip 
+                  label={`${currentMonthUsage.toFixed(1)}%`}
+                  sx={{ 
+                    background: currentMonthUsage > 80 ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)' : 'linear-gradient(135deg, #9c27b0 0%, #673ab7 100%)',
+                    color: 'white',
+                    fontWeight: 700
+                  }}
+                />
+                <Typography variant="body2" sx={{ fontWeight: 600, color: currentMonthBalance >= 0 ? '#2e7d32' : '#d32f2f' }}>
+                  יתרה: {currentMonthBalance.toLocaleString()} CZK
+                </Typography>
+              </Box>
+            </Box>
+            <LinearProgress
+              variant="determinate"
+              value={Math.min(currentMonthUsage, 100)}
+              sx={{
+                height: 12,
+                borderRadius: 6,
+                backgroundColor: 'rgba(156,39,176,0.1)',
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: 6,
+                  background: currentMonthUsage > 80 
+                    ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)'
+                    : 'linear-gradient(135deg, #9c27b0 0%, #673ab7 100%)',
+                  boxShadow: '0 2px 8px rgba(156,39,176,0.3)'
+                }
+              }}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+              <Typography variant="body2" sx={{ color: '#4a148c', fontWeight: 600 }}>
+                הוצאות החודש: {currentMonthExpenses.toLocaleString()} CZK
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#4a148c', fontWeight: 600 }}>
+                תקציב: {currentMonthBudget.toLocaleString()} CZK
+              </Typography>
+            </Box>
+          </Paper>
+        )}
 
         {/* Usage Progress */}
         <Paper sx={{ p: 3, mb: 4, borderRadius: 4, background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)' }}>
@@ -333,8 +468,99 @@ function BudgetDashboard({ onBack }) {
                 ))}
               </TableBody>
             </Table>
-          </Box>
-        </Paper>
+          </Box>        </Paper>
+
+        {/* Monthly Budget Dialog */}
+        <Dialog 
+          open={budgetDialog.open} 
+          onClose={() => setBudgetDialog({ open: false, month: '', budget: '' })}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 4,
+              background: 'linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)',
+              boxShadow: '0 20px 40px rgba(156,39,176,0.3)'
+            }
+          }}
+        >
+          <DialogTitle sx={{ 
+            textAlign: 'center', 
+            fontWeight: 700, 
+            color: '#4a148c',
+            pb: 1
+          }}>
+            💰 הגדרת תקציב חודשי
+          </DialogTitle>
+          <DialogContent sx={{ pt: 2 }}>
+            <Box sx={{ textAlign: 'center', mb: 3 }}>
+              <Typography variant="h6" sx={{ color: '#4a148c', fontWeight: 600 }}>
+                {getMonthName(budgetDialog.month)}
+              </Typography>
+            </Box>
+            <TextField
+              autoFocus
+              fullWidth
+              label="תקציב (CZK)"
+              type="number"
+              value={budgetDialog.budget}
+              onChange={(e) => setBudgetDialog(prev => ({ ...prev, budget: e.target.value }))}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 3,
+                  '& fieldset': {
+                    borderColor: 'rgba(156,39,176,0.3)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgba(156,39,176,0.5)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#9c27b0',
+                  },
+                },
+                '& .MuiInputLabel-root': {
+                  color: '#4a148c',
+                  '&.Mui-focused': {
+                    color: '#9c27b0',
+                  },
+                },
+              }}
+            />
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
+            <Button 
+              onClick={() => setBudgetDialog({ open: false, month: '', budget: '' })}
+              variant="outlined"
+              sx={{
+                borderColor: 'rgba(156,39,176,0.5)',
+                color: '#9c27b0',
+                fontWeight: 600,
+                borderRadius: 3,
+                '&:hover': {
+                  borderColor: '#9c27b0',
+                  background: 'rgba(156,39,176,0.05)',
+                }
+              }}
+            >
+              ביטול
+            </Button>
+            <Button 
+              onClick={handleSetMonthlyBudget}
+              variant="contained"
+              sx={{
+                background: 'linear-gradient(135deg, #9c27b0 0%, #673ab7 100%)',
+                fontWeight: 700,
+                borderRadius: 3,
+                px: 4,
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #8e24aa 0%, #5e35b1 100%)',
+                }
+              }}
+            >
+              💾 שמור
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Box>
   );

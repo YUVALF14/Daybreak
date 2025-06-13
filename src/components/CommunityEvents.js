@@ -201,57 +201,87 @@ const CommunityEvents = () => {
                     background: 'rgba(255,255,255,0.2)',
                   }
                 }}>
-                  <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    {/* Event Title */}                    <Typography variant="h5" sx={{ 
-                      color: 'white', 
-                      fontWeight: 700, 
+                  <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>                    {/* Event Title */}
+                    <Typography variant="h5" sx={{ 
+                      color: '#1a252f', 
+                      fontWeight: 800, 
                       mb: 2,
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      textShadow: '0 2px 8px rgba(255,255,255,0.5), 0 1px 4px rgba(0,0,0,0.8)',
+                      background: 'rgba(255,255,255,0.9)',
+                      borderRadius: 2,
+                      p: 1.5,
+                      border: '2px solid rgba(255,255,255,0.3)'
                     }}>
                       {event.name || event.title}
                     </Typography>
 
                     {/* Event Details */}
-                    <Stack spacing={2} sx={{ flex: 1, mb: 3 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <AccessTime sx={{ color: 'rgba(255,255,255,0.8)', fontSize: 20 }} />
-                        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
+                    <Stack spacing={2} sx={{ flex: 1, mb: 3 }}>                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <AccessTime sx={{ color: '#1a252f', fontSize: 20 }} />
+                        <Typography variant="body2" sx={{ 
+                          color: '#1a252f', 
+                          fontWeight: 700,
+                          textShadow: '0 1px 3px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.6)',
+                          background: 'rgba(255,255,255,0.7)',
+                          borderRadius: 1,
+                          px: 1,
+                          py: 0.5
+                        }}>
                           {formatDate(event.date)} • {formatTime(event.time)}
                         </Typography>
-                      </Box>
-
-                      {event.location && (
+                      </Box>                      {event.location && (
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <LocationOn sx={{ color: 'rgba(255,255,255,0.8)', fontSize: 20 }} />
-                          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
+                          <LocationOn sx={{ color: '#1a252f', fontSize: 20 }} />
+                          <Typography variant="body2" sx={{ 
+                            color: '#1a252f', 
+                            fontWeight: 700,
+                            textShadow: '0 1px 3px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.6)',
+                            background: 'rgba(255,255,255,0.7)',
+                            borderRadius: 1,
+                            px: 1,
+                            py: 0.5
+                          }}>
                             {event.location}
                           </Typography>
                         </Box>
-                      )}
-
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Group sx={{ color: 'rgba(255,255,255,0.8)', fontSize: 20 }} />
-                        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
+                      )}                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Group sx={{ color: '#1a252f', fontSize: 20 }} />
+                        <Typography variant="body2" sx={{ 
+                          color: '#1a252f', 
+                          fontWeight: 700,
+                          textShadow: '0 1px 3px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.6)',
+                          background: 'rgba(255,255,255,0.7)',
+                          borderRadius: 1,
+                          px: 1,
+                          py: 0.5
+                        }}>
                           {event.participants?.length || 0} נרשמו
                         </Typography>
                         {event.maxParticipants && (
-                          <Chip 
+                          <Chip
                             label={`מקסימום: ${event.maxParticipants}`}
                             size="small"
                             sx={{ 
-                              background: 'rgba(255,255,255,0.2)',
+                              background: 'rgba(26,37,47,0.9)',
                               color: 'white',
-                              fontSize: '0.75rem'
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                             }}
                           />
                         )}
-                      </Box>
-
-                      {event.description && (
+                      </Box>                      {event.description && (
                         <Typography variant="body2" sx={{ 
-                          color: 'rgba(255,255,255,0.8)',
+                          color: '#1a252f',
                           lineHeight: 1.6,
-                          textAlign: 'right'
+                          textAlign: 'right',
+                          fontWeight: 600,
+                          textShadow: '0 1px 3px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.6)',
+                          background: 'rgba(255,255,255,0.8)',
+                          borderRadius: 2,
+                          p: 1.5,
+                          border: '1px solid rgba(255,255,255,0.3)'
                         }}>
                           {event.description}
                         </Typography>
