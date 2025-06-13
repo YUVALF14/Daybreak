@@ -6,7 +6,6 @@ import EventDashboard from './components/EventDashboard.js';
 import CommunityEvents from './components/CommunityEvents.js';
 import BudgetDashboard from './components/BudgetDashboard.js';
 import { EventsProvider } from './context/EventsContext.tsx';
-import ErrorBoundary from './ErrorBoundary.js';
 import './App.css';
 
 function App() {
@@ -26,7 +25,7 @@ function App() {
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
 
   return (
-    <ErrorBoundary>
+    <div>
       <EventsProvider>
         <Router>
           <Routes>
@@ -59,7 +58,7 @@ function App() {
           </Routes>
         </Router>
       </EventsProvider>
-    </ErrorBoundary>
+    </div>
   );
 }
 
