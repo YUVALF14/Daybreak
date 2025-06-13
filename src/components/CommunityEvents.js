@@ -9,20 +9,34 @@ const CommunityEvents = () => {
   const navigate = useNavigate();
   const { events, updateEvent } = useEvents();
   const [registrationDialog, setRegistrationDialog] = useState({ open: false, event: null });
-
   const upcomingEvents = events
     .filter(e => {
-      if (!e.date) return false;
-      return new Date(e.date) >= new Date();
+      if (!e || !e.date) return false;
+      try {
+        return new Date(e.date) >= new Date();
+      } catch {
+        return false;
+      }
     })
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
-
+    .sort((a, b) => {
+      try {
+        return new Date(a.date) - new Date(b.date);
+      } catch {
+        return 0;
+      }
+    });
   const handleRegister = async (eventId, participant) => {
-    const event = events.find(e => e.id === eventId);
+    if (!eventId || !participant) return;
+    
+    const event = events.find(e => e && e.id === eventId);
     if (!event) return;
     
-    const updatedParticipants = [...(event.participants || []), participant];
-    await updateEvent(eventId, { participants: updatedParticipants });
+    try {
+      const updatedParticipants = [...(event.participants || []), participant];
+      await updateEvent(eventId, { participants: updatedParticipants });
+    } catch (error) {
+      console.error('Error registering participant:', error);
+    }
   };
 
   const openRegistration = (event) => {
@@ -164,11 +178,13 @@ const CommunityEvents = () => {
               </Typography>
             </CardContent>
           </Card>
-        ) : (
-          <Grid container spacing={3}>
-            {upcomingEvents.map((event, index) => (
-              <Grid item xs={12} md={6} lg={4} key={event.id}>
-                <Card sx={{
+        ) : (          <Grid container spacing={3}>
+            {upcomingEvents.map((event, index) => {
+              if (!event || !event.id) return null;
+              
+              return (
+                <Grid item xs={12} md={6} lg={4} key={event.id}>
+                  <Card sx={{
                   background: 'rgba(255,255,255,0.15)',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(255,255,255,0.2)',
@@ -186,14 +202,13 @@ const CommunityEvents = () => {
                   }
                 }}>
                   <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    {/* Event Title */}
-                    <Typography variant="h5" sx={{ 
+                    {/* Event Title */}                    <Typography variant="h5" sx={{ 
                       color: 'white', 
                       fontWeight: 700, 
                       mb: 2,
                       textAlign: 'center'
                     }}>
-                      {event.name}
+                      {event.name || event.title}
                     </Typography>
 
                     {/* Event Details */}
@@ -273,11 +288,11 @@ const CommunityEvents = () => {
                       {event.maxParticipants && event.participants?.length >= event.maxParticipants 
                         ? '🚫 האירוע מלא' 
                         : '✨ הרשמה לאירוע'}
-                    </Button>
-                  </CardContent>
+                    </Button>                  </CardContent>
                 </Card>
               </Grid>
-            ))}
+              );
+            })}
           </Grid>
         )}
       </Container>
