@@ -5,7 +5,7 @@ import AdminLogin from './components/AdminLogin.js';
 import EventDashboard from './components/EventDashboard.js';
 import CommunityEvents from './components/CommunityEvents.js';
 import BudgetDashboard from './components/BudgetDashboard.js';
-import { EventsProvider } from './context/EventsContext.js';
+import { EventsProvider } from './context/EventsContext';
 import './App.css';
 
 function App() {
