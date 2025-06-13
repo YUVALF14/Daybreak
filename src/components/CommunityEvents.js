@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Card, CardContent, Stack, Button, Fade } from '@mui/material';
+import { Box, Typography, Card, CardContent, Stack, Button } from '@mui/material';
 import { PersonAdd, Event } from '@mui/icons-material';
 import { useEvents } from '../context/EventsContext';
 import EventRegistrationDialog from './EventRegistrationDialog';
@@ -35,14 +35,12 @@ const CommunityEvents = () => {
     console.log('CommunityEvents events array:', events); // DEBUG
     console.log('CommunityEvents upcomingEvents:', upcomingEvents); // DEBUG
   }, [events, upcomingEvents]);
-
   return (
-    <Fade in timeout={800}>
-      <Box sx={{
-        maxWidth: 720,
-        mx: 'auto',
-        mt: { xs: 2, sm: 6 },
-        mb: { xs: 2, sm: 6 },
+    <Box sx={{
+      maxWidth: 720,
+      mx: 'auto',
+      mt: { xs: 2, sm: 6 },
+      mb: { xs: 2, sm: 6 },
         p: { xs: 1, sm: 4 },
         background: 'radial-gradient(ellipse at 80% 10%, #e3f2fd 0%, #fff 80%)',
         borderRadius: { xs: 6, sm: 14 },
@@ -191,10 +189,8 @@ const CommunityEvents = () => {
           open={registrationDialog.open}
           onClose={closeRegistration}
           event={registrationDialog.event}
-          onRegister={handleRegister}
-        />
+          onRegister={handleRegister}        />
       </Box>
-    </Fade>
   );
 };
 

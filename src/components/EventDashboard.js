@@ -12,8 +12,7 @@ import {
   TableCell,
   Paper,
   Button,  IconButton,
-  Snackbar,
-  Fade
+  Snackbar
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -96,10 +95,8 @@ function EventDashboard() {
   };
 
   // Only show budget button for admins
-  const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
-  return (
-    <Fade in timeout={600}>
-      <Container>        <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';  return (
+    <Container><Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h4" sx={{ 
             fontWeight: 900,
             background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
@@ -260,10 +257,8 @@ function EventDashboard() {
             onClick={() => setSnackbar({ ...snackbar, open: false })}
           >
             <CloseIcon />
-          </IconButton>        }
-      />
+          </IconButton>        }        />
       </Container>
-    </Fade>
   );
 }
 

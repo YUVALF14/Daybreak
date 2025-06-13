@@ -6,9 +6,7 @@ import {
   DialogActions,
   TextField,
   Button,
-  Box,
-  Typography,
-  Fade,
+  Box,  Typography,
   Snackbar,
   Alert
 } from '@mui/material';
@@ -114,10 +112,8 @@ function EventRegistrationDialog({ open, onClose, event, onRegister }) {
             {event?.title}
           </Typography>
         </DialogTitle>
-        
-        <DialogContent>
-          <Fade in={open} timeout={600}>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <DialogContent>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
               <TextField
                 fullWidth
                 label="שם מלא"
@@ -196,10 +192,8 @@ function EventRegistrationDialog({ open, onClose, event, onRegister }) {
                   <Typography variant="body2" color="text.secondary">
                     <strong>מחיר:</strong> {event.price} CZK
                   </Typography>
-                </Box>
-              )}
+                </Box>              )}
             </Box>
-          </Fade>
         </DialogContent>
         
         <DialogActions sx={{ p: 3, pt: 1 }}>
