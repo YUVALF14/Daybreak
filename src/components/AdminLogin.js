@@ -24,12 +24,14 @@ function AdminLogin({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('AdminLogin handleSubmit called, code:', code); // DEBUG
     const success = onLogin(code);
     if (!success) {
       setError(true);
     } else {
       setError(false);
       // Navigate to admin dashboard ("/admin-login" will show dashboard if authenticated)
+      console.log('AdminLogin success, navigating to /admin-login'); // DEBUG
       navigate('/admin-login');
     }
   };
