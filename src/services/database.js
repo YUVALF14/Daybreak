@@ -1,5 +1,5 @@
 import { ref, set, get, update } from 'firebase/database';
-import { database } from '../config/firebase';
+import { database } from '../config/firebase.js';
 
 /**
  * Save all events to the cloud (overwrites all events).

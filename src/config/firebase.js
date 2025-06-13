@@ -1,20 +1,22 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCl_KY51O2W5koBIZf9Pdp1GYiqeIPZz3I",
-  authDomain: "daybreak-3979a.firebaseapp.com",
-  databaseURL: "https://daybreak-1-default-rtdb.europe-west1.firebasedatabase.app/",
-  projectId: "daybreak-3979a",
-  storageBucket: "daybreak-3979a.firebasestorage.app",
-  messagingSenderId: "1065548372608",
-  appId: "1:1065548372608:web:487d243faf9b0d89bee465",
-  measurementId: "G-B7FYNWLX6V"
+  apiKey: "AIzaSyDZP9okGI4yAQEWN82DmUWBYT6yZxXc7jY",
+  authDomain: "daybreak-1.firebaseapp.com",
+  databaseURL: "https://daybreak-1-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "daybreak-1",
+  storageBucket: "daybreak-1.firebasestorage.app",
+  messagingSenderId: "726482251150",
+  appId: "1:726482251150:web:5e3b4e3e3bdd5633fb88df",
+  measurementId: "G-Z9J69W8GC2"
 };
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
+const analytics = getAnalytics(app);
 
-export { database, auth };
+export { database, auth, analytics };

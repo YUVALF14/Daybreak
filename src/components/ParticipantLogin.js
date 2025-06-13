@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Paper, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { database } from '../config/firebase';
+import { database } from '../config/firebase.js';
 import { ref, set } from 'firebase/database';
 
 const ParticipantLogin = () => {
