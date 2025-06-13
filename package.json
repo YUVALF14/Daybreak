@@ -1,65 +1,39 @@
 {
-  "name": "yjcc-events",
+  "name": "daybreak-events",
   "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "@emotion/cache": "^11.11.0",
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
-    "@fontsource/assistant": "^5.0.16",
-    "@fontsource/heebo": "^5.0.16",
-    "@mui/icons-material": "^5.15.6",
-    "@mui/material": "^5.15.6",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.31",
-    "@types/react": "^18.2.6",
-    "@types/react-dom": "^18.2.4",
-    "axios": "^1.6.5",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "firebase": "^11.9.1",
-    "googleapis": "^129.0.0",
-    "multer": "^1.4.5-lts.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.3",
-    "react-scripts": "5.0.1",
-    "stylis": "^4.3.1",
-    "stylis-plugin-rtl": "^2.1.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
-  },
+  "description": "YJCC Events Management System",
+  "main": "server.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "node server.js",
+    "dev": "concurrently \"npm run client\" \"npm run server\"",
     "server": "node server.js",
-    "dev": "concurrently \"npm run start\" \"npm run server\""
+    "client": "cd src && npm start",
+    "build": "cd src && npm run build",
+    "test": "cd src && npm test",
+    "install-client": "cd src && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "firebase": "^11.9.1",
+    "axios": "^1.6.5",
+    "googleapis": "^129.0.0",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
-  }
-}
+    "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [
+    "events",
+    "management",
+    "react",
+    "firebase"
+  ]
 }
