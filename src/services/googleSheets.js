@@ -1,17 +1,17 @@
-// REQUIRED ENV VARIABLE FOR GOOGLE SHEETS:
-// GOOGLE_SERVICE_ACCOUNT_KEY=path/to/your/service-account.json
-
-import { google } from 'googleapis';
-
-const sheets = google.sheets('v4');
-
-// Use a backend environment variable, not REACT_APP_ prefix
-const auth = new google.auth.GoogleAuth({
-  keyFile: process.env.GOOGLE_SERVICE_ACCOUNT_KEY,
-  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-});
+// Note: Google Sheets API requires server-side implementation
+// This is a placeholder for future server-side integration
 
 /**
+ * Fetch registrants from a Google Sheet.
+ * @param {string} spreadsheetId
+ * @param {string} range
+ * @returns {Promise<Array<{name: string, email: string, phone: string}>>}
+ */
+export const fetchRegistrantsFromSheet = async (spreadsheetId, range) => {
+  // This would need to be implemented on the server-side
+  console.warn('Google Sheets integration requires server-side implementation');
+  return [];
+};
  * Fetch registrants from a Google Sheet.
  * @param {string} spreadsheetId
  * @param {string} range

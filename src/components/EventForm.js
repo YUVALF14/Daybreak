@@ -36,14 +36,21 @@ function EventForm({ open, onClose, onSubmit, event }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({
+    const eventData = {
       ...formData,
       maxParticipants: formData.maxParticipants
         ? parseInt(formData.maxParticipants, 10)
         : undefined,
       price: formData.price ? parseFloat(formData.price) : undefined,
       subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
-    });
+    };
+    
+    // Ensure ID is included for updates
+    if (event && event.id) {
+      eventData.id = event.id;
+    }
+    
+    onSubmit(eventData);
   };
 
   return (

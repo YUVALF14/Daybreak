@@ -25,12 +25,16 @@ function NewEventForm({ open, onClose, onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({
+    const eventData = {
+      id: Date.now().toString(), // Generate unique ID
       ...formData,
       maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants, 10) : undefined,
       price: formData.price ? parseFloat(formData.price) : undefined,
       subsidy: formData.subsidy ? parseFloat(formData.subsidy) : undefined,
-    });
+    };
+    
+    onSubmit(eventData);
+    
     setFormData({
       title: '',
       date: '',
