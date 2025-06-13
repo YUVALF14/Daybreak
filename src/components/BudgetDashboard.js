@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Paper, Button, Table, TableHead, TableRow, TableCell, TableBody, Card, CardContent, LinearProgress, Chip, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Grid } from '@mui/material';
+import { Box, Typography, Paper, Button, Table, TableHead, TableRow, TableCell, TableBody, Card, CardContent, LinearProgress, Chip, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -33,11 +33,9 @@ function BudgetDashboard({ onBack }) {
     const monthNames = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
     return `${monthNames[parseInt(month) - 1]} ${year}`;
   };
-
   // Calculate current month expenses
   const getCurrentMonthExpenses = () => {
     const currentMonth = getCurrentMonth();
-    const [year, month] = currentMonth.split('-');
     
     return events
       .filter(e => {
