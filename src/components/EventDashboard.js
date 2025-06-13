@@ -25,7 +25,7 @@ import {
 import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
 import NewEventForm from './NewEventForm';
-import BudgetDashboard from './BudgetDashboard';
+import BudgetDashboard from './BudgetDashboard.js';
 import { useEvents } from '../context/EventsContext';
 
 function EventDashboard() {
