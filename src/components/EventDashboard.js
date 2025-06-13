@@ -22,10 +22,10 @@ import {
   WhatsApp as WhatsAppIcon,
   Close as CloseIcon,
 } from '@mui/icons-material';
-import EventForm from './EventForm';
-import ParticipantDialog from './ParticipantDialog';
-import NewEventForm from './NewEventForm';
-import BudgetDashboard from './BudgetDashboard';
+import EventForm from './EventForm.js';
+import ParticipantDialog from './ParticipantDialog.js';
+import NewEventForm from './NewEventForm.js';
+import BudgetDashboard from './BudgetDashboard.js';
 import { useEvents } from '../context/EventsContext.tsx';
 
 function EventDashboard() {
