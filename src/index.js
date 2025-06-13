@@ -13,7 +13,7 @@ import '@fontsource/heebo/500.css';
 import '@fontsource/heebo/700.css';
 import '@fontsource/heebo/800.css';
 
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from './reportWebVitals.js';
 
 document.documentElement.setAttribute('dir', 'rtl');
 const root = ReactDOM.createRoot(document.getElementById('root'));
