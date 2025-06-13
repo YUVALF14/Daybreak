@@ -11,11 +11,9 @@ import {
   TableRow,
   TableCell,
   Paper,
-  Button,
-  IconButton,
+  Button,  IconButton,
   Snackbar,
-  Fade,
-  Slide
+  Fade
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -28,7 +26,7 @@ import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
 import NewEventForm from './NewEventForm';
 import BudgetDashboard from './BudgetDashboard';
-import { useEvents } from '../context/EventsContext.tsx';
+import { useEvents } from '../context/EventsContext';
 
 function EventDashboard() {
   const { events, addEvent, updateEvent, deleteEvent } = useEvents();
@@ -101,60 +99,57 @@ function EventDashboard() {
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
   return (
     <Fade in timeout={600}>
-      <Container>
-        <Slide direction="down" in timeout={800}>
-          <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h4" sx={{ 
-              fontWeight: 900,
-              background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              letterSpacing: 1
-            }}>
-              אירועי YJCC
-            </Typography>
-            <Box>
-              {localStorage.getItem('adminAuthenticated') === 'true' && (
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => {
-                    localStorage.removeItem('adminAuthenticated');
-                    window.location.href = '/';
-                  }}
-                  className="admin-logout-btn"
-                  sx={{
-                    mr: 2,
-                    fontWeight: 700,
-                    borderRadius: 3,
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 4px 12px rgba(211, 47, 47, 0.3)'
-                    }
-                  }}
-                >
-                  התנתקות מנהל
-                </Button>
-              )}
-              <Fab 
-                color="primary" 
-                onClick={() => setOpenNewEventForm(true)}
+      <Container>        <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h4" sx={{ 
+            fontWeight: 900,
+            background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            letterSpacing: 1
+          }}>
+            אירועי YJCC
+          </Typography>
+          <Box>
+            {localStorage.getItem('adminAuthenticated') === 'true' && (
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => {
+                  localStorage.removeItem('adminAuthenticated');
+                  window.location.href = '/';
+                }}
+                className="admin-logout-btn"
                 sx={{
-                  background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
+                  mr: 2,
+                  fontWeight: 700,
+                  borderRadius: 3,
                   transition: 'all 0.3s ease',
                   '&:hover': {
-                    transform: 'scale(1.1) rotate(90deg)',
-                    boxShadow: '0 8px 20px rgba(25, 118, 210, 0.4)'
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 4px 12px rgba(211, 47, 47, 0.3)'
                   }
                 }}
               >
-                <AddIcon />
-              </Fab>
-            </Box>
+                התנתקות מנהל
+              </Button>
+            )}
+            <Fab 
+              color="primary" 
+              onClick={() => setOpenNewEventForm(true)}
+              sx={{
+                background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.1) rotate(90deg)',
+                  boxShadow: '0 8px 20px rgba(25, 118, 210, 0.4)'
+                }
+              }}
+            >
+              <AddIcon />
+            </Fab>
           </Box>
-        </Slide>
+        </Box>
 
       <TableContainer component={Paper}>
         <Table>

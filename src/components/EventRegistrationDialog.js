@@ -9,15 +9,12 @@ import {
   Box,
   Typography,
   Fade,
-  Slide,
   Snackbar,
   Alert
 } from '@mui/material';
 import { Person, Phone, Email } from '@mui/icons-material';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+
 
 function EventRegistrationDialog({ open, onClose, event, onRegister }) {
   const [participant, setParticipant] = useState({
@@ -91,11 +88,9 @@ function EventRegistrationDialog({ open, onClose, event, onRegister }) {
   };
 
   return (
-    <>
-      <Dialog
+    <>      <Dialog
         open={open}
         onClose={onClose}
-        TransitionComponent={Transition}
         maxWidth="sm"
         fullWidth
         sx={{

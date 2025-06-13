@@ -5,7 +5,7 @@ import AdminLogin from './components/AdminLogin';
 import EventDashboard from './components/EventDashboard';
 import CommunityEvents from './components/CommunityEvents';
 import BudgetDashboard from './components/BudgetDashboard';
-import { EventsProvider } from './context/EventsContext.tsx';
+import { EventsProvider } from './context/EventsContext';
 import './App.css';
 
 function App() {
@@ -27,7 +27,8 @@ function App() {
   return (
     <div>
       <EventsProvider>
-        <Router>          <Routes>
+        <Router>
+          <Routes>
             <Route path="/" element={<HomePage />} />
             <Route
               path="/admin-login"
