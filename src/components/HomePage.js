@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import CelebrationIcon from '@mui/icons-material/Celebration.js';
+import CelebrationIcon from '@mui/icons-material/Celebration';
 
 const HomePage = () => {
   const navigate = useNavigate();

@@ -10,10 +10,10 @@ import {
   Avatar,
   IconButton,
 } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined.js';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack.js';
-import Visibility from '@mui/icons-material/Visibility.js';
-import VisibilityOff from '@mui/icons-material/VisibilityOff.js';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 
 function AdminLogin({ onLogin }) {

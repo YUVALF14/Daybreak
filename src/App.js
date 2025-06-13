@@ -6,6 +6,7 @@ import EventDashboard from './components/EventDashboard.js';
 import CommunityEvents from './components/CommunityEvents.js';
 import BudgetDashboard from './components/BudgetDashboard.js';
 import { EventsProvider } from './context/EventsContext.tsx';
+import ErrorBoundary from './ErrorBoundary';
 import './App.css';
 
 function App() {
@@ -25,38 +26,40 @@ function App() {
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
 
   return (
-    <EventsProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route
-            path="/admin-login"
-            element={
-              isAdmin ? (
-                <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
-              ) : (
-                <AdminLogin onLogin={handleAdminLogin} />
-              )
-            }
-          />
-          <Route
-            path="/budget"
-            element={
-              isAdmin && showBudget ? (
-                <BudgetDashboard onBack={() => setShowBudget(false)} />
-              ) : (
-                // Non-admins or direct access: redirect to home or events
-                <HomePage />
-              )
-            }
-          />
-          {/* Non-admins see only the event list */}
-          <Route path="/community" element={<CommunityEvents />} />
-          {/* fallback: non-admins see CommunityEvents for /events */}
-          <Route path="/events" element={<CommunityEvents />} />
-        </Routes>
-      </Router>
-    </EventsProvider>
+    <ErrorBoundary>
+      <EventsProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/admin-login"
+              element={
+                isAdmin ? (
+                  <EventDashboard onNavigateBudget={() => setShowBudget(true)} />
+                ) : (
+                  <AdminLogin onLogin={handleAdminLogin} />
+                )
+              }
+            />
+            <Route
+              path="/budget"
+              element={
+                isAdmin && showBudget ? (
+                  <BudgetDashboard onBack={() => setShowBudget(false)} />
+                ) : (
+                  // Non-admins or direct access: redirect to home or events
+                  <HomePage />
+                )
+              }
+            />
+            {/* Non-admins see only the event list */}
+            <Route path="/community" element={<CommunityEvents />} />
+            {/* fallback: non-admins see CommunityEvents for /events */}
+            <Route path="/events" element={<CommunityEvents />} />
+          </Routes>
+        </Router>
+      </EventsProvider>
+    </ErrorBoundary>
   );
 }
 
