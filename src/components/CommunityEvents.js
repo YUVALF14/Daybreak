@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, Stack, Button } from '@mui/material';
-import { useEvents } from '../context/EventsContext';
+import { useEvents } from '../context/EventsContext.tsx';
 
 const CommunityEvents = () => {
   const { events } = useEvents();
