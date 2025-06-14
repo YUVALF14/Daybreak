@@ -144,14 +144,20 @@ function BudgetDashboard({ onBack }) {
             }
           }
         }}
-      >
-        {/* Header */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+      >        {/* Header */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between', 
+          mb: 4,
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: { xs: 3, sm: 0 }
+        }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <Box
               sx={{
-                width: 60,
-                height: 60,
+                width: { xs: 50, sm: 60 },
+                height: { xs: 50, sm: 60 },
                 borderRadius: '50%',
                 background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
                 display: 'flex',
@@ -165,7 +171,7 @@ function BudgetDashboard({ onBack }) {
                 }
               }}
             >
-              <AccountBalanceWalletIcon sx={{ color: 'white', fontSize: '2rem' }} />
+              <AccountBalanceWalletIcon sx={{ color: 'white', fontSize: { xs: '1.5rem', sm: '2rem' } }} />
             </Box>
             <Typography 
               variant="h4" 
@@ -175,24 +181,26 @@ function BudgetDashboard({ onBack }) {
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                letterSpacing: '-0.02em'
+                letterSpacing: '-0.02em',
+                fontSize: { xs: '1.5rem', sm: '2.125rem' },
+                textAlign: { xs: 'center', sm: 'left' }
               }}
             >
               ניהול תקציב
             </Typography>          </Box>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
+          <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>            <Button
               variant="contained"
               onClick={() => window.open('https://wa.me/972507123456', '_blank')}
               sx={{
                 background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
                 borderRadius: 3,
-                px: 3,
+                px: { xs: 2, sm: 3 },
                 py: 1.5,
                 color: 'white',
                 fontWeight: 700,
                 boxShadow: '0 8px 32px rgba(37, 211, 102, 0.3)',
                 transition: 'all 0.3s ease',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
                 '&:hover': {
                   transform: 'translateY(-2px)',
                   boxShadow: '0 12px 40px rgba(37, 211, 102, 0.4)',
@@ -207,21 +215,22 @@ function BudgetDashboard({ onBack }) {
               sx={{
                 fontWeight: 700,
                 borderRadius: 3,
-                px: 3,
+                px: { xs: 2, sm: 3 },
                 background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
                 color: 'white',
-              border: 'none',
-              boxShadow: '0 4px 12px rgba(255,154,86,0.3)',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: '0 8px 20px rgba(255,154,86,0.4)',
-                background: 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)',
-                border: 'none'
-              }
-            }}
-          >            חזרה
-          </Button>
+                border: 'none',
+                boxShadow: '0 4px 12px rgba(255,154,86,0.3)',
+                transition: 'all 0.3s ease',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 20px rgba(255,154,86,0.4)',
+                  background: 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)',
+                  border: 'none'
+                }
+              }}
+            >            חזרה
+            </Button>
           </Box>
         </Box>        {/* Budget Overview Cards */}
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
@@ -392,28 +401,45 @@ function BudgetDashboard({ onBack }) {
                 boxShadow: '0 2px 8px rgba(255,154,86,0.3)'
               }
             }}
-          />        </Paper>
-
-        {/* Event Details Table */}
+          />        </Paper>        {/* Event Details Table */}
         <Paper sx={{ 
-          p: 3, 
+          p: { xs: 2, sm: 3 }, 
           borderRadius: 4, 
           background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
           boxShadow: '0 8px 20px rgba(0,0,0,0.1)' 
         }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: '#495057' }}>
+          <Typography variant="h6" sx={{ 
+            fontWeight: 700, 
+            mb: 3, 
+            color: '#495057',
+            fontSize: { xs: '1.125rem', sm: '1.25rem' }
+          }}>
             פירוט אירועים
           </Typography>
-          <Box sx={{ overflowX: 'auto' }}>
-            <Table>              <TableHead>
+          <Box sx={{ 
+            overflowX: 'auto',
+            '&::-webkit-scrollbar': {
+              height: 8,
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'rgba(0,0,0,0.1)',
+              borderRadius: 4
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
+              borderRadius: 4
+            }
+          }}>
+            <Table sx={{ minWidth: { xs: 800, sm: 'auto' } }}>
+              <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>שם האירוע</TableCell>
-                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>תאריך</TableCell>
-                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>כמות קרונות</TableCell>
-                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>סבסוד למשתתף</TableCell>
-                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>משתתפים בפועל</TableCell>
-                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>תקציב מקסימלי</TableCell>
-                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)' }}>הוצאה בפועל</TableCell>
+                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>שם האירוע</TableCell>
+                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>תאריך</TableCell>
+                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>כמות קרונות</TableCell>
+                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>סבסוד למשתתף</TableCell>
+                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>משתתפים בפועל</TableCell>
+                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>תקציב מקסימלי</TableCell>
+                  <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>הוצאה בפועל</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -425,38 +451,53 @@ function BudgetDashboard({ onBack }) {
                       '&:hover': { backgroundColor: 'rgba(255,154,86,0.1)' },
                       transition: 'all 0.2s ease'
                     }}
-                  >
-                    <TableCell sx={{ fontWeight: 600 }}>{e.title}</TableCell>
-                    <TableCell>{e.date ? new Date(e.date).toLocaleDateString('he-IL') : '-'}</TableCell>                    <TableCell>
+                  >                    <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{e.title}</TableCell>
+                    <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{e.date ? new Date(e.date).toLocaleDateString('he-IL') : '-'}</TableCell>
+                    <TableCell>
                       <Chip 
                         label={e.subsidy ? `${e.subsidy} CZK` : '-'}
                         size="small"
                         sx={{ 
                           background: e.subsidy ? 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)' : 'rgba(0,0,0,0.1)',
                           color: 'white',
-                          fontWeight: 600
+                          fontWeight: 600,
+                          fontSize: { xs: '0.65rem', sm: '0.75rem' }
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Chip 
+                        label={e.subsidy ? `${e.subsidy} CZK` : '-'}
+                        size="small"
+                        sx={{ 
+                          background: e.subsidy ? 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)' : 'rgba(0,0,0,0.1)',
+                          color: 'white',
+                          fontWeight: 600,
+                          fontSize: { xs: '0.65rem', sm: '0.75rem' }
                         }}
                       />
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography sx={{ fontWeight: 600 }}>
+                        <Typography sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                           {e.participants ? e.participants.length : 0}
                         </Typography>
                         {e.maxParticipants && (
-                          <Typography variant="body2" sx={{ color: '#666' }}>
+                          <Typography variant="body2" sx={{ color: '#666', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
                             / {e.maxParticipants}
                           </Typography>
                         )}
                       </Box>
-                    </TableCell>                    <TableCell>
-                      <Typography sx={{ fontWeight: 600, color: '#2E7D32' }}>
+                    </TableCell>
+                    <TableCell>
+                      <Typography sx={{ fontWeight: 600, color: '#2E7D32', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                         {e.maxParticipants && e.subsidy
                           ? `${(parseInt(e.maxParticipants) * parseFloat(e.subsidy)).toLocaleString()} CZK`
                           : '-'}
                       </Typography>
-                    </TableCell>                    <TableCell>
-                      <Typography sx={{ fontWeight: 600, color: '#d32f2f' }}>
+                    </TableCell>
+                    <TableCell>
+                      <Typography sx={{ fontWeight: 600, color: '#d32f2f', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                         {e.participants && e.subsidy
                           ? `${(e.participants.length * parseFloat(e.subsidy)).toLocaleString()} CZK`
                           : '0 CZK'}

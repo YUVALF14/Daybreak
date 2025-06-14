@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Paper, Typography, Box, TextField, Button, Snackbar, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { ArrowBack, PersonAdd } from '@mui/icons-material';
+import { PersonAdd } from '@mui/icons-material';
 
 const Signup = () => {
   const [form, setForm] = useState({ name: '', phone: '', email: '' });
@@ -37,9 +37,7 @@ const Signup = () => {
         pointerEvents: 'none',
       }
     }}>
-      <Container maxWidth="xs" sx={{ position: 'relative', zIndex: 1 }}>
-        <Button
-          startIcon={<ArrowBack />}
+      <Container maxWidth="xs" sx={{ position: 'relative', zIndex: 1 }}>        <Button
           onClick={() => navigate('/')}
           sx={{
             position: 'absolute',

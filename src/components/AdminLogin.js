@@ -10,7 +10,6 @@ import {
   IconButton,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
@@ -111,7 +110,6 @@ function AdminLogin({ onLogin }) {
             }
           }}
         >          <Button
-            startIcon={<ArrowBackIcon />}
             onClick={() => window.history.back()}
             sx={{
               position: 'absolute',

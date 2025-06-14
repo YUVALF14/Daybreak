@@ -33,7 +33,7 @@ import {
   Delete as DeleteIcon,
   WhatsApp as WhatsAppIcon,
   Close as CloseIcon,
-  ArrowBack as ArrowBackIcon,  CalendarMonth as CalendarIcon,
+  CalendarMonth as CalendarIcon,
   Event as EventIcon,
   LocationOn as LocationIcon,
   Group as GroupIcon,
@@ -199,10 +199,8 @@ function EventDashboard() {
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';  return (
     <Container>
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-          <Button
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>          <Button
             variant="outlined"
-            startIcon={<ArrowBackIcon />}
             onClick={() => navigate('/')}
             sx={{
               fontWeight: 700,
@@ -348,14 +346,12 @@ function EventDashboard() {
             ))}          </TableBody>
         </Table>
       </TableContainer>
-      )}
-
-      {/* Calendar View */}
+      )}      {/* Calendar View */}
       {currentView === 1 && (
         <Box sx={{ 
           background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
           borderRadius: 4,
-          p: 3,
+          p: { xs: 2, sm: 3 },
           boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
         }}>
           {/* Calendar Header */}
@@ -366,20 +362,29 @@ function EventDashboard() {
             mb: 3,
             background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
             borderRadius: 3,
-            p: 2,
-            color: 'white'
+            p: { xs: 1.5, sm: 2 },
+            color: 'white',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: { xs: 2, sm: 0 }
           }}>
             <Button 
               onClick={() => navigateMonth(-1)}
               sx={{ 
                 color: 'white', 
                 fontWeight: 700,
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                order: { xs: 1, sm: 0 },
                 '&:hover': { background: 'rgba(255,255,255,0.1)' }
               }}
             >
-              ◀ חודש קודם
+              חודש קודם
             </Button>
-            <Typography variant="h5" sx={{ fontWeight: 800 }}>
+            <Typography variant="h5" sx={{ 
+              fontWeight: 800,
+              fontSize: { xs: '1.25rem', sm: '1.5rem' },
+              order: { xs: 0, sm: 1 },
+              textAlign: 'center'
+            }}>
               {getMonthName(selectedDate)}
             </Typography>
             <Button 
@@ -387,10 +392,12 @@ function EventDashboard() {
               sx={{ 
                 color: 'white', 
                 fontWeight: 700,
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                order: { xs: 2, sm: 2 },
                 '&:hover': { background: 'rgba(255,255,255,0.1)' }
               }}
             >
-              חודש הבא ▶
+              חודש הבא
             </Button>
           </Box>
 
@@ -419,10 +426,9 @@ function EventDashboard() {
               const isCurrentMonth = date.getMonth() === selectedDate.getMonth();
               const isToday = date.toDateString() === new Date().toDateString();
               
-              return (
-                <Grid item xs={12/7} key={index}>
+              return (                <Grid item xs={12/7} key={index}>
                   <Card sx={{ 
-                    height: 120,
+                    height: { xs: 80, sm: 120 },
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
                     opacity: isCurrentMonth ? 1 : 0.4,
@@ -443,17 +449,17 @@ function EventDashboard() {
                     }
                   }}
                   onClick={() => openCalendarEventDialog(date)}>
-                    <CardContent sx={{ p: 1, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <CardContent sx={{ p: { xs: 0.5, sm: 1 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
                       <Typography variant="body2" sx={{ 
                         fontWeight: 700, 
                         textAlign: 'center',
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
                         color: (isToday || dayEvents.length > 0) ? 'white' : '#1976d2'
                       }}>
                         {date.getDate()}
                       </Typography>
-                      
-                      <Box sx={{ flex: 1, overflow: 'hidden', mt: 0.5 }}>
-                        {dayEvents.slice(0, 2).map((event, eventIndex) => (
+                        <Box sx={{ flex: 1, overflow: 'hidden', mt: 0.5 }}>
+                        {dayEvents.slice(0, 1).map((event, eventIndex) => (
                           <Chip
                             key={eventIndex}
                             label={event.title || event.name}
@@ -461,25 +467,48 @@ function EventDashboard() {
                             sx={{
                               mb: 0.5,
                               maxWidth: '100%',
-                              height: 20,
-                              fontSize: '0.7rem',
+                              height: { xs: 16, sm: 20 },
+                              fontSize: { xs: '0.6rem', sm: '0.7rem' },
                               background: 'rgba(255,255,255,0.9)',
                               color: '#1976d2',
                               fontWeight: 600,
                               '& .MuiChip-label': {
-                                px: 1
+                                px: { xs: 0.5, sm: 1 }
                               }
                             }}
                           />
                         ))}
-                        {dayEvents.length > 2 && (
+                        {/* Show second event only on larger screens */}
+                        {dayEvents.length > 1 && (
+                          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                            <Chip
+                              label={dayEvents[1].title || dayEvents[1].name}
+                              size="small"
+                              sx={{
+                                mb: 0.5,
+                                maxWidth: '100%',
+                                height: 20,
+                                fontSize: '0.7rem',
+                                background: 'rgba(255,255,255,0.9)',
+                                color: '#1976d2',
+                                fontWeight: 600,
+                                '& .MuiChip-label': {
+                                  px: 1
+                                }
+                              }}
+                            />
+                          </Box>
+                        )}
+                        {/* Show "more" indicator */}
+                        {((dayEvents.length > 1)) && (
                           <Typography variant="caption" sx={{ 
-                            display: 'block',
+                            display: { xs: dayEvents.length > 1 ? 'block' : 'none', sm: dayEvents.length > 2 ? 'block' : 'none' },
                             textAlign: 'center',
                             fontWeight: 600,
+                            fontSize: { xs: '0.6rem', sm: '0.75rem' },
                             color: (isToday || dayEvents.length > 0) ? 'rgba(255,255,255,0.8)' : '#666'
                           }}>
-                            +{dayEvents.length - 2} נוספים
+                            +{dayEvents.length - 1} {dayEvents.length > 2 ? 'נוספים' : ''}
                           </Typography>
                         )}
                       </Box>

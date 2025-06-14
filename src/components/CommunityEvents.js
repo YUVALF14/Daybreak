@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Typography, Card, CardContent, Stack, Button, Container, Grid, Chip } from '@mui/material';
-import { PersonAdd, Event, ArrowBack, WhatsApp, AccessTime, LocationOn, Group } from '@mui/icons-material';
+import { PersonAdd, Event, WhatsApp, AccessTime, LocationOn, Group } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useEvents } from '../context/EventsContext';
 import EventRegistrationDialog from './EventRegistrationDialog';
@@ -88,10 +88,8 @@ const CommunityEvents = () => {
           alignItems: 'center', 
           mb: 4,
           animation: 'fadeInUp 0.6s ease-out'
-        }}>
-          <Button
+        }}>          <Button
             variant="contained"
-            startIcon={<ArrowBack />}
             onClick={() => navigate('/')}
             sx={{
               background: 'rgba(255,255,255,0.2)',

@@ -3,7 +3,7 @@ import { Box, Typography, TextField, Button, Paper, Container } from '@mui/mater
 import { useNavigate } from 'react-router-dom';
 import { database } from '../config/firebase';
 import { ref, set } from 'firebase/database';
-import { ArrowBack, Login } from '@mui/icons-material';
+import { Login } from '@mui/icons-material';
 
 const ParticipantLogin = () => {
   const [phone, setPhone] = useState('');
@@ -46,9 +46,7 @@ const ParticipantLogin = () => {
         pointerEvents: 'none',
       }
     }}>
-      <Container maxWidth="xs" sx={{ position: 'relative', zIndex: 1 }}>
-        <Button
-          startIcon={<ArrowBack />}
+      <Container maxWidth="xs" sx={{ position: 'relative', zIndex: 1 }}>        <Button
           onClick={() => navigate('/')}
           sx={{
             position: 'absolute',
