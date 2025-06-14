@@ -349,7 +349,7 @@ const HomePage = () => {
                 '&::before': {
                   left: '100%'
                 },
-                '&::after': {
+                '&::before': {
                   content: '"📱"',
                   position: 'absolute',
                   top: '50%',
@@ -369,7 +369,7 @@ const HomePage = () => {
               }
             }}
           >
-            📱 צור קשר בוואטסאפ
+             צור קשר בוואטסאפ 📱
           </Button>
         </Box>        <Typography 
           variant="body2" 
