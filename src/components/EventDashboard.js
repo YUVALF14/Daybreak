@@ -36,10 +36,8 @@ import {
   CalendarMonth as CalendarIcon,
   Event as EventIcon,
   LocationOn as LocationIcon,
-  Group as GroupIcon,
-  AttachMoney as MoneyIcon,  Download as DownloadIcon,
+  Group as GroupIcon,  AttachMoney as MoneyIcon,
   Upload as UploadIcon,
-  Assessment as AssessmentIcon,
   PictureAsPdf as PictureAsPdfIcon,
   TableView as TableViewIcon
 } from '@mui/icons-material';
@@ -580,8 +578,7 @@ function EventDashboard() {
             flexDirection: { xs: 'row', sm: 'row' }, 
             flexWrap: 'wrap',
             justifyContent: { xs: 'center', sm: 'flex-end' }
-          }}>
-            {/* Import Button */}
+          }}>            {/* Import Button */}
             <Button
               variant="outlined"
               onClick={(e) => setImportDialog({ 
@@ -602,7 +599,6 @@ function EventDashboard() {
                   borderColor: '#2563eb'
                 }
               }}
-              startIcon={<UploadIcon />}
             >
               יבוא נתונים
             </Button>
@@ -624,7 +620,6 @@ function EventDashboard() {
                   borderColor: '#047857'
                 }
               }}
-              startIcon={<DownloadIcon />}
             >
               יצוא נתונים
             </Button>
@@ -647,7 +642,6 @@ function EventDashboard() {
                     boxShadow: '0 8px 25px rgba(255,154,86,0.4)'
                   }
                 }}
-                startIcon={<AssessmentIcon />}
               >
                 לוח תקציב
               </Button>

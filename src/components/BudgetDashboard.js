@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   Box, Typography, Paper, Button, Table, TableHead, TableRow, TableCell, TableBody, 
   Card, CardContent, LinearProgress, Chip, TextField, Dialog, DialogTitle, 
-  DialogContent, DialogActions, IconButton, Grid, Divider, Menu, MenuItem 
+  DialogContent, DialogActions, IconButton, Grid
 } from '@mui/material';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,11 +11,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import SavingsIcon from '@mui/icons-material/Savings';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import DownloadIcon from '@mui/icons-material/Download';
-import UploadIcon from '@mui/icons-material/Upload';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import TableViewIcon from '@mui/icons-material/TableView';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { useEvents } from '../context/EventsContext';
 
 function BudgetDashboard({ onBack }) {
@@ -40,12 +33,9 @@ function BudgetDashboard({ onBack }) {
   const [totalBudgetPool, setTotalBudgetPool] = useState(() => {
     const saved = localStorage.getItem('totalBudgetPool');
     return saved ? parseFloat(saved) : 0;
-  });
-    // Dialog states
+  });  // Dialog states
   const [budgetDialog, setBudgetDialog] = useState({ open: false, month: '', budget: '' });
   const [totalBudgetDialog, setTotalBudgetDialog] = useState({ open: false, amount: '' });
-  const [exportMenu, setExportMenu] = useState(null);
-  const [importDialog, setImportDialog] = useState({ open: false, file: null });
   // Save to localStorage whenever budgets change
   useEffect(() => {
     localStorage.setItem('monthlyBudgets', JSON.stringify(monthlyBudgets));
@@ -171,109 +161,8 @@ function BudgetDashboard({ onBack }) {
       const eventDate = new Date(e.date);
       const eventMonth = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}`;
       return eventMonth === currentViewMonth;
-    });
-  };
+    });  };
 
-  // Export functionality
-  const exportBudgetData = (format) => {
-    const data = {
-      totalBudgetPool,
-      monthlyBudgets,
-      currentMonth: currentViewMonth,
-      summary: {
-        totalBudget: totalBudgetPool,
-        allocatedBudget: getTotalAllocatedBudget(),
-        totalExpenses: getTotalExpenses(),
-        remainingPool: getRemainingBudgetPool()
-      },
-      monthlyBreakdown: Object.keys(monthlyBudgets).map(month => ({
-        month,
-        monthName: getMonthName(month),
-        budget: monthlyBudgets[month],
-        expenses: getMonthExpenses(month),
-        balance: monthlyBudgets[month] - getMonthExpenses(month)
-      })),
-      events: events.map(e => ({
-        title: e.title,
-        date: e.date,
-        location: e.location,
-        participants: e.participants?.length || 0,
-        maxParticipants: e.maxParticipants,
-        subsidy: e.subsidy,
-        totalCost: (e.participants?.length || 0) * parseFloat(e.subsidy || 0)
-      })),
-      exportDate: new Date().toISOString()
-    };
-
-    if (format === 'json') {
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `budget-data-${currentViewMonth}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } else if (format === 'csv') {
-      let csv = 'Month,Budget,Expenses,Balance\n';
-      data.monthlyBreakdown.forEach(month => {
-        csv += `${month.monthName},${month.budget},${month.expenses},${month.balance}\n`;
-      });
-      
-      csv += '\n\nEvents\n';
-      csv += 'Title,Date,Location,Participants,Max Participants,Subsidy,Total Cost\n';
-      data.events.forEach(event => {
-        csv += `${event.title},${event.date},${event.location},${event.participants},${event.maxParticipants},${event.subsidy},${event.totalCost}\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `budget-report-${currentViewMonth}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-    setExportMenu(null);
-  };
-
-  // Import Google Forms data
-  const handleImportGoogleForms = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const csvData = e.target.result;
-          const lines = csvData.split('\n');
-          const headers = lines[0].split(',');
-          
-          // Process CSV data - assuming Google Forms format
-          const participants = [];
-          for (let i = 1; i < lines.length; i++) {
-            const values = lines[i].split(',');
-            if (values.length >= 3) {
-              participants.push({
-                name: values[1]?.trim(),
-                phone: values[2]?.trim(),
-                email: values[3]?.trim() || '',
-                registrationDate: values[0]?.trim(),
-                confirmed: true,
-                paid: false,
-                attended: false
-              });
-            }
-          }
-          
-          console.log('Imported participants:', participants);
-          // Here you would integrate with your event system
-          alert(`נמצאו ${participants.length} משתתפים בקובץ. הנתונים יתווספו לאירוע הנבחר.`);
-        } catch (error) {
-          alert('שגיאה בקריאת הקובץ. ודא שהקובץ בפורמט CSV תקין.');
-        }
-      };
-      reader.readAsText(file);
-    }
-  };
   return (
     <Box
       sx={{
@@ -424,58 +313,7 @@ function BudgetDashboard({ onBack }) {
             gap: 2, 
             flexDirection: { xs: 'row', sm: 'row' }, 
             flexWrap: 'wrap',
-            justifyContent: { xs: 'center', sm: 'flex-end' }
-          }}>
-            {/* Import Button */}
-            <Button
-              variant="outlined"
-              component="label"
-              sx={{
-                borderColor: '#3b82f6',
-                color: '#3b82f6',
-                borderRadius: 2,
-                px: 3,
-                py: 1,
-                fontWeight: 600,
-                fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                '&:hover': {
-                  background: '#eff6ff',
-                  borderColor: '#2563eb'
-                }
-              }}
-              startIcon={<UploadIcon />}
-            >
-              יבוא נתונים
-              <input
-                type="file"
-                hidden
-                accept=".csv"
-                onChange={handleImportGoogleForms}
-              />
-            </Button>
-
-            {/* Export Button */}
-            <Button
-              variant="outlined"
-              onClick={(e) => setExportMenu(e.currentTarget)}
-              sx={{
-                borderColor: '#059669',
-                color: '#059669',
-                borderRadius: 2,
-                px: 3,
-                py: 1,
-                fontWeight: 600,
-                fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                '&:hover': {
-                  background: '#ecfdf5',
-                  borderColor: '#047857'
-                }
-              }}
-              startIcon={<DownloadIcon />}
-            >
-              יצוא נתונים
-            </Button>
-
+            justifyContent: { xs: 'center', sm: 'flex-end' }          }}>
             {/* Back Button */}
             <Button
               variant="contained"
