@@ -310,9 +310,8 @@ const HomePage = () => {
                   animation: 'sparkle 0.6s ease-out'
                 }
               }
-            }}
-          >
-            🎉 צפייה באירועים
+            }}          >
+             צפייה באירועים 🎉
           </Button><Button
             onClick={() => window.open('https://wa.me/972542230342', '_blank')}
             variant="contained"
