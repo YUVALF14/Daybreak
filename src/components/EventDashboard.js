@@ -37,8 +37,7 @@ import {
   Event as EventIcon,
   LocationOn as LocationIcon,
   Group as GroupIcon,
-  AttachMoney as MoneyIcon,
-  Logout as LogoutIcon
+  AttachMoney as MoneyIcon
 } from '@mui/icons-material';
 import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
