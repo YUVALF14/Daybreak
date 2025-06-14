@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 const HomePage = () => {
   const navigate = useNavigate();
 
-  return (    <Box
+  return (
+    <Box
       sx={{
         minHeight: '100vh',
         display: 'flex',
@@ -25,26 +26,10 @@ const HomePage = () => {
           bottom: 0,
           background: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,154,86,0.2) 0%, transparent 50%)',
           pointerEvents: 'none'
-        },
-        '&::after': {
-          content: '""',
-          position: 'absolute',
-          top: '10%',
-          left: '5%',
-          width: { xs: '200px', sm: '300px' },
-          height: { xs: '200px', sm: '300px' },
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-          animation: 'float 6s ease-in-out infinite',
-          pointerEvents: 'none'
-        },
-        '@keyframes float': {
-          '0%, 100%': { transform: 'translate(0, 0) rotate(0deg)' },
-          '33%': { transform: 'translate(30px, -30px) rotate(120deg)' },
-          '66%': { transform: 'translate(-20px, 20px) rotate(240deg)' }
-        }
-      }}
-    >      <Box
+        }      }}
+    >
+      {/* Main Content */}
+      <Box
         sx={{
           background: 'rgba(255,255,255,0.98)',
           backdropFilter: 'blur(25px)',
@@ -241,28 +226,13 @@ const HomePage = () => {
                 height: '100%',
                 background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
                 transition: 'left 0.6s'
-              },
-              '&:hover': {
+              },              '&:hover': {
                 transform: 'translateY(-4px) scale(1.02)',
                 boxShadow: '0 20px 40px rgba(194,65,107,0.5), 0 10px 20px rgba(139,21,56,0.3)',
                 background: 'linear-gradient(135deg, #d1537a 0%, #9c1e47 100%)',
                 '&::before': {
                   left: '100%'
-                },
-                '&::after': {
-                  content: '"✨"',
-                  position: 'absolute',
-                  top: '50%',
-                  left: '20px',
-                  transform: 'translateY(-50%)',
-                  fontSize: '1rem',
-                  animation: 'sparkle 0.6s ease-out'
                 }
-              },
-              '@keyframes sparkle': {
-                '0%': { opacity: 0, transform: 'translateY(-50%) scale(0)' },
-                '50%': { opacity: 1, transform: 'translateY(-50%) scale(1.2)' },
-                '100%': { opacity: 0, transform: 'translateY(-50%) scale(1)' }
               }
             }}
           >
@@ -299,15 +269,6 @@ const HomePage = () => {
                 background: 'linear-gradient(135deg, #ff8a3d 0%, #ffbc5d 100%)',
                 '&::before': {
                   left: '100%'
-                },
-                '&::after': {
-                  content: '"🎊"',
-                  position: 'absolute',
-                  top: '50%',
-                  right: '20px',
-                  transform: 'translateY(-50%)',
-                  fontSize: '1rem',
-                  animation: 'sparkle 0.6s ease-out'
                 }
               }
             }}          >
