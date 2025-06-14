@@ -177,9 +177,7 @@ function EventDashboard() {
       }
     }
     await updateEvent(eventId, { participants: updatedParticipants });
-  };
-  const sendEventReminders = (event) => {
-    const message = `שלום! תזכורת לאירוע "${event.title || event.name}" שיתקיים ב-${new Date(event.date).toLocaleDateString('he-IL')} ב${event.location}. נשמח לראותך!`;
+  };  const sendEventReminders = (event) => {
     event.participants.forEach(participant => {
       if (participant.confirmed) {
         window.open(`https://wa.me/${participant.phone}`, '_blank');
@@ -239,27 +237,29 @@ function EventDashboard() {
           }
         }
       }}
-    >
-    <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, py: 4 }}>
+    >    <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, py: { xs: 2, sm: 4 } }}>
       <Box sx={{ 
-        mb: 4, 
+        mb: { xs: 3, sm: 4 }, 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
         flexDirection: { xs: 'column', sm: 'row' },
-        gap: { xs: 3, sm: 0 }
+        gap: { xs: 2, sm: 0 }
       }}>        <Box sx={{ 
           display: 'flex', 
           alignItems: 'center', 
-          gap: 3,
+          gap: { xs: 2, sm: 3 },
           flexDirection: { xs: 'column', sm: 'row' },
-          textAlign: { xs: 'center', sm: 'left' }
+          textAlign: { xs: 'center', sm: 'left' },
+          width: { xs: '100%', sm: 'auto' }
         }}>
           <Box sx={{ 
             display: 'flex', 
-            gap: 2, 
-            flexDirection: { xs: 'column', sm: 'row' },
-            alignItems: 'center'
+            gap: { xs: 1.5, sm: 2 }, 
+            flexDirection: { xs: 'row', sm: 'row' },
+            alignItems: 'center',
+            justifyContent: { xs: 'center', sm: 'flex-start' },
+            width: { xs: '100%', sm: 'auto' }
           }}>
             <Button
               variant="outlined"
@@ -267,23 +267,24 @@ function EventDashboard() {
               sx={{
                 fontWeight: 700,
                 borderRadius: 4,
-                px: 4,
-                py: 1.5,
+                px: { xs: 2, sm: 4 },
+                py: { xs: 1, sm: 1.5 },
                 background: 'rgba(255,255,255,0.95)',
                 color: '#c2416b',
                 border: '2px solid rgba(255,255,255,0.3)',
                 backdropFilter: 'blur(10px)',
                 boxShadow: '0 8px 25px rgba(255,255,255,0.2)',
                 transition: 'all 0.3s ease',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                minWidth: { xs: 'auto', sm: 'auto' },
                 '&:hover': {
                   transform: 'translateY(-3px)',
                   boxShadow: '0 15px 35px rgba(255,255,255,0.3)',
                   background: 'rgba(255,255,255,1)',
                   borderColor: '#c2416b'
                 }
-              }}
-            >
-              חזרה לעמוד הבית 🏠
+              }}            >
+              חזרה לעמוד הבית
             </Button>
             <Button
               variant="outlined"
@@ -291,14 +292,16 @@ function EventDashboard() {
               sx={{
                 fontWeight: 700,
                 borderRadius: 4,
-                px: 4,
-                py: 1.5,
+                px: { xs: 2, sm: 4 },
+                py: { xs: 1, sm: 1.5 },
                 background: 'rgba(255,255,255,0.95)',
                 color: '#d32f2f',
                 border: '2px solid rgba(255,255,255,0.3)',
                 backdropFilter: 'blur(10px)',
                 boxShadow: '0 8px 25px rgba(255,255,255,0.2)',
                 transition: 'all 0.3s ease',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                minWidth: { xs: 'auto', sm: 'auto' },
                 '&:hover': {
                   transform: 'translateY(-3px)',
                   boxShadow: '0 15px 35px rgba(211,47,47,0.3)',
@@ -306,7 +309,7 @@ function EventDashboard() {
                   borderColor: '#d32f2f',
                   color: '#d32f2f'
                 }              }}            >
-              התנתק 🚪
+              התנתק
             </Button>
           </Box>
           <Typography variant="h4" sx={{ 
@@ -314,20 +317,22 @@ function EventDashboard() {
             color: 'rgba(255,255,255,0.9)',
             textShadow: '0 2px 4px rgba(0,0,0,0.3)',
             letterSpacing: '-0.02em',
-            fontSize: { xs: '1.8rem', sm: '2.125rem' },
-            fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-          }}>
-            ✨ אירועי YJCC
+            fontSize: { xs: '1.5rem', sm: '2.125rem' },
+            fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            textAlign: { xs: 'center', sm: 'left' }          }}>
+            אירועי YJCC
           </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+        </Box>        <Box sx={{ display: 'flex', gap: { xs: 1.5, sm: 2 }, alignItems: 'center' }}>
           <Fab 
             color="primary" 
             onClick={() => setOpenNewEventForm(true)}
+            size={window.innerWidth < 600 ? 'medium' : 'large'}
             sx={{
               background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
               boxShadow: '0 12px 30px rgba(255,154,86,0.4)',
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              width: { xs: 48, sm: 56 },
+              height: { xs: 48, sm: 56 },
               '&:hover': {
                 transform: 'scale(1.15) rotate(90deg)',
                 boxShadow: '0 20px 50px rgba(255,154,86,0.6)',
@@ -335,26 +340,29 @@ function EventDashboard() {
               }
             }}
           >
-            <AddIcon sx={{ fontSize: '1.8rem' }} />
+          <AddIcon sx={{ fontSize: { xs: '1.5rem', sm: '1.8rem' } }} />
           </Fab>
         </Box>
       </Box>      {/* Premium Tabs for switching between views */}
       <Box sx={{ 
-        mb: 4,
+        mb: { xs: 3, sm: 4 },
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        px: { xs: 1, sm: 0 }
       }}>
         <Paper sx={{
           background: 'rgba(255,255,255,0.95)',
           backdropFilter: 'blur(20px)',
-          borderRadius: 5,
+          borderRadius: { xs: 3, sm: 5 },
           p: 1,
           boxShadow: '0 16px 40px rgba(0,0,0,0.1)',
-          border: '1px solid rgba(255,255,255,0.3)'
+          border: '1px solid rgba(255,255,255,0.3)',
+          width: { xs: '100%', sm: 'auto' }
         }}>
           <Tabs 
             value={currentView} 
             onChange={(e, newValue) => setCurrentView(newValue)}
+            variant={window.innerWidth < 600 ? 'fullWidth' : 'standard'}
             sx={{
               '& .MuiTabs-indicator': {
                 background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
@@ -362,15 +370,15 @@ function EventDashboard() {
                 borderRadius: 2,
                 boxShadow: '0 4px 12px rgba(255,154,86,0.3)'
               },              '& .MuiTab-root': {
-                minHeight: 60,
+                minHeight: { xs: 50, sm: 60 },
                 fontWeight: 700,
-                fontSize: '1rem',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
                 borderRadius: 4,
                 transition: 'all 0.3s ease',
                 fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                 '&:hover': {
                   background: 'rgba(255,154,86,0.1)',
-                  transform: 'translateY(-2px)'
+                  transform: { xs: 'none', sm: 'translateY(-2px)' }
                 },
                 '&.Mui-selected': {
                   background: 'linear-gradient(135deg, rgba(255,154,86,0.1) 0%, rgba(194,65,107,0.1) 100%)',
@@ -380,55 +388,55 @@ function EventDashboard() {
               }
             }}
           >            <Tab 
-              icon={<EventIcon sx={{ fontSize: '1.5rem' }} />} 
+              icon={<EventIcon sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }} />} 
               label="תצוגת טבלה" 
               iconPosition="start"
               sx={{ 
-                px: 4,
+                px: { xs: 2, sm: 4 },
                 fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
               }}
             />
             <Tab 
-              icon={<CalendarIcon sx={{ fontSize: '1.5rem' }} />} 
+              icon={<CalendarIcon sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }} />} 
               label="לוח שנה" 
               iconPosition="start"
               sx={{ 
-                px: 4,
+                px: { xs: 2, sm: 4 },
                 fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
               }}
             />
           </Tabs>
         </Paper>
       </Box>      {/* Premium Table View */}
-      {currentView === 0 && (
-        <TableContainer 
+      {currentView === 0 && (        <TableContainer 
           component={Paper}
           sx={{
             background: 'rgba(255,255,255,0.95)',
             backdropFilter: 'blur(20px)',
             borderRadius: 4,
-            overflow: 'hidden',
+            overflow: { xs: 'auto', md: 'visible' },
             boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
-            border: '1px solid rgba(255,255,255,0.3)'
+            border: '1px solid rgba(255,255,255,0.3)',
+            maxWidth: '100%'
           }}
-        >
-          <Table sx={{ 
-            minWidth: { xs: 800, md: 'auto' },
+        ><Table sx={{ 
+            minWidth: { xs: 'auto', md: 'auto' },
             direction: 'rtl',
             '& .MuiTableCell-root': {
-              textAlign: 'right'
+              textAlign: 'right',
+              padding: { xs: '8px 4px', sm: '16px' },
+              fontSize: { xs: '0.75rem', sm: '0.875rem' }
             }
           }}>
-            <TableHead>
-              <TableRow sx={{
+            <TableHead>              <TableRow sx={{
                 background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',                '& .MuiTableCell-head': {
                   color: 'white',
                   fontWeight: 800,
-                  fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' },
+                  fontSize: { xs: '0.65rem', sm: '0.875rem', md: '1rem' },
                   letterSpacing: '0.5px',
                   textTransform: 'uppercase',
-                  py: { xs: 1.5, sm: 2 },
-                  px: { xs: 1, sm: 2 },
+                  py: { xs: 1, sm: 2 },
+                  px: { xs: 0.5, sm: 2 },
                   borderBottom: 'none',
                   textShadow: '0 2px 4px rgba(0,0,0,0.2)',
                   fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -757,12 +765,12 @@ function EventDashboard() {
               <Grid item xs={12/7} key={index}>                <Box sx={{ 
                   textAlign: 'center', 
                   fontWeight: 800, 
-                  p: 1,
+                  p: { xs: 0.5, sm: 1 },
                   background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
                   color: 'white',
                   borderRadius: 3,
                   mb: 1,
-                  fontSize: { xs: '1rem', sm: '1.2rem' },
+                  fontSize: { xs: '0.8rem', sm: '1.2rem' },
                   fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                   textShadow: '0 1px 2px rgba(0,0,0,0.2)',
                   boxShadow: '0 4px 12px rgba(255,154,86,0.3)'
@@ -778,9 +786,8 @@ function EventDashboard() {
               const isCurrentMonth = date.getMonth() === selectedDate.getMonth();
               const isToday = date.toDateString() === new Date().toDateString();
               
-              return (                <Grid item xs={12/7} key={index}>
-                  <Card sx={{ 
-                    height: { xs: 80, sm: 120 },
+              return (                <Grid item xs={12/7} key={index}>                  <Card sx={{ 
+                    height: { xs: 60, sm: 120 },
                     cursor: 'pointer',
                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                     opacity: isCurrentMonth ? 1 : 0.4,
@@ -795,9 +802,9 @@ function EventDashboard() {
                     backdropFilter: 'blur(10px)',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
                     '&:hover': {
-                      transform: 'scale(1.05) translateY(-2px)',
+                      transform: { xs: 'scale(1.02)', sm: 'scale(1.05) translateY(-2px)' },
                       boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
-                      background: isToday 
+                      background: isToday
                         ? 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)'
                         : dayEvents.length > 0 
                           ? 'linear-gradient(135deg, #66bb6a 0%, #43a047 100%)'

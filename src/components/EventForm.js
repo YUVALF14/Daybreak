@@ -261,7 +261,7 @@ function EventForm({ open, onClose, onSubmit, event }) {
                     fontSize: '1.2rem',
                     letterSpacing: 1
                   }}>
-                    💰 סה"כ תקציב סבסוד: {totalBudget.toLocaleString()} CZK
+                    סה"כ תקציב סבסוד: {totalBudget.toLocaleString()} CZK
                   </Typography>
                   <Typography variant="body2" sx={{
                     color: '#4caf50',

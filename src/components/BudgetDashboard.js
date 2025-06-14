@@ -415,9 +415,9 @@ function BudgetDashboard({ onBack }) {
             fontSize: { xs: '1.125rem', sm: '1.25rem' }
           }}>
             פירוט אירועים
-          </Typography>
-          <Box sx={{ 
+          </Typography>          <Box sx={{ 
             overflowX: 'auto',
+            maxWidth: '100%',
             '&::-webkit-scrollbar': {
               height: 8,
             },
@@ -430,7 +430,7 @@ function BudgetDashboard({ onBack }) {
               borderRadius: 4
             }
           }}>
-            <Table sx={{ minWidth: { xs: 800, sm: 'auto' } }}>
+            <Table sx={{ minWidth: { xs: 'auto', sm: 'auto' } }}>
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontWeight: 700, background: 'rgba(194,65,107,0.1)', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>שם האירוע</TableCell>
@@ -529,7 +529,7 @@ function BudgetDashboard({ onBack }) {
             color: '#4a148c',
             pb: 1
           }}>
-            💰 הגדרת תקציב חודשי
+            הגדרת תקציב חודשי
           </DialogTitle>
           <DialogContent sx={{ pt: 2 }}>
             <Box sx={{ textAlign: 'center', mb: 3 }}>
@@ -596,7 +596,7 @@ function BudgetDashboard({ onBack }) {
                 }
               }}
             >
-              💾 שמור
+              שמור
             </Button>
           </DialogActions>
         </Dialog>

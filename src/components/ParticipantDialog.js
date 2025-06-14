@@ -13,10 +13,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Checkbox
+  Checkbox,
+  useMediaQuery
 } from '@mui/material';
 
 function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
+  const isMobile = useMediaQuery('(max-width:600px)');
+  
   const [newParticipant, setNewParticipant] = useState({
     name: '',
     phone: '',
@@ -64,22 +67,23 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
   const handleParticipantChange = (participant, field) => {
     const updatedParticipant = { ...participant, [field]: !participant[field] };
     onParticipantUpdate(event.id, updatedParticipant);
-  };
-
-  const handleDeleteParticipant = (participant) => {
-    if (window.confirm('האם אתה בטוח שברצונך למחוק משתתף זה?')) {
+  };  const handleDeleteParticipant = (participant) => {
+    if (window.confirm('האם אתה בטוח שברצונך למחוק משתتף זה?')) {
       onParticipantUpdate(event.id, { ...participant, delete: true });
     }
   };
 
-  return (    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth
+      fullScreen={isMobile}
       PaperProps={{
         sx: {
-          borderRadius: 7,
+          borderRadius: { xs: 0, sm: 7 },
           boxShadow: 10,
           background: 'rgba(255,255,255,0.98)',
-          border: '2.5px solid #e3f2fd',
-          direction: 'rtl'
+          border: { xs: 'none', sm: '2.5px solid #e3f2fd' },
+          direction: 'rtl',
+          height: { xs: '100vh', sm: 'auto' }
         }
       }}
     >
@@ -92,12 +96,12 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
       }}>
         משתתפים - {event.name || event.title}
       </DialogTitle>
-      <DialogContent>
-        <Box component="form" onSubmit={handleAddParticipant} sx={{ 
+      <DialogContent>        <Box component="form" onSubmit={handleAddParticipant} sx={{ 
           mb: 3, 
           display: 'flex', 
           gap: 2,
-          direction: 'rtl'
+          direction: 'rtl',
+          flexDirection: { xs: 'column', sm: 'row' }
         }}>
           <TextField
             label="שם משתתף"
@@ -112,11 +116,13 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
             onChange={(e) => setNewParticipant({ ...newParticipant, phone: e.target.value })}
             required
             sx={{ flex: 1, borderRadius: 3, background: '#f5f5f7' }}
-          />
-          <Button type="submit" variant="contained" sx={{
+          />          <Button type="submit" variant="contained" sx={{
             fontWeight: 800,
             borderRadius: 99,
-            px: 4,
+            px: { xs: 3, sm: 4 },
+            py: { xs: 1.5, sm: 1 },
+            fontSize: { xs: '0.9rem', sm: '1rem' },
+            minHeight: { xs: '48px', sm: 'auto' },
             background: 'linear-gradient(90deg, #0071e3 0%, #34c759 100%)'
           }}>
             הוסף משתתף
@@ -125,7 +131,9 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
           borderRadius: 5, 
           boxShadow: 2, 
           background: '#f8fbff',
-          direction: 'rtl'
+          direction: 'rtl',
+          overflowX: 'auto',
+          maxWidth: '100%'
         }}>
           <Table sx={{ direction: 'rtl' }}>
             <TableHead>

@@ -288,7 +288,7 @@ function NewEventForm({ open, onClose, onSubmit }) {
             }
           }}
         >
-          ✨ צור אירוע
+          צור אירוע
         </Button>
       </DialogActions>
     </Dialog>
