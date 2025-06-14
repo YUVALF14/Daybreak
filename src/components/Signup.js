@@ -84,7 +84,7 @@ const Signup = () => {
             mb: 3, 
             fontWeight: 800,
             color: 'white',
-            textShadow: '0 2px 8px rgba(0,0,0,0.2)'
+            textShadow: '0 1px 2px rgba(0,0,0,0.1)'
           }}>
             הרשמה למערכת
           </Typography>

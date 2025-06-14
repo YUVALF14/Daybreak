@@ -126,7 +126,7 @@ const HomePage = () => {
             WebkitTextFillColor: 'transparent',
             fontSize: { xs: '2.2rem', sm: '2.8rem', md: '3.8rem' },
             letterSpacing: '-0.03em',
-            textShadow: '0 4px 8px rgba(139,21,56,0.1)',
+            textShadow: '0 1px 2px rgba(139,21,56,0.05)',
             position: 'relative',
             animation: 'textGlow 3s ease-in-out infinite alternate',
             '&::after': {

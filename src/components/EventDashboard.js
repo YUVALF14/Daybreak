@@ -39,7 +39,7 @@ import {
   Group as GroupIcon,
   AttachMoney as MoneyIcon,  Download as DownloadIcon,
   Upload as UploadIcon,
-  Assessment as AssessmentIcon,  ArrowBack as ArrowBackIcon,
+  Assessment as AssessmentIcon,
   PictureAsPdf as PictureAsPdfIcon,
   TableView as TableViewIcon
 } from '@mui/icons-material';
@@ -463,7 +463,7 @@ function EventDashboard() {
           <Typography variant="h4" sx={{ 
             fontWeight: 800,
             color: 'rgba(255,255,255,0.9)',
-            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            textShadow: '0 1px 2px rgba(0,0,0,0.1)',
             letterSpacing: '-0.02em',
             fontSize: { xs: '1.5rem', sm: '2.125rem' },
             fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -749,7 +749,7 @@ function EventDashboard() {
                   py: { xs: 1, sm: 2 },
                   px: { xs: 0.5, sm: 2 },
                   borderBottom: 'none',
-                  textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.1)',
                   fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                   '&:first-of-type': {
                     borderTopLeftRadius: 16
@@ -1046,7 +1046,7 @@ function EventDashboard() {
               order: { xs: 0, sm: 1 },
               textAlign: 'center',
               fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-              textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+              textShadow: '0 1px 2px rgba(0,0,0,0.05)'
             }}>
               {getMonthName(selectedDate)}
             </Typography>
@@ -1083,7 +1083,7 @@ function EventDashboard() {
                   mb: 1,
                   fontSize: { xs: '0.8rem', sm: '1.2rem' },
                   fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                  textShadow: '0 1px 1px rgba(0,0,0,0.05)',
                   boxShadow: '0 4px 12px rgba(255,154,86,0.3)'
                 }}>
                   {day}
@@ -1131,7 +1131,7 @@ function EventDashboard() {
                         fontSize: { xs: '0.75rem', sm: '0.875rem' },
                         color: (isToday || dayEvents.length > 0) ? 'white' : '#2d3748',
                         fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                        textShadow: (isToday || dayEvents.length > 0) ? '0 1px 2px rgba(0,0,0,0.2)' : 'none'
+                        textShadow: (isToday || dayEvents.length > 0) ? '0 1px 1px rgba(0,0,0,0.05)' : 'none'
                       }}>
                         {date.getDate()}
                       </Typography>
