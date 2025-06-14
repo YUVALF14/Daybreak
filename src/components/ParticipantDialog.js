@@ -88,7 +88,7 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
         fontSize: '1.5rem',
         color: '#1976d2',
         letterSpacing: 1,
-        fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
+        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}>
         משתתפים - {event.name || event.title}
       </DialogTitle>

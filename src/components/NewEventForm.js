@@ -123,7 +123,7 @@ function NewEventForm({ open, onClose, onSubmit }) {
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         letterSpacing: '-0.02em',
-        fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
+        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         textAlign: 'center',
         pt: 4,
         pb: 2,

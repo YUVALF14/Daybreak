@@ -30,7 +30,7 @@ function FeedbackForm({ eventId }) {
           fontWeight: 900,
           color: '#1976d2',
           letterSpacing: 1,
-          fontFamily: 'SF Pro Display, Heebo, Assistant, sans-serif',
+          fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         }}>
           משוב אירוע
         </Typography>

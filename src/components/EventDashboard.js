@@ -306,11 +306,9 @@ function EventDashboard() {
                   background: 'rgba(255,255,255,1)',
                   borderColor: '#d32f2f',
                   color: '#d32f2f'
-                }
-              }}
-              startIcon={<LogoutIcon />}
+                }              }}
             >
-              התנתק
+              🚪 התנתק
             </Button>
           </Box>
           <Typography variant="h4" sx={{ 
@@ -734,7 +732,7 @@ function EventDashboard() {
                 }
               }}
             >
-              ← חודש קודם
+              חודש קודם
             </Button>
             <Typography variant="h5" sx={{ 
               fontWeight: 800,
@@ -762,7 +760,7 @@ function EventDashboard() {
                   transform: 'translateY(-2px)'
                 }
               }}            >
-              חודש הבא →
+              חודש הבא
             </Button>
           </Box>
 
@@ -834,54 +832,54 @@ function EventDashboard() {
                         {date.getDate()}
                       </Typography>
                         <Box sx={{ flex: 1, overflow: 'hidden', mt: 0.5 }}>
-                        {dayEvents.slice(0, 1).map((event, eventIndex) => (
-                          <Chip
+                        {dayEvents.slice(0, 1).map((event, eventIndex) => (                          <Chip
                             key={eventIndex}
                             label={event.title || event.name}
                             size="small"
                             sx={{
                               mb: 0.5,
                               maxWidth: '100%',
-                              height: { xs: 16, sm: 20 },
-                              fontSize: { xs: '0.6rem', sm: '0.7rem' },
-                              background: 'rgba(255,255,255,0.9)',
+                              height: { xs: 20, sm: 24 },
+                              fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                              background: 'rgba(255,255,255,0.95)',
                               color: '#1976d2',
                               fontWeight: 600,
                               '& .MuiChip-label': {
-                                px: { xs: 0.5, sm: 1 }
+                                px: { xs: 0.75, sm: 1.25 },
+                                fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                               }
                             }}
                           />
                         ))}
                         {/* Show second event only on larger screens */}
                         {dayEvents.length > 1 && (
-                          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                            <Chip
+                          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>                            <Chip
                               label={dayEvents[1].title || dayEvents[1].name}
                               size="small"
                               sx={{
                                 mb: 0.5,
                                 maxWidth: '100%',
-                                height: 20,
-                                fontSize: '0.7rem',
-                                background: 'rgba(255,255,255,0.9)',
+                                height: 24,
+                                fontSize: '0.8rem',
+                                background: 'rgba(255,255,255,0.95)',
                                 color: '#1976d2',
                                 fontWeight: 600,
                                 '& .MuiChip-label': {
-                                  px: 1
+                                  px: 1.25,
+                                  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                                 }
                               }}
                             />
                           </Box>
                         )}
                         {/* Show "more" indicator */}
-                        {((dayEvents.length > 1)) && (
-                          <Typography variant="caption" sx={{ 
+                        {((dayEvents.length > 1)) && (                          <Typography variant="caption" sx={{ 
                             display: { xs: dayEvents.length > 1 ? 'block' : 'none', sm: dayEvents.length > 2 ? 'block' : 'none' },
                             textAlign: 'center',
                             fontWeight: 600,
                             fontSize: { xs: '0.6rem', sm: '0.75rem' },
-                            color: (isToday || dayEvents.length > 0) ? 'rgba(255,255,255,0.8)' : '#666'
+                            color: (isToday || dayEvents.length > 0) ? 'rgba(255,255,255,0.8)' : '#666',
+                            fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                           }}>
                             +{dayEvents.length - 1} {dayEvents.length > 2 ? 'נוספים' : ''}
                           </Typography>
