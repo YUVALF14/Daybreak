@@ -134,24 +134,23 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
               {event.participants.map((participant) => (
                 <TableRow key={participant.phone}>
                   <TableCell>{participant.name}</TableCell>
-                  <TableCell>{participant.phone}</TableCell>
-                  <TableCell>
+                  <TableCell>{participant.phone}</TableCell>                  <TableCell>
                     <Checkbox
-                      checked={participant.paid}
+                      checked={Boolean(participant.paid)}
                       onChange={() => handleParticipantChange(participant, 'paid')}
                       sx={{ color: '#34c759', '&.Mui-checked': { color: '#34c759' } }}
                     />
                   </TableCell>
                   <TableCell>
                     <Checkbox
-                      checked={participant.confirmed}
+                      checked={Boolean(participant.confirmed)}
                       onChange={() => handleParticipantChange(participant, 'confirmed')}
                       sx={{ color: '#1976d2', '&.Mui-checked': { color: '#1976d2' } }}
                     />
                   </TableCell>
                   <TableCell>
                     <Checkbox
-                      checked={participant.attended}
+                      checked={Boolean(participant.attended)}
                       onChange={() => handleParticipantChange(participant, 'attended')}
                       sx={{ color: '#ffa726', '&.Mui-checked': { color: '#ffa726' } }}
                     />

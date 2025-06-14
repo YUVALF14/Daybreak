@@ -312,7 +312,7 @@ const HomePage = () => {
               }
             }}          >
              צפייה באירועים 🎉
-          </Button><Button
+          </Button>          <Button
             onClick={() => window.open('https://wa.me/972542230342', '_blank')}
             variant="contained"
             size="large"
@@ -324,12 +324,13 @@ const HomePage = () => {
               fontSize: { xs: '1.1rem', sm: '1.25rem' },
               fontWeight: 800,
               borderRadius: 5,
-              background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
-              color: 'white',
+              background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%) !important',
+              color: 'white !important',
               boxShadow: '0 12px 28px rgba(37,211,102,0.4), 0 6px 12px rgba(18,140,126,0.2)',
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               position: 'relative',
               overflow: 'hidden',
+              border: 'none',
               '&::before': {
                 content: '""',
                 position: 'absolute',
@@ -342,8 +343,8 @@ const HomePage = () => {
               },
               '&:hover': {
                 transform: 'translateY(-4px) scale(1.02)',
-                background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-                color: 'white',
+                background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important',
+                color: 'white !important',
                 boxShadow: '0 20px 40px rgba(37,211,102,0.5), 0 10px 20px rgba(18,140,126,0.3)',
                 '&::before': {
                   left: '100%'
@@ -357,10 +358,18 @@ const HomePage = () => {
                   fontSize: '1.2rem',
                   animation: 'sparkle 0.6s ease-out'
                 }
+              },
+              '&:focus': {
+                background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%) !important',
+                color: 'white !important'
+              },
+              '&:active': {
+                background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%) !important',
+                color: 'white !important'
               }
             }}
           >
-            צור קשר בוואטסאפ 📱
+            📱 צור קשר בוואטסאפ
           </Button>
         </Box>        <Typography 
           variant="body2" 
