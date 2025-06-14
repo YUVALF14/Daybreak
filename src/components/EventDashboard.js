@@ -22,8 +22,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
-  MenuItem,
+  TextField,  MenuItem,
+  Menu,
   Tabs,
   Tab
 } from '@mui/material';
@@ -37,7 +37,11 @@ import {
   Event as EventIcon,
   LocationOn as LocationIcon,
   Group as GroupIcon,
-  AttachMoney as MoneyIcon
+  AttachMoney as MoneyIcon,  Download as DownloadIcon,
+  Upload as UploadIcon,
+  Assessment as AssessmentIcon,  ArrowBack as ArrowBackIcon,
+  PictureAsPdf as PictureAsPdfIcon,
+  TableView as TableViewIcon
 } from '@mui/icons-material';
 import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
@@ -56,8 +60,7 @@ function EventDashboard() {
   const [openNewEventForm, setOpenNewEventForm] = useState(false);
   const [openBudgetForm, setOpenBudgetForm] = useState(false);
   const [currentView, setCurrentView] = useState(0); // 0 = table, 1 = calendar
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [calendarDialog, setCalendarDialog] = useState({ open: false, date: null });
+  const [selectedDate, setSelectedDate] = useState(new Date());  const [calendarDialog, setCalendarDialog] = useState({ open: false, date: null });
   const [newCalendarEvent, setNewCalendarEvent] = useState({
     title: '',
     type: 'community',
@@ -69,6 +72,8 @@ function EventDashboard() {
     subsidy: '',
     price: ''
   });
+  const [exportMenu, setExportMenu] = useState(null);
+  const [importDialog, setImportDialog] = useState({ open: false, file: null, eventId: null });
 
   // Calendar helper functions
   const getCurrentMonth = () => {
@@ -193,11 +198,154 @@ function EventDashboard() {
   };
   // Only show budget button for admins
   const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
-
   const handleLogout = () => {
     if (window.confirm('האם אתה בטוח שברצונך להתנתק?')) {
       localStorage.removeItem('adminAuthenticated');
       navigate('/');
+    }
+  };
+
+  // Export functionality
+  const exportEventsData = (format) => {
+    const data = {
+      events: events.map(event => ({
+        id: event.id,
+        title: event.title,
+        date: event.date,
+        time: event.time,
+        location: event.location,
+        description: event.description,
+        price: event.price,
+        subsidy: event.subsidy,
+        maxParticipants: event.maxParticipants,
+        participants: event.participants || [],
+        participantCount: (event.participants || []).length,
+        confirmedParticipants: (event.participants || []).filter(p => p.confirmed).length,
+        totalSubsidy: event.subsidy ? (event.participants || []).length * parseFloat(event.subsidy) : 0
+      })),
+      summary: {
+        totalEvents: events.length,
+        totalParticipants: events.reduce((sum, event) => sum + (event.participants || []).length, 0),
+        totalSubsidyAmount: events.reduce((sum, event) => {
+          if (event.subsidy && event.participants) {
+            return sum + (event.participants.length * parseFloat(event.subsidy));
+          }
+          return sum;
+        }, 0),
+        upcomingEvents: events.filter(e => new Date(e.date) >= new Date()).length
+      },
+      exportDate: new Date().toISOString()
+    };
+
+    if (format === 'json') {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `events_export_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } else if (format === 'csv') {
+      const csvHeaders = ['שם האירוע', 'תאריך', 'מיקום', 'מחיר', 'סבסוד', 'מספר משתתפים', 'משתתפים מאושרים', 'סכום סבסוד כולל'];
+      const csvRows = events.map(event => [
+        event.title || '',
+        event.date || '',
+        event.location || '',
+        event.price || '',
+        event.subsidy || '',
+        (event.participants || []).length,
+        (event.participants || []).filter(p => p.confirmed).length,
+        event.subsidy ? (event.participants || []).length * parseFloat(event.subsidy) : 0
+      ]);
+      
+      const csvContent = [csvHeaders, ...csvRows]
+        .map(row => row.map(cell => `"${cell}"`).join(','))
+        .join('\n');
+      
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `events_export_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    setExportMenu(null);
+    setSnackbar({ open: true, message: `נתוני האירועים יוצאו בהצלחה כ${format.toUpperCase()}` });
+  };
+
+  // Import Google Forms functionality
+  const handleImportGoogleForms = async (file, eventId) => {
+    try {
+      const text = await file.text();
+      const lines = text.split('\n');
+      
+      if (lines.length < 2) {
+        setSnackbar({ open: true, message: 'קובץ CSV לא תקין - חסרים נתונים' });
+        return;
+      }
+
+      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+      const participants = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+        const participant = {};
+
+        headers.forEach((header, index) => {
+          if (values[index]) {
+            // Map common Google Forms fields to our participant structure
+            if (header.includes('שם') || header.includes('name') || header.includes('Name')) {
+              participant.name = values[index];
+            } else if (header.includes('טלפון') || header.includes('phone') || header.includes('Phone')) {
+              participant.phone = values[index];
+            } else if (header.includes('אימייל') || header.includes('email') || header.includes('Email')) {
+              participant.email = values[index];
+            } else if (header.includes('הערות') || header.includes('notes') || header.includes('Notes')) {
+              participant.notes = values[index];
+            }
+          }
+        });
+
+        if (participant.name || participant.phone) {
+          participant.confirmed = false;
+          participant.attended = false;
+          participants.push(participant);
+        }
+      }
+
+      if (participants.length === 0) {
+        setSnackbar({ open: true, message: 'לא נמצאו נתוני משתתפים תקינים בקובץ' });
+        return;
+      }
+
+      // Add participants to the selected event
+      const event = events.find(e => e.id === eventId);
+      if (event) {
+        const existingParticipants = event.participants || [];
+        const newParticipants = participants.filter(newP => 
+          !existingParticipants.some(existingP => 
+            existingP.phone === newP.phone || existingP.email === newP.email
+          )
+        );
+        
+        const updatedParticipants = [...existingParticipants, ...newParticipants];
+        await updateEvent(eventId, { participants: updatedParticipants });
+        
+        setSnackbar({ 
+          open: true, 
+          message: `${newParticipants.length} משתתפים חדשים נוספו לאירוע "${event.title}"` 
+        });
+      }
+
+      setImportDialog({ open: false, file: null, eventId: null });
+    } catch (error) {
+      console.error('Error importing Google Forms data:', error);
+      setSnackbar({ open: true, message: 'שגיאה בייבוא נתוני Google Forms' });
     }
   };return (    <Box
       sx={{
@@ -343,7 +491,170 @@ function EventDashboard() {
           <AddIcon sx={{ fontSize: { xs: '1.5rem', sm: '1.8rem' } }} />
           </Fab>
         </Box>
-      </Box>      {/* Premium Tabs for switching between views */}
+      </Box>
+
+      {/* Professional Action Buttons Section */}
+      <Paper sx={{
+        background: 'rgba(255,255,255,0.95)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: { xs: 3, sm: 4 },
+        p: { xs: 2, sm: 3 },
+        mb: { xs: 3, sm: 4 },
+        boxShadow: '0 16px 40px rgba(0,0,0,0.1)',
+        border: '1px solid rgba(255,255,255,0.3)'
+      }}>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between',
+          alignItems: { xs: 'stretch', sm: 'center' },
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: { xs: 2, sm: 3 }
+        }}>
+          {/* Summary Stats */}
+          <Box sx={{ 
+            display: 'flex', 
+            gap: { xs: 2, sm: 4 },
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            justifyContent: { xs: 'center', sm: 'flex-start' }
+          }}>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h4" sx={{ 
+                fontWeight: 800, 
+                color: '#1e293b',
+                fontSize: { xs: '1.5rem', sm: '2rem' }
+              }}>
+                {events.length}
+              </Typography>
+              <Typography variant="body2" sx={{ 
+                color: '#64748b', 
+                fontWeight: 600,
+                fontSize: { xs: '0.75rem', sm: '0.875rem' }
+              }}>
+                סה"כ אירועים
+              </Typography>
+            </Box>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h4" sx={{ 
+                fontWeight: 800, 
+                color: '#059669',
+                fontSize: { xs: '1.5rem', sm: '2rem' }
+              }}>
+                {events.reduce((sum, event) => sum + (event.participants || []).length, 0)}
+              </Typography>
+              <Typography variant="body2" sx={{ 
+                color: '#64748b', 
+                fontWeight: 600,
+                fontSize: { xs: '0.75rem', sm: '0.875rem' }
+              }}>
+                סה"כ משתתפים
+              </Typography>
+            </Box>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h4" sx={{ 
+                fontWeight: 800, 
+                color: '#dc2626',
+                fontSize: { xs: '1.5rem', sm: '2rem' }
+              }}>
+                {events.reduce((sum, event) => {
+                  if (event.subsidy && event.participants) {
+                    return sum + (event.participants.length * parseFloat(event.subsidy));
+                  }
+                  return sum;
+                }, 0).toLocaleString()}
+              </Typography>
+              <Typography variant="body2" sx={{ 
+                color: '#64748b', 
+                fontWeight: 600,
+                fontSize: { xs: '0.75rem', sm: '0.875rem' }
+              }}>
+                CZK סה"כ סבסוד
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Action Buttons */}
+          <Box sx={{ 
+            display: 'flex', 
+            gap: 2, 
+            flexDirection: { xs: 'row', sm: 'row' }, 
+            flexWrap: 'wrap',
+            justifyContent: { xs: 'center', sm: 'flex-end' }
+          }}>
+            {/* Import Button */}
+            <Button
+              variant="outlined"
+              onClick={(e) => setImportDialog({ 
+                open: true, 
+                file: null, 
+                eventId: events.length > 0 ? events[0].id : null 
+              })}
+              sx={{
+                borderColor: '#3b82f6',
+                color: '#3b82f6',
+                borderRadius: 2,
+                px: 3,
+                py: 1,
+                fontWeight: 600,
+                fontSize: { xs: '0.8rem', sm: '0.9rem' },
+                '&:hover': {
+                  background: '#eff6ff',
+                  borderColor: '#2563eb'
+                }
+              }}
+              startIcon={<UploadIcon />}
+            >
+              יבוא נתונים
+            </Button>
+
+            {/* Export Button */}
+            <Button
+              variant="outlined"
+              onClick={(e) => setExportMenu(e.currentTarget)}
+              sx={{
+                borderColor: '#059669',
+                color: '#059669',
+                borderRadius: 2,
+                px: 3,
+                py: 1,
+                fontWeight: 600,
+                fontSize: { xs: '0.8rem', sm: '0.9rem' },
+                '&:hover': {
+                  background: '#ecfdf5',
+                  borderColor: '#047857'
+                }
+              }}
+              startIcon={<DownloadIcon />}
+            >
+              יצוא נתונים
+            </Button>
+
+            {/* Budget Dashboard Button */}
+            {isAdmin && (
+              <Button
+                variant="contained"
+                onClick={() => setOpenBudgetForm(true)}
+                sx={{
+                  background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
+                  borderRadius: 2,
+                  px: 3,
+                  py: 1,
+                  fontWeight: 600,
+                  fontSize: { xs: '0.8rem', sm: '0.9rem' },
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)',
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 8px 25px rgba(255,154,86,0.4)'
+                  }
+                }}
+                startIcon={<AssessmentIcon />}
+              >
+                לוח תקציב
+              </Button>
+            )}
+          </Box>
+        </Box>
+      </Paper>{/* Premium Tabs for switching between views */}
       <Box sx={{ 
         mb: { xs: 3, sm: 4 },
         display: 'flex',
@@ -1134,6 +1445,179 @@ function EventDashboard() {
           >
             <CalendarIcon sx={{ mr: 1 }} />
             הוסף אירוע
+          </Button>        </DialogActions>
+      </Dialog>
+
+      {/* Export Menu */}
+      <Menu
+        anchorEl={exportMenu}
+        open={Boolean(exportMenu)}
+        onClose={() => setExportMenu(null)}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
+            minWidth: 200,
+            direction: 'rtl'
+          }
+        }}
+      >
+        <MenuItem 
+          onClick={() => exportEventsData('csv')}
+          sx={{ 
+            py: 1.5, 
+            fontWeight: 600,
+            '&:hover': { background: '#ecfdf5' }
+          }}
+        >
+          <TableViewIcon sx={{ mr: 1, color: '#059669' }} />
+          יצוא CSV
+        </MenuItem>
+        <MenuItem 
+          onClick={() => exportEventsData('json')}
+          sx={{ 
+            py: 1.5, 
+            fontWeight: 600,
+            '&:hover': { background: '#eff6ff' }
+          }}
+        >
+          <PictureAsPdfIcon sx={{ mr: 1, color: '#3b82f6' }} />
+          יצוא JSON
+        </MenuItem>
+      </Menu>
+
+      {/* Import Dialog */}
+      <Dialog
+        open={importDialog.open}
+        onClose={() => setImportDialog({ open: false, file: null, eventId: null })}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+            boxShadow: '0 20px 60px rgba(59,130,246,0.3)',
+            direction: 'rtl'
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          textAlign: 'center', 
+          fontWeight: 800, 
+          background: 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)',
+          color: 'white',
+          m: -3,
+          mb: 3,
+          p: 3,
+          borderRadius: '16px 16px 0 0'
+        }}>
+          <UploadIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+          יבוא נתוני Google Forms
+        </DialogTitle>
+        <DialogContent sx={{ pt: 2, direction: 'rtl' }}>
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="body1" sx={{ mb: 2, fontWeight: 600 }}>
+              בחר אירוע להוספת משתתפים:
+            </Typography>
+            <TextField
+              select
+              fullWidth
+              value={importDialog.eventId || ''}
+              onChange={(e) => setImportDialog(prev => ({ ...prev, eventId: e.target.value }))}
+              sx={{ 
+                '& .MuiOutlinedInput-root': { borderRadius: 3 },
+                mb: 3
+              }}
+            >
+              {events.map((event) => (
+                <MenuItem key={event.id} value={event.id}>
+                  {event.title || event.name} - {new Date(event.date).toLocaleDateString('he-IL')}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+          
+          <Box sx={{ 
+            border: '2px dashed #3b82f6',
+            borderRadius: 3,
+            p: 3,
+            textAlign: 'center',
+            background: '#eff6ff'
+          }}>
+            <UploadIcon sx={{ fontSize: 48, color: '#3b82f6', mb: 2 }} />
+            <Typography variant="h6" sx={{ fontWeight: 700, color: '#1e40af', mb: 1 }}>
+              גרור קובץ CSV או לחץ לבחירה
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#64748b', mb: 2 }}>
+              תמיכה בקבצי CSV מ-Google Forms
+            </Typography>
+            <Button
+              variant="outlined"
+              component="label"
+              sx={{
+                borderColor: '#3b82f6',
+                color: '#3b82f6',
+                fontWeight: 600,
+                borderRadius: 2,
+                '&:hover': {
+                  background: '#dbeafe',
+                  borderColor: '#2563eb'
+                }
+              }}
+            >
+              בחר קובץ
+              <input
+                type="file"
+                hidden
+                accept=".csv"
+                onChange={(e) => {
+                  if (e.target.files[0]) {
+                    setImportDialog(prev => ({ ...prev, file: e.target.files[0] }));
+                  }
+                }}
+              />
+            </Button>
+            {importDialog.file && (
+              <Typography variant="body2" sx={{ mt: 2, color: '#059669', fontWeight: 600 }}>
+                ✓ נבחר: {importDialog.file.name}
+              </Typography>
+            )}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3, gap: 2 }}>
+          <Button 
+            onClick={() => setImportDialog({ open: false, file: null, eventId: null })}
+            variant="outlined"
+            sx={{
+              borderColor: '#64748b',
+              color: '#64748b',
+              fontWeight: 700,
+              borderRadius: 3,
+              px: 4,
+              '&:hover': {
+                borderColor: '#475569',
+                background: 'rgba(100,116,139,0.05)',
+              }
+            }}
+          >
+            ביטול
+          </Button>
+          <Button 
+            onClick={() => handleImportGoogleForms(importDialog.file, importDialog.eventId)}
+            variant="contained"
+            disabled={!importDialog.file || !importDialog.eventId}
+            sx={{
+              background: 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)',
+              fontWeight: 700,
+              borderRadius: 3,
+              px: 4,
+              '&:hover': {
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+              }
+            }}
+          >
+            <UploadIcon sx={{ mr: 1 }} />
+            יבא נתונים
           </Button>
         </DialogActions>
       </Dialog>
