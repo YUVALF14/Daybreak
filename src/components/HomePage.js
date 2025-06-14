@@ -345,15 +345,14 @@ const HomePage = () => {
                 transform: 'translateY(-4px) scale(1.02)',
                 background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important',
                 color: 'white !important',
-                boxShadow: '0 20px 40px rgba(37,211,102,0.5), 0 10px 20px rgba(18,140,126,0.3)',
-                '&::before': {
+                boxShadow: '0 20px 40px rgba(37,211,102,0.5), 0 10px 20px rgba(18,140,126,0.3)',                '&::before': {
                   left: '100%'
                 },
-                '&::before': {
+                '&::after': {
                   content: '"📱"',
                   position: 'absolute',
                   top: '50%',
-                  left: '20px',
+                  right: '20px',
                   transform: 'translateY(-50%)',
                   fontSize: '1.2rem',
                   animation: 'sparkle 0.6s ease-out'
