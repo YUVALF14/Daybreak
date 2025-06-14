@@ -284,7 +284,7 @@ function EventDashboard() {
                 }
               }}
             >
-              🏠 חזרה לעמוד הבית
+              חזרה לעמוד הבית 🏠
             </Button>
             <Button
               variant="outlined"
@@ -413,7 +413,13 @@ function EventDashboard() {
             border: '1px solid rgba(255,255,255,0.3)'
           }}
         >
-          <Table sx={{ minWidth: { xs: 800, md: 'auto' } }}>
+          <Table sx={{ 
+            minWidth: { xs: 800, md: 'auto' },
+            direction: 'rtl',
+            '& .MuiTableCell-root': {
+              textAlign: 'right'
+            }
+          }}>
             <TableHead>
               <TableRow sx={{
                 background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',                '& .MuiTableCell-head': {
@@ -435,14 +441,14 @@ function EventDashboard() {
                   }
                 }
               }}>
-                <TableCell>✨ שם האירוע</TableCell>
-                <TableCell>📅 תאריख</TableCell>
-                <TableCell>📍 מיקום</TableCell>
-                <TableCell>💰 מחיר</TableCell>
-                <TableCell>🎁 סבסוד</TableCell>
-                <TableCell>📊 תקציב כולל</TableCell>
-                <TableCell>👥 משתתפים</TableCell>
-                <TableCell>⚡ פעולות</TableCell>
+                <TableCell>שם האירוע</TableCell>
+                <TableCell>תאריך</TableCell>
+                <TableCell>מיקום</TableCell>
+                <TableCell>מחיר</TableCell>
+                <TableCell>סבסוד</TableCell>
+                <TableCell>תקציב כולל</TableCell>
+                <TableCell>משתתפים</TableCell>
+                <TableCell>פעולות</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -455,16 +461,13 @@ function EventDashboard() {
                     },
                     '&:nth-of-type(even)': {
                       background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(233,236,239,0.6) 100%)'
-                    },
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    },                    transition: 'all 0.2s ease',
                     '&:hover': {
-                      background: 'linear-gradient(135deg, rgba(255,154,86,0.1) 0%, rgba(194,65,107,0.1) 100%)',
-                      transform: 'scale(1.01)',
-                      boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+                      background: 'linear-gradient(135deg, rgba(255,154,86,0.05) 0%, rgba(194,65,107,0.05) 100%)',
                       '& .MuiTableCell-root': {
-                        color: '#c2416b'
+                        color: '#333'
                       }
-                    },                    '& .MuiTableCell-body': {
+                    },'& .MuiTableCell-body': {
                       fontWeight: 600,
                       fontSize: { xs: '0.75rem', sm: '0.875rem' },
                       py: { xs: 1.5, sm: 2 },
@@ -474,28 +477,22 @@ function EventDashboard() {
                       fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                     }
                   }}
-                >
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
-                        boxShadow: '0 2px 8px rgba(255,154,86,0.3)'
-                      }} />
-                      <Typography variant="body2" sx={{ 
-                        fontWeight: 700,
-                        color: '#2d3748',
-                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
-                      }}>
-                        {event.title || event.name}
-                      </Typography>
-                    </Box>
+                >                  <TableCell>
+                    <Typography variant="body2" sx={{ 
+                      fontWeight: 700,
+                      color: '#2d3748',
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                    }}>
+                      {event.title || event.name}
+                    </Typography>
                   </TableCell>
                   <TableCell>
                     <Chip
-                      label={new Date(event.date).toLocaleDateString('he-IL')}
+                      label={new Date(event.date).toLocaleDateString('he-IL', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric' 
+                      })}
                       size="small"
                       sx={{
                         background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
@@ -506,20 +503,13 @@ function EventDashboard() {
                         border: '1px solid rgba(25,118,210,0.2)'
                       }}
                     />
-                  </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <LocationIcon sx={{ 
-                        color: '#ff9a56', 
-                        fontSize: { xs: '1rem', sm: '1.2rem' } 
-                      }} />
-                      <Typography variant="body2" sx={{ 
-                        fontWeight: 600,
-                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
-                      }}>
-                        {event.location}
-                      </Typography>
-                    </Box>
+                  </TableCell>                  <TableCell>
+                    <Typography variant="body2" sx={{ 
+                      fontWeight: 600,
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                    }}>
+                      {event.location}
+                    </Typography>
                   </TableCell>
                   <TableCell>
                     {event.price ? (
@@ -713,13 +703,12 @@ function EventDashboard() {
             flexDirection: { xs: 'column', sm: 'row' },
             gap: { xs: 2, sm: 0 },
             boxShadow: '0 8px 25px rgba(255,154,86,0.3)'
-          }}>
-            <Button 
+          }}>            <Button 
               onClick={() => navigateMonth(-1)}
               sx={{ 
                 color: 'white', 
                 fontWeight: 700,
-                fontSize: { xs: '0.875rem', sm: '1rem' },
+                fontSize: { xs: '1.1rem', sm: '1.3rem' },
                 order: { xs: 1, sm: 0 },
                 borderRadius: 3,
                 px: 3,
@@ -735,7 +724,7 @@ function EventDashboard() {
             </Button>
             <Typography variant="h5" sx={{ 
               fontWeight: 800,
-              fontSize: { xs: '1.25rem', sm: '1.5rem' },
+              fontSize: { xs: '1.5rem', sm: '1.8rem' },
               order: { xs: 0, sm: 1 },
               textAlign: 'center',
               fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -748,7 +737,7 @@ function EventDashboard() {
               sx={{ 
                 color: 'white', 
                 fontWeight: 700,
-                fontSize: { xs: '0.875rem', sm: '1rem' },
+                fontSize: { xs: '1.1rem', sm: '1.3rem' },
                 order: { xs: 2, sm: 2 },
                 borderRadius: 3,
                 px: 3,
@@ -758,7 +747,7 @@ function EventDashboard() {
                   background: 'rgba(255,255,255,0.15)',
                   transform: 'translateY(-2px)'
                 }
-              }}            >
+              }}>
               חודש הבא
             </Button>
           </Box>
@@ -766,8 +755,7 @@ function EventDashboard() {
           {/* Calendar Grid */}
           <Grid container spacing={1}>            {/* Premium Day Headers */}
             {['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'].map((day, index) => (
-              <Grid item xs={12/7} key={index}>
-                <Box sx={{ 
+              <Grid item xs={12/7} key={index}>                <Box sx={{ 
                   textAlign: 'center', 
                   fontWeight: 800, 
                   p: 1,
@@ -775,7 +763,7 @@ function EventDashboard() {
                   color: 'white',
                   borderRadius: 3,
                   mb: 1,
-                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  fontSize: { xs: '1rem', sm: '1.2rem' },
                   fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                   textShadow: '0 1px 2px rgba(0,0,0,0.2)',
                   boxShadow: '0 4px 12px rgba(255,154,86,0.3)'
@@ -838,14 +826,16 @@ function EventDashboard() {
                             sx={{
                               mb: 0.5,
                               maxWidth: '100%',
-                              height: { xs: 20, sm: 24 },
-                              fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                              height: { xs: 24, sm: 28 },
+                              fontSize: { xs: '0.75rem', sm: '0.9rem' },
                               background: 'rgba(255,255,255,0.95)',
                               color: '#1976d2',
-                              fontWeight: 600,
+                              fontWeight: 700,
+                              fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                               '& .MuiChip-label': {
-                                px: { xs: 0.75, sm: 1.25 },
-                                fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                                px: { xs: 1, sm: 1.5 },
+                                fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                                fontSize: { xs: '0.75rem', sm: '0.9rem' }
                               }
                             }}
                           />
@@ -858,14 +848,16 @@ function EventDashboard() {
                               sx={{
                                 mb: 0.5,
                                 maxWidth: '100%',
-                                height: 24,
-                                fontSize: '0.8rem',
+                                height: 28,
+                                fontSize: '0.9rem',
                                 background: 'rgba(255,255,255,0.95)',
                                 color: '#1976d2',
-                                fontWeight: 600,
+                                fontWeight: 700,
+                                fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                                 '& .MuiChip-label': {
-                                  px: 1.25,
-                                  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                                  px: 1.5,
+                                  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                                  fontSize: '0.9rem'
                                 }
                               }}
                             />
@@ -875,9 +867,9 @@ function EventDashboard() {
                         {((dayEvents.length > 1)) && (                          <Typography variant="caption" sx={{ 
                             display: { xs: dayEvents.length > 1 ? 'block' : 'none', sm: dayEvents.length > 2 ? 'block' : 'none' },
                             textAlign: 'center',
-                            fontWeight: 600,
-                            fontSize: { xs: '0.6rem', sm: '0.75rem' },
-                            color: (isToday || dayEvents.length > 0) ? 'rgba(255,255,255,0.8)' : '#666',
+                            fontWeight: 700,
+                            fontSize: { xs: '0.7rem', sm: '0.85rem' },
+                            color: (isToday || dayEvents.length > 0) ? 'rgba(255,255,255,0.9)' : '#666',
                             fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                           }}>
                             +{dayEvents.length - 1} {dayEvents.length > 2 ? 'נוספים' : ''}
