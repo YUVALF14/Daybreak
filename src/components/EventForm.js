@@ -95,8 +95,7 @@ function EventForm({ open, onClose, onSubmit, event }) {
       open={open} 
       onClose={onClose} 
       maxWidth="md" 
-      fullWidth
-      PaperProps={{
+      fullWidth      PaperProps={{
         sx: {
           borderRadius: 8,
           boxShadow: '0 32px 64px rgba(0,0,0,0.12), 0 16px 32px rgba(194,65,107,0.08)',
@@ -105,6 +104,7 @@ function EventForm({ open, onClose, onSubmit, event }) {
           border: '1px solid rgba(255,255,255,0.2)',
           position: 'relative',
           overflow: 'hidden',
+          direction: 'rtl',
           animation: 'slideInScale 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           '&::before': {
             content: '""',

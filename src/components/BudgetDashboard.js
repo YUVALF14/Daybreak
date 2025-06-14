@@ -248,7 +248,7 @@ function BudgetDashboard({ onBack }) {
             <CardContent sx={{ textAlign: 'center', py: 3 }}>
               <AttachMoneyIcon sx={{ fontSize: '3rem', mb: 1, opacity: 0.9 }} />
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-                תקציב כולל
+                תקציב בהמתנה
               </Typography>              <Typography variant="h4" sx={{ fontWeight: 900 }}>
                 {totalBudget.toLocaleString()} CZK
               </Typography>
@@ -289,7 +289,7 @@ function BudgetDashboard({ onBack }) {
           }}>
             <CardContent sx={{ textAlign: 'center', py: 3 }}>
               <EventAvailableIcon sx={{ fontSize: '3rem', mb: 1, opacity: 0.9 }} />              <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-                יתרה כללית
+                יתרה
               </Typography>              <Typography variant="h4" sx={{ fontWeight: 900 }}>
                 {balance.toLocaleString()} CZK
               </Typography>

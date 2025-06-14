@@ -72,14 +72,14 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
     }
   };
 
-  return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth
+  return (    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth
       PaperProps={{
         sx: {
           borderRadius: 7,
           boxShadow: 10,
           background: 'rgba(255,255,255,0.98)',
           border: '2.5px solid #e3f2fd',
+          direction: 'rtl'
         }
       }}
     >
@@ -93,7 +93,12 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
         משתתפים - {event.name || event.title}
       </DialogTitle>
       <DialogContent>
-        <Box component="form" onSubmit={handleAddParticipant} sx={{ mb: 3, display: 'flex', gap: 2 }}>
+        <Box component="form" onSubmit={handleAddParticipant} sx={{ 
+          mb: 3, 
+          display: 'flex', 
+          gap: 2,
+          direction: 'rtl'
+        }}>
           <TextField
             label="שם משתתף"
             value={newParticipant.name}
@@ -116,10 +121,13 @@ function ParticipantDialog({ open, onClose, event, onParticipantUpdate }) {
           }}>
             הוסף משתתף
           </Button>
-        </Box>
-
-        <TableContainer sx={{ borderRadius: 5, boxShadow: 2, background: '#f8fbff' }}>
-          <Table>
+        </Box>        <TableContainer sx={{ 
+          borderRadius: 5, 
+          boxShadow: 2, 
+          background: '#f8fbff',
+          direction: 'rtl'
+        }}>
+          <Table sx={{ direction: 'rtl' }}>
             <TableHead>
               <TableRow>
                 <TableCell sx={{ fontWeight: 800, color: '#1976d2' }}>שם</TableCell>

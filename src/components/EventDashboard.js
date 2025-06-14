@@ -178,12 +178,11 @@ function EventDashboard() {
     }
     await updateEvent(eventId, { participants: updatedParticipants });
   };
-
   const sendEventReminders = (event) => {
     const message = `שלום! תזכורת לאירוע "${event.title || event.name}" שיתקיים ב-${new Date(event.date).toLocaleDateString('he-IL')} ב${event.location}. נשמח לראותך!`;
     event.participants.forEach(participant => {
       if (participant.confirmed) {
-        window.open(`https://wa.me/${participant.phone}?text=${encodeURIComponent(message)}`, '_blank');
+        window.open(`https://wa.me/${participant.phone}`, '_blank');
       }
     });
   };
@@ -382,7 +381,7 @@ function EventDashboard() {
             }}
           >            <Tab 
               icon={<EventIcon sx={{ fontSize: '1.5rem' }} />} 
-              label="📊 תצוגת טבלה" 
+              label="תצוגת טבלה" 
               iconPosition="start"
               sx={{ 
                 px: 4,
@@ -391,7 +390,7 @@ function EventDashboard() {
             />
             <Tab 
               icon={<CalendarIcon sx={{ fontSize: '1.5rem' }} />} 
-              label="📅 לוח שנה" 
+              label="לוח שנה" 
               iconPosition="start"
               sx={{ 
                 px: 4,
@@ -446,7 +445,7 @@ function EventDashboard() {
                 <TableCell>מיקום</TableCell>
                 <TableCell>מחיר</TableCell>
                 <TableCell>סבסוד</TableCell>
-                <TableCell>תקציב כולל</TableCell>
+                <TableCell>תקציב בהמתנה</TableCell>
                 <TableCell>משתתפים</TableCell>
                 <TableCell>פעולות</TableCell>
               </TableRow>
@@ -914,32 +913,31 @@ function EventDashboard() {
           justifyContent: 'center',
           animation: 'pulse 2s infinite' 
         }}>
-          <Button
-            variant="contained"
+          <Button            variant="contained"
             onClick={() => setOpenBudgetForm(true)}
             sx={{
-              background: 'linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)',
+              background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
               color: 'white',
-              fontWeight: 800,
-              fontSize: { xs: '1rem', sm: '1.1rem' },
-              borderRadius: 6,
-              px: { xs: 3, sm: 6 },
-              py: { xs: 1.5, sm: 2 },
-              boxShadow: '0 12px 30px rgba(76,175,80,0.4)',
+              fontWeight: 700,
+              fontSize: { xs: '0.95rem', sm: '1rem' },
+              borderRadius: 4,
+              px: { xs: 3, sm: 4 },
+              py: { xs: 1.5, sm: 1.75 },
+              boxShadow: '0 8px 20px rgba(37,99,235,0.3)',
               textTransform: 'none',
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              transition: 'all 0.3s ease',
+              border: '1px solid rgba(255,255,255,0.1)',
               '&:hover': {
-                background: 'linear-gradient(135deg, #66bb6a 0%, #43a047 100%)',
-                transform: 'translateY(-4px) scale(1.05)',
-                boxShadow: '0 20px 50px rgba(76,175,80,0.6)'
+                background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)',
+                transform: 'translateY(-2px)',
+                boxShadow: '0 12px 30px rgba(37,99,235,0.4)'
               },
               '&:active': {
-                transform: 'translateY(-2px) scale(1.02)'
-              }
-            }}
-            startIcon={<MoneyIcon sx={{ fontSize: '1.5rem' }} />}
+                transform: 'translateY(-1px)'
+              }            }}
           >
-            💰 ניהול תקציב מתקדם
+            ניהול תקציב מתקדם
           </Button>
         </Box>
       )}
@@ -951,12 +949,12 @@ function EventDashboard() {
         open={calendarDialog.open} 
         onClose={() => setCalendarDialog({ open: false, date: null })}
         maxWidth="md"
-        fullWidth
-        PaperProps={{
+        fullWidth        PaperProps={{
           sx: {
             borderRadius: 4,
             background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
-            boxShadow: '0 20px 60px rgba(25,118,210,0.3)'
+            boxShadow: '0 20px 60px rgba(25,118,210,0.3)',
+            direction: 'rtl'
           }
         }}
       >        <DialogTitle sx={{ 
@@ -982,7 +980,7 @@ function EventDashboard() {
             </Typography>
           )}
         </DialogTitle>
-        <DialogContent sx={{ pt: 2 }}>
+        <DialogContent sx={{ pt: 2, direction: 'rtl' }}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField

@@ -83,8 +83,7 @@ function EventRegistrationDialog({ open, onClose, event, onRegister }) {
         open={open}
         onClose={onClose}
         maxWidth="sm"
-        fullWidth
-        sx={{
+        fullWidth        sx={{
           '& .MuiDialog-paper': {
             borderRadius: 4,
             background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,154,86,0.05) 100%)',
@@ -93,6 +92,7 @@ function EventRegistrationDialog({ open, onClose, event, onRegister }) {
             boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
             position: 'relative',
             overflow: 'hidden',
+            direction: 'rtl',
             '&::before': {
               content: '""',
               position: 'absolute',
