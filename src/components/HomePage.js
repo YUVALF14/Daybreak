@@ -13,7 +13,7 @@ const HomePage = () => {
         alignItems: 'center',
         justifyContent: 'center',
         background: 'linear-gradient(135deg, #ff9a56 0%, #ffad56 25%, #c2416b 75%, #8b1538 100%)',
-        padding: 4,
+        padding: { xs: 2, sm: 4 },
         position: 'relative',
         overflow: 'hidden',
         '&::before': {
@@ -31,8 +31,8 @@ const HomePage = () => {
           position: 'absolute',
           top: '10%',
           left: '5%',
-          width: '300px',
-          height: '300px',
+          width: { xs: '200px', sm: '300px' },
+          height: { xs: '200px', sm: '300px' },
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
           animation: 'float 6s ease-in-out infinite',
@@ -48,9 +48,9 @@ const HomePage = () => {
         sx={{
           background: 'rgba(255,255,255,0.98)',
           backdropFilter: 'blur(25px)',
-          borderRadius: 8,
-          padding: { xs: 5, sm: 7 },
-          maxWidth: 520,
+          borderRadius: { xs: 6, sm: 8 },
+          padding: { xs: 3, sm: 5, md: 7 },
+          maxWidth: { xs: '95%', sm: 520 },
           width: '100%',
           textAlign: 'center',
           boxShadow: '0 30px 60px rgba(255,154,86,0.25), 0 15px 30px rgba(139,21,56,0.15), inset 0 1px 0 rgba(255,255,255,0.6)',
@@ -80,23 +80,22 @@ const HomePage = () => {
             }
           }
         }}
-      >        {/* Premium Icon */}
-        <Box
+      >        {/* Premium Icon */}        <Box
           sx={{
-            width: 90,
-            height: 90,
+            width: { xs: 70, sm: 90 },
+            height: { xs: 70, sm: 90 },
             borderRadius: '50%',
             background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 50%, #8b1538 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 28px auto',
+            margin: { xs: '0 auto 20px auto', sm: '0 auto 28px auto' },
             boxShadow: '0 18px 40px rgba(255,154,86,0.5), 0 8px 16px rgba(139,21,56,0.3)',
             position: 'relative',
             animation: 'pulse 2s ease-in-out infinite',
             '&::before': {
               content: '"🌅"',
-              fontSize: '2.4rem',
+              fontSize: { xs: '2rem', sm: '2.4rem' },
               animation: 'bounce 2s ease-in-out infinite',
             },
             '&::after': {
@@ -134,13 +133,13 @@ const HomePage = () => {
         />        <Typography 
           variant="h2" 
           sx={{ 
-            mb: 3, 
+            mb: { xs: 2, sm: 3 }, 
             fontWeight: 900,
             background: 'linear-gradient(135deg, #c2416b 0%, #8b1538 60%, #ff9a56 100%)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            fontSize: { xs: '2.8rem', sm: '3.8rem' },
+            fontSize: { xs: '2.2rem', sm: '2.8rem', md: '3.8rem' },
             letterSpacing: '-0.03em',
             textShadow: '0 4px 8px rgba(139,21,56,0.1)',
             position: 'relative',
@@ -178,28 +177,26 @@ const HomePage = () => {
           }}
         >
           DAYBREAK
-        </Typography>
-        <Typography 
+        </Typography>        <Typography 
           variant="h6" 
           sx={{ 
-            mb: 5, 
+            mb: { xs: 3, sm: 4, md: 5 }, 
             color: '#8b5a3c',
             fontWeight: 600,
             lineHeight: 1.7,
-            fontSize: { xs: '1.15rem', sm: '1.3rem' },
+            fontSize: { xs: '1rem', sm: '1.15rem', md: '1.3rem' },
             textAlign: 'center',
-            maxWidth: 400,
-            margin: '0 auto 40px auto'
+            maxWidth: { xs: '100%', sm: 400 },
+            margin: { xs: '0 auto 24px auto', sm: '0 auto 32px auto', md: '0 auto 40px auto' },
+            px: { xs: 1, sm: 0 }
           }}
         >
           מערכת קהילתית לניהול אירועים<br />
-          <span style={{ color: '#c2416b', fontWeight: 700 }}>הקהילה הישראלית הצעירה בפראג</span>
-        </Typography>
-
-        <Box sx={{ 
+          <span style={{ color: '#c2416b', fontWeight: 700, fontSize: 'inherit' }}>הקהילה הישראלית הצעירה בפראג</span>
+        </Typography>        <Box sx={{ 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: 3.5, 
+          gap: { xs: 2.5, sm: 3, md: 3.5 }, 
           alignItems: 'center', 
           width: '100%',
           '& > button': {
@@ -224,10 +221,10 @@ const HomePage = () => {
             size="large"
             sx={{
               width: '100%',
-              maxWidth: 380,
-              py: 2.5,
-              px: 5,
-              fontSize: '1.25rem',
+              maxWidth: { xs: '100%', sm: 380 },
+              py: { xs: 2, sm: 2.5 },
+              px: { xs: 3, sm: 5 },
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
               fontWeight: 800,
               borderRadius: 5,
               background: 'linear-gradient(135deg, #c2416b 0%, #8b1538 100%)',
@@ -244,7 +241,8 @@ const HomePage = () => {
                 height: '100%',
                 background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
                 transition: 'left 0.6s'
-              },              '&:hover': {
+              },
+              '&:hover': {
                 transform: 'translateY(-4px) scale(1.02)',
                 boxShadow: '0 20px 40px rgba(194,65,107,0.5), 0 10px 20px rgba(139,21,56,0.3)',
                 background: 'linear-gradient(135deg, #d1537a 0%, #9c1e47 100%)',
@@ -255,7 +253,7 @@ const HomePage = () => {
                   content: '"✨"',
                   position: 'absolute',
                   top: '50%',
-                  right: '20px',
+                  left: '20px',
                   transform: 'translateY(-50%)',
                   fontSize: '1rem',
                   animation: 'sparkle 0.6s ease-out'
@@ -268,18 +266,17 @@ const HomePage = () => {
               }
             }}
           >
-            🔐 כניסת מנהלים
-          </Button>          
-          <Button
+            כניסת מנהלים 🔐
+          </Button>          <Button
             onClick={() => navigate('/community')}
             variant="contained"
             size="large"
             sx={{
               width: '100%',
-              maxWidth: 380,
-              py: 2.5,
-              px: 5,
-              fontSize: '1.25rem',
+              maxWidth: { xs: '100%', sm: 380 },
+              py: { xs: 2, sm: 2.5 },
+              px: { xs: 3, sm: 5 },
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
               fontWeight: 800,
               borderRadius: 5,
               background: 'linear-gradient(135deg, #ff9a56 0%, #ffad56 100%)',
@@ -316,15 +313,16 @@ const HomePage = () => {
             }}
           >
             🎉 צפייה באירועים
-          </Button>            <Button
-            onClick={() => window.open('https://wa.me/972542230342', '_blank')}            variant="contained"
+          </Button><Button
+            onClick={() => window.open('https://wa.me/972542230342', '_blank')}
+            variant="contained"
             size="large"
             sx={{
               width: '100%',
-              maxWidth: 380,
-              py: 2.5,
-              px: 5,
-              fontSize: '1.25rem',
+              maxWidth: { xs: '100%', sm: 380 },
+              py: { xs: 2, sm: 2.5 },
+              px: { xs: 3, sm: 5 },
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
               fontWeight: 800,
               borderRadius: 5,
               background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
@@ -345,44 +343,37 @@ const HomePage = () => {
               },
               '&:hover': {
                 transform: 'translateY(-4px) scale(1.02)',
-                background: 'linear-gradient(135deg, #1ebe5a 0%, #0f7552 100%)',
+                background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
                 color: 'white',
                 boxShadow: '0 20px 40px rgba(37,211,102,0.5), 0 10px 20px rgba(18,140,126,0.3)',
                 '&::before': {
                   left: '100%'
                 },
                 '&::after': {
-                  content: '"�"',
+                  content: '"📱"',
                   position: 'absolute',
                   top: '50%',
-                  right: '20px',
+                  left: '20px',
                   transform: 'translateY(-50%)',
                   fontSize: '1.2rem',
                   animation: 'sparkle 0.6s ease-out'
                 }
               }
             }}
-            startIcon={
-              <Box sx={{ 
-                fontSize: '1.5rem',
-                filter: 'drop-shadow(0 2px 4px rgba(255,255,255,0.3))'
-              }}>
-                💬
-              </Box>
-            }
           >
-            � צור קשר בוואטסאפ
+            צור קשר בוואטסאפ 📱
           </Button>
         </Box>        <Typography 
           variant="body2" 
           sx={{ 
-            mt: 5, 
+            mt: { xs: 3, sm: 4, md: 5 }, 
             color: '#b8906d',
-            fontSize: '0.95rem',
+            fontSize: { xs: '0.85rem', sm: '0.95rem' },
             fontWeight: 500,
             textAlign: 'center',
             lineHeight: 1.6,
             animation: 'fadeIn 1s ease-out 1s both',
+            px: { xs: 2, sm: 0 },
             '& span': {
               animation: 'heartbeat 2s ease-in-out infinite',
             },
@@ -397,7 +388,7 @@ const HomePage = () => {
           }}
         >
           © 2025 YJCC Prague Events System<br />
-          <span style={{ color: '#c2416b', fontSize: '0.9rem' }}>נעשה ב❤️ למען הקהילה הישראלית בפראג</span>
+          <span style={{ color: '#c2416b', fontSize: { xs: '0.8rem', sm: '0.9rem' } }}>נעשה ב❤️ למען הקהילה הישראלית בפראג</span>
         </Typography>
       </Box>
     </Box>
