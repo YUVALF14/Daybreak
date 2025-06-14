@@ -459,9 +459,7 @@ function EventDashboard() {
             </Button>
           </Box>
           <Typography variant="h4" sx={{ 
-            fontWeight: 800,
-            color: 'rgba(255,255,255,0.9)',
-            textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+            fontWeight: 800,            color: 'rgba(255,255,255,0.9)',
             letterSpacing: '-0.02em',
             fontSize: { xs: '1.5rem', sm: '2.125rem' },
             fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -548,10 +546,9 @@ function EventDashboard() {
                 סה"כ משתתפים
               </Typography>
             </Box>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ 
+            <Box sx={{ textAlign: 'center' }}>              <Typography variant="h4" sx={{ 
                 fontWeight: 800, 
-                color: '#dc2626',
+                color: '#2563eb',
                 fontSize: { xs: '1.5rem', sm: '2rem' }
               }}>
                 {events.reduce((sum, event) => {
@@ -739,11 +736,9 @@ function EventDashboard() {
                   fontWeight: 800,
                   fontSize: { xs: '0.65rem', sm: '0.875rem', md: '1rem' },
                   letterSpacing: '0.5px',
-                  textTransform: 'uppercase',
-                  py: { xs: 1, sm: 2 },
+                  textTransform: 'uppercase',                  py: { xs: 1, sm: 2 },
                   px: { xs: 0.5, sm: 2 },
                   borderBottom: 'none',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.1)',
                   fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                   '&:first-of-type': {
                     borderTopLeftRadius: 16
@@ -1036,11 +1031,9 @@ function EventDashboard() {
             </Button>
             <Typography variant="h5" sx={{ 
               fontWeight: 800,
-              fontSize: { xs: '1.5rem', sm: '1.8rem' },
-              order: { xs: 0, sm: 1 },
+              fontSize: { xs: '1.5rem', sm: '1.8rem' },              order: { xs: 0, sm: 1 },
               textAlign: 'center',
-              fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-              textShadow: '0 1px 2px rgba(0,0,0,0.05)'
+              fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
             }}>
               {getMonthName(selectedDate)}
             </Typography>
@@ -1073,11 +1066,9 @@ function EventDashboard() {
                   p: { xs: 0.5, sm: 1 },
                   background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
                   color: 'white',
-                  borderRadius: 3,
-                  mb: 1,
+                  borderRadius: 3,                  mb: 1,
                   fontSize: { xs: '0.8rem', sm: '1.2rem' },
                   fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  textShadow: '0 1px 1px rgba(0,0,0,0.05)',
                   boxShadow: '0 4px 12px rgba(255,154,86,0.3)'
                 }}>
                   {day}
@@ -1120,12 +1111,10 @@ function EventDashboard() {
                   onClick={() => openCalendarEventDialog(date)}>
                     <CardContent sx={{ p: { xs: 0.5, sm: 1 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
                       <Typography variant="body2" sx={{ 
-                        fontWeight: 800, 
-                        textAlign: 'center',
+                        fontWeight: 800,                        textAlign: 'center',
                         fontSize: { xs: '0.75rem', sm: '0.875rem' },
                         color: (isToday || dayEvents.length > 0) ? 'white' : '#2d3748',
-                        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                        textShadow: (isToday || dayEvents.length > 0) ? '0 1px 1px rgba(0,0,0,0.05)' : 'none'
+                        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                       }}>
                         {date.getDate()}
                       </Typography>
