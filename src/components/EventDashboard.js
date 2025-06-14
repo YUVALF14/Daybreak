@@ -209,6 +209,7 @@ function EventDashboard() {
         background: 'linear-gradient(135deg, #ff9a56 0%, #ffad56 25%, #c2416b 75%, #8b1538 100%)',
         position: 'relative',
         overflow: 'hidden',
+        direction: 'rtl',
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -306,9 +307,8 @@ function EventDashboard() {
                   background: 'rgba(255,255,255,1)',
                   borderColor: '#d32f2f',
                   color: '#d32f2f'
-                }              }}
-            >
-              🚪 התנתק
+                }              }}            >
+              התנתק 🚪
             </Button>
           </Box>
           <Typography variant="h4" sx={{ 

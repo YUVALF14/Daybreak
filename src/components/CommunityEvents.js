@@ -63,12 +63,12 @@ const CommunityEvents = () => {
     return timeString;
   };
 
-  return (
-    <Box sx={{
+  return (    <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #ff9a56 0%, #ffad56 25%, #c2416b 75%, #8b1538 100%)',
       position: 'relative',
       overflow: 'hidden',
+      direction: 'rtl',
       '&::before': {
         content: '""',
         position: 'absolute',
@@ -110,11 +110,9 @@ const CommunityEvents = () => {
             }}
           >
             חזור לעמוד הבית
-          </Button>
-
-          <Button
+          </Button>          <Button
             variant="contained"
-            startIcon={<WhatsApp />}
+            endIcon={<WhatsApp />}
             onClick={() => window.open('https://wa.me/972507123456', '_blank')}
             sx={{
               background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
@@ -131,7 +129,7 @@ const CommunityEvents = () => {
               }
             }}
           >
-            📱 צור קשר
+            צור קשר 📱
           </Button>
         </Box>        {/* Title */}        <Typography
           variant="h3"
@@ -218,7 +216,7 @@ const CommunityEvents = () => {
                     </Typography>
 
                     {/* Event Details */}
-                    <Stack spacing={2} sx={{ flex: 1, mb: 3 }}>                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Stack spacing={2} sx={{ flex: 1, mb: 3 }}>                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'row-reverse' }}>
                         <AccessTime sx={{ color: '#1a252f', fontSize: 20 }} />
                         <Typography variant="body2" sx={{ 
                           color: '#1a252f', 
@@ -231,8 +229,7 @@ const CommunityEvents = () => {
                         }}>
                           {formatDate(event.date)} • {formatTime(event.time)}
                         </Typography>
-                      </Box>                      {event.location && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      </Box>{event.location && (                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'row-reverse' }}>
                           <LocationOn sx={{ color: '#1a252f', fontSize: 20 }} />
                           <Typography variant="body2" sx={{ 
                             color: '#1a252f', 
@@ -246,7 +243,7 @@ const CommunityEvents = () => {
                             {event.location}
                           </Typography>
                         </Box>
-                      )}                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      )}                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'row-reverse' }}>
                         <Group sx={{ color: '#1a252f', fontSize: 20 }} />
                         <Typography variant="body2" sx={{ 
                           color: '#1a252f', 
@@ -289,11 +286,10 @@ const CommunityEvents = () => {
                       )}
                     </Stack>
 
-                    {/* Registration Button */}
-                    <Button
+                    {/* Registration Button */}                    <Button
                       variant="contained"
                       fullWidth
-                      startIcon={<PersonAdd />}
+                      endIcon={<PersonAdd />}
                       onClick={() => openRegistration(event)}
                       disabled={event.maxParticipants && event.participants?.length >= event.maxParticipants}
                       sx={{
@@ -317,9 +313,9 @@ const CommunityEvents = () => {
                       }}
                     >
                       {event.maxParticipants && event.participants?.length >= event.maxParticipants 
-                        ? '🚫 האירוע מלא' 
-                        : '✨ הרשמה לאירוע'}
-                    </Button>                  </CardContent>
+                        ? 'האירוע מלא 🚫' 
+                        : 'הרשמה לאירוע ✨'}
+                    </Button></CardContent>
                 </Card>
               </Grid>
               );
