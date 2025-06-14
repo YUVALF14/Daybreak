@@ -37,7 +37,8 @@ import {
   Event as EventIcon,
   LocationOn as LocationIcon,
   Group as GroupIcon,
-  AttachMoney as MoneyIcon
+  AttachMoney as MoneyIcon,
+  Logout as LogoutIcon
 } from '@mui/icons-material';
 import EventForm from './EventForm';
 import ParticipantDialog from './ParticipantDialog';
@@ -194,9 +195,15 @@ function EventDashboard() {
     setOpenNewEventForm(false);
     setSnackbar({ open: true, message: 'האירוע החדש נוצר בהצלחה' });
   };
-
   // Only show budget button for admins
-  const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';  return (    <Box
+  const isAdmin = localStorage.getItem('adminAuthenticated') === 'true';
+
+  const handleLogout = () => {
+    if (window.confirm('האם אתה בטוח שברצונך להתנתק?')) {
+      localStorage.removeItem('adminAuthenticated');
+      navigate('/');
+    }
+  };return (    <Box
       sx={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #ff9a56 0%, #ffad56 25%, #c2416b 75%, #8b1538 100%)',
@@ -242,38 +249,71 @@ function EventDashboard() {
         alignItems: 'center',
         flexDirection: { xs: 'column', sm: 'row' },
         gap: { xs: 3, sm: 0 }
-      }}>
-        <Box sx={{ 
+      }}>        <Box sx={{ 
           display: 'flex', 
           alignItems: 'center', 
           gap: 3,
           flexDirection: { xs: 'column', sm: 'row' },
           textAlign: { xs: 'center', sm: 'left' }
         }}>
-          <Button
-            variant="outlined"
-            onClick={() => navigate('/')}
-            sx={{
-              fontWeight: 700,
-              borderRadius: 4,
-              px: 4,
-              py: 1.5,
-              background: 'rgba(255,255,255,0.95)',
-              color: '#c2416b',
-              border: '2px solid rgba(255,255,255,0.3)',
-              backdropFilter: 'blur(10px)',
-              boxShadow: '0 8px 25px rgba(255,255,255,0.2)',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-3px)',
-                boxShadow: '0 15px 35px rgba(255,255,255,0.3)',
-                background: 'rgba(255,255,255,1)',
-                borderColor: '#c2416b'
-              }
-            }}
-          >
-            🏠 חזרה לעמוד הבית
-          </Button>          <Typography variant="h4" sx={{ 
+          <Box sx={{ 
+            display: 'flex', 
+            gap: 2, 
+            flexDirection: { xs: 'column', sm: 'row' },
+            alignItems: 'center'
+          }}>
+            <Button
+              variant="outlined"
+              onClick={() => navigate('/')}
+              sx={{
+                fontWeight: 700,
+                borderRadius: 4,
+                px: 4,
+                py: 1.5,
+                background: 'rgba(255,255,255,0.95)',
+                color: '#c2416b',
+                border: '2px solid rgba(255,255,255,0.3)',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 8px 25px rgba(255,255,255,0.2)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-3px)',
+                  boxShadow: '0 15px 35px rgba(255,255,255,0.3)',
+                  background: 'rgba(255,255,255,1)',
+                  borderColor: '#c2416b'
+                }
+              }}
+            >
+              🏠 חזרה לעמוד הבית
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleLogout}
+              sx={{
+                fontWeight: 700,
+                borderRadius: 4,
+                px: 4,
+                py: 1.5,
+                background: 'rgba(255,255,255,0.95)',
+                color: '#d32f2f',
+                border: '2px solid rgba(255,255,255,0.3)',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 8px 25px rgba(255,255,255,0.2)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-3px)',
+                  boxShadow: '0 15px 35px rgba(211,47,47,0.3)',
+                  background: 'rgba(255,255,255,1)',
+                  borderColor: '#d32f2f',
+                  color: '#d32f2f'
+                }
+              }}
+              startIcon={<LogoutIcon />}
+            >
+              התנתק
+            </Button>
+          </Box>
+          <Typography variant="h4" sx={{ 
             fontWeight: 800,
             color: 'rgba(255,255,255,0.9)',
             textShadow: '0 2px 4px rgba(0,0,0,0.3)',
