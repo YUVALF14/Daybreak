@@ -579,30 +579,8 @@ function EventDashboard() {
                   borderColor: '#047857'
                 }
               }}
-            >
-              יצוא נתונים
+            >              יצוא נתונים
             </Button>
-
-            {/* Budget Dashboard Button */}
-            {isAdmin && (
-              <Button
-                variant="contained"
-                onClick={() => setOpenBudgetForm(true)}
-                sx={{
-                  background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
-                  borderRadius: 2,
-                  px: 3,
-                  py: 1,
-                  fontWeight: 600,
-                  fontSize: { xs: '0.8rem', sm: '0.9rem' },                  '&:hover': {
-                    background: 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)',
-                    transform: 'translateY(-2px)'
-                  }
-                }}
-              >
-                לוח תקציב
-              </Button>
-            )}
           </Box>
         </Box>
       </Paper>{/* Premium Tabs for switching between views */}

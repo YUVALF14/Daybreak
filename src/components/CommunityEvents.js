@@ -97,15 +97,12 @@ const CommunityEvents = () => {
               border: '1px solid rgba(255,255,255,0.3)',
               borderRadius: 3,
               px: 3,
-              py: 1.5,
-              color: 'white',
+              py: 1.5,              color: 'white',
               fontWeight: 700,
-              boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
               transition: 'all 0.3s ease',
               '&:hover': {
                 background: 'rgba(255,255,255,0.3)',
-                transform: 'translateY(-2px)',
-                boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+                transform: 'translateY(-2px)'
               }
             }}
           >
@@ -118,14 +115,11 @@ const CommunityEvents = () => {
               background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
               borderRadius: 3,
               px: 3,
-              py: 1.5,
-              color: 'white',
+              py: 1.5,              color: 'white',
               fontWeight: 700,
-              boxShadow: '0 8px 32px rgba(37, 211, 102, 0.3)',
               transition: 'all 0.3s ease',
               '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: '0 12px 40px rgba(37, 211, 102, 0.4)',
+                transform: 'translateY(-2px)'
               }
             }}
           >
@@ -136,16 +130,13 @@ const CommunityEvents = () => {
           component="h1"
           sx={{
             textAlign: 'center',
-            mb: 4,
-            fontWeight: 900,
+            mb: 4,            fontWeight: 900,
             fontSize: { xs: '2.2rem', sm: '2.8rem', md: '3.5rem' },
             color: '#1a252f',
-            textShadow: '0 1px 2px rgba(0,0,0,0.1)',
             background: 'rgba(255,255,255,0.95)',
             borderRadius: 4,
             p: 3,
             border: '3px solid rgba(255,255,255,0.4)',
-            boxShadow: '0 12px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)',
             animation: 'fadeInUp 0.8s ease-out 0.2s both',
             backdropFilter: 'blur(15px)',
             letterSpacing: '0.5px',
@@ -158,11 +149,9 @@ const CommunityEvents = () => {
         {/* Events Grid */}
         {upcomingEvents.length === 0 ? (
           <Card sx={{
-            background: 'rgba(255,255,255,0.15)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(255,255,255,0.15)',            backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255,255,255,0.2)',
             borderRadius: 4,
-            boxShadow: '0 16px 40px rgba(0,0,0,0.1)',
             textAlign: 'center',
             py: 8,
             animation: 'fadeInUp 1s ease-out 0.4s both',
@@ -185,10 +174,8 @@ const CommunityEvents = () => {
                 <Grid item xs={12} md={6} lg={4} key={event.id}>
                   <Card sx={{
                   background: 'rgba(255,255,255,0.15)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(20px)',                  border: '1px solid rgba(255,255,255,0.2)',
                   borderRadius: 4,
-                  boxShadow: '0 16px 40px rgba(0,0,0,0.1)',
                   transition: 'all 0.3s ease',
                   height: '100%',
                   display: 'flex',
@@ -196,17 +183,14 @@ const CommunityEvents = () => {
                   animation: `fadeInUp 1s ease-out ${0.4 + index * 0.1}s both`,
                   '&:hover': {
                     transform: 'translateY(-8px)',
-                    boxShadow: '0 24px 60px rgba(0,0,0,0.15)',
-                    background: 'rgba(255,255,255,0.2)',
+                    background: 'rgba(255,255,255,0.2)'
                   }
                 }}>
-                  <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>                    {/* Event Title */}
-                    <Typography variant="h5" sx={{ 
+                  <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>                    {/* Event Title */}                    <Typography variant="h5" sx={{ 
                       color: '#1a252f', 
                       fontWeight: 800, 
                       mb: 2,
                       textAlign: 'center',
-                      textShadow: '0 1px 2px rgba(0,0,0,0.1)',
                       background: 'rgba(255,255,255,0.9)',
                       borderRadius: 2,
                       p: 1.5,
@@ -217,11 +201,9 @@ const CommunityEvents = () => {
 
                     {/* Event Details */}
                     <Stack spacing={2} sx={{ flex: 1, mb: 3 }}>                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'row-reverse' }}>
-                        <AccessTime sx={{ color: '#1a252f', fontSize: 20 }} />
-                        <Typography variant="body2" sx={{ 
+                        <AccessTime sx={{ color: '#1a252f', fontSize: 20 }} />                        <Typography variant="body2" sx={{ 
                           color: '#1a252f', 
                           fontWeight: 700,
-                          textShadow: '0 1px 3px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.6)',
                           background: 'rgba(255,255,255,0.7)',
                           borderRadius: 1,
                           px: 1,
@@ -230,11 +212,9 @@ const CommunityEvents = () => {
                           {formatDate(event.date)} • {formatTime(event.time)}
                         </Typography>
                       </Box>{event.location && (                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'row-reverse' }}>
-                          <LocationOn sx={{ color: '#1a252f', fontSize: 20 }} />
-                          <Typography variant="body2" sx={{ 
+                          <LocationOn sx={{ color: '#1a252f', fontSize: 20 }} />                          <Typography variant="body2" sx={{ 
                             color: '#1a252f', 
                             fontWeight: 700,
-                            textShadow: '0 1px 1px rgba(0,0,0,0.05)',
                             background: 'rgba(255,255,255,0.7)',
                             borderRadius: 1,
                             px: 1,
@@ -244,19 +224,7 @@ const CommunityEvents = () => {
                           </Typography>
                         </Box>
                       )}                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'row-reverse' }}>
-                        <Group sx={{ color: '#1a252f', fontSize: 20 }} />
-                        <Typography variant="body2" sx={{ 
-                          color: '#1a252f', 
-                          fontWeight: 700,
-                          textShadow: '0 1px 3px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.6)',
-                          background: 'rgba(255,255,255,0.7)',
-                          borderRadius: 1,
-                          px: 1,
-                          py: 0.5
-                        }}>
-                          {event.participants?.length || 0} נרשמו
-                        </Typography>
-                        {event.maxParticipants && (
+                        <Group sx={{ color: '#1a252f', fontSize: 20 }} />                        {event.maxParticipants && (
                           <Chip
                             label={`מקסימום: ${event.maxParticipants}`}
                             size="small"
@@ -264,17 +232,14 @@ const CommunityEvents = () => {
                               background: 'rgba(26,37,47,0.9)',
                               color: 'white',
                               fontSize: '0.75rem',
-                              fontWeight: 700,
-                              boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                              fontWeight: 700
                             }}
                           />
                         )}
-                      </Box>                      {event.description && (
-                        <Typography variant="body2" sx={{ 
+                      </Box>                      {event.description && (                        <Typography variant="body2" sx={{ 
                           color: '#1a252f',
                           lineHeight: 1.6,                          textAlign: 'right',
                           fontWeight: 600,
-                          textShadow: '0 1px 1px rgba(0,0,0,0.05)',
                           background: 'rgba(255,255,255,0.8)',
                           borderRadius: 2,
                           p: 1.5,
@@ -293,27 +258,22 @@ const CommunityEvents = () => {
                       disabled={event.maxParticipants && event.participants?.length >= event.maxParticipants}
                       sx={{
                         background: event.maxParticipants && event.participants?.length >= event.maxParticipants 
-                          ? 'rgba(255,255,255,0.3)' 
+                          ? 'rgba(128,128,128,0.5)' 
                           : 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
                         color: 'white',
-                        borderRadius: 3,
-                        py: 1.5,
+                        borderRadius: 3,                        py: 1.5,
                         fontWeight: 700,
-                        boxShadow: '0 8px 32px rgba(255,107,107,0.3)',
                         transition: 'all 0.3s ease',
                         '&:hover:not(:disabled)': {
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 12px 40px rgba(255,107,107,0.4)',
+                          transform: 'translateY(-2px)'
                         },
                         '&:disabled': {
-                          color: 'rgba(255,255,255,0.6)',
+                          color: 'rgba(255,255,255,0.8)',
                           cursor: 'not-allowed'
                         }
                       }}
                     >
-                      {event.maxParticipants && event.participants?.length >= event.maxParticipants 
-                        ? 'האירוע מלא 🚫' 
-                        : 'הרשמה לאירוע ✨'}
+                      הרשמה לאירוע ✨
                     </Button></CardContent>
                 </Card>
               </Grid>

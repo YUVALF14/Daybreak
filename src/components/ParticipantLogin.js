@@ -60,40 +60,31 @@ const ParticipantLogin = () => {
             py: 1.5,
             color: 'white',
             fontWeight: 700,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
             transition: 'all 0.3s ease',
             '&:hover': {
               background: 'rgba(255,255,255,0.3)',
-              transform: 'translateY(-2px)',
-              boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+              transform: 'translateY(-2px)'
             }
           }}
         >
           חזור לעמוד הבית
-        </Button>
-
-        <Paper elevation={0} sx={{ 
+        </Button>        <Paper elevation={0} sx={{ 
           p: 4, 
           textAlign: 'center',
           background: 'rgba(255,255,255,0.15)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(255,255,255,0.2)',
           borderRadius: 4,
-          boxShadow: '0 16px 40px rgba(0,0,0,0.1)',
           animation: 'fadeInUp 0.8s ease-out'
-        }}>
-          <Login sx={{ 
+        }}>          <Login sx={{ 
             fontSize: 64, 
             color: 'white', 
-            mb: 2,
-            filter: 'drop-shadow(0 4px 12px rgba(255,255,255,0.3))'
+            mb: 2
           }} />
-          
-          <Typography variant="h4" sx={{ 
+            <Typography variant="h4" sx={{ 
             mb: 3, 
             fontWeight: 800,
-            color: 'white',
-            textShadow: '0 1px 2px rgba(0,0,0,0.1)'
+            color: 'white'
           }}>
             כניסת משתתפים
           </Typography>
@@ -104,8 +95,7 @@ const ParticipantLogin = () => {
               fullWidth
               margin="normal"
               value={name}
-              onChange={e => setName(e.target.value)}
-              required
+              onChange={e => setName(e.target.value)}              required
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 3,
@@ -113,12 +103,10 @@ const ParticipantLogin = () => {
                   backdropFilter: 'blur(10px)',
                   transition: 'all 0.3s ease',
                   '&:hover': {
-                    background: 'rgba(255,255,255,0.9)',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                    background: 'rgba(255,255,255,0.9)'
                   },
                   '&.Mui-focused': {
                     background: 'rgba(255,255,255,0.95)',
-                    boxShadow: '0 6px 20px rgba(194,65,107,0.2)',
                     '& fieldset': {
                       borderColor: '#c2416b',
                       borderWidth: 2
@@ -135,8 +123,7 @@ const ParticipantLogin = () => {
               fullWidth
               margin="normal"
               value={phone}
-              onChange={e => setPhone(e.target.value)}
-              required
+              onChange={e => setPhone(e.target.value)}              required
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 3,
@@ -144,12 +131,10 @@ const ParticipantLogin = () => {
                   backdropFilter: 'blur(10px)',
                   transition: 'all 0.3s ease',
                   '&:hover': {
-                    background: 'rgba(255,255,255,0.9)',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                    background: 'rgba(255,255,255,0.9)'
                   },
                   '&.Mui-focused': {
                     background: 'rgba(255,255,255,0.95)',
-                    boxShadow: '0 6px 20px rgba(194,65,107,0.2)',
                     '& fieldset': {
                       borderColor: '#c2416b',
                       borderWidth: 2
@@ -178,16 +163,13 @@ const ParticipantLogin = () => {
               fullWidth 
               sx={{ 
                 mt: 3,
-                borderRadius: 3,
-                py: 1.5,
+                borderRadius: 3,                py: 1.5,
                 fontWeight: 700,
                 background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
-                boxShadow: '0 8px 32px rgba(255,154,86,0.3)',
                 transition: 'all 0.3s ease',
                 '&:hover': {
                   background: 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)',
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 12px 40px rgba(255,154,86,0.4)',
+                  transform: 'translateY(-2px)'
                 }
               }}
             >
