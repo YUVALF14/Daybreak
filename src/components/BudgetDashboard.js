@@ -171,8 +171,7 @@ function BudgetDashboard({ onBack }) {
         padding: { xs: 2, sm: 3 },
         direction: 'rtl'
       }}
-    >
-      <Box
+    >      <Box
         sx={{
           background: 'rgba(255,255,255,0.95)',
           backdropFilter: 'blur(10px)',
@@ -180,10 +179,9 @@ function BudgetDashboard({ onBack }) {
           padding: { xs: 3, sm: 4 },
           maxWidth: 1200,
           margin: '0 auto',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
           border: '1px solid rgba(255,255,255,0.2)'
         }}
-      >        {/* Professional Header with Tools */}
+      >{/* Professional Header with Tools */}
         <Box sx={{ 
           display: 'flex', 
           alignItems: 'center', 
@@ -198,13 +196,11 @@ function BudgetDashboard({ onBack }) {
             <Box
               sx={{
                 width: { xs: 50, sm: 60 },
-                height: { xs: 50, sm: 60 },
-                borderRadius: 2,
+                height: { xs: 50, sm: 60 },                borderRadius: 2,
                 background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(59,130,246,0.3)'
+                justifyContent: 'center'
               }}
             >
               <AssessmentIcon sx={{ color: 'white', fontSize: { xs: '1.5rem', sm: '2rem' } }} />
@@ -336,17 +332,14 @@ function BudgetDashboard({ onBack }) {
         </Box>{/* Enhanced Budget Overview Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           {/* Total Budget Pool */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ 
+          <Grid item xs={12} sm={6} md={3}>            <Card sx={{ 
               background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)', 
               color: 'white',
               borderRadius: 4,
-              boxShadow: '0 12px 24px rgba(25,118,210,0.3)',
               transition: 'all 0.3s ease',
               cursor: 'pointer',
               '&:hover': {
-                transform: 'translateY(-5px)',
-                boxShadow: '0 20px 40px rgba(25,118,210,0.4)'
+                transform: 'translateY(-5px)'
               }
             }}
             onClick={openTotalBudgetDialog}>
@@ -364,17 +357,14 @@ function BudgetDashboard({ onBack }) {
           </Grid>
 
           {/* Current Month Budget */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ 
+          <Grid item xs={12} sm={6} md={3}>            <Card sx={{ 
               background: 'linear-gradient(135deg, #9c27b0 0%, #673ab7 100%)', 
               color: 'white',
               borderRadius: 4,
-              boxShadow: '0 12px 24px rgba(156,39,176,0.3)',
               transition: 'all 0.3s ease',
               cursor: 'pointer',
               '&:hover': {
-                transform: 'translateY(-5px)',
-                boxShadow: '0 20px 40px rgba(156,39,176,0.4)'
+                transform: 'translateY(-5px)'
               }
             }}
             onClick={() => openBudgetDialog()}>
@@ -392,16 +382,13 @@ function BudgetDashboard({ onBack }) {
           </Grid>
 
           {/* Monthly Expenses */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ 
+          <Grid item xs={12} sm={6} md={3}>            <Card sx={{ 
               background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)', 
               color: 'white',
               borderRadius: 4,
-              boxShadow: '0 12px 24px rgba(255,154,86,0.3)',
               transition: 'all 0.3s ease',
               '&:hover': {
-                transform: 'translateY(-5px)',
-                boxShadow: '0 20px 40px rgba(255,154,86,0.4)'
+                transform: 'translateY(-5px)'
               }
             }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
@@ -417,22 +404,15 @@ function BudgetDashboard({ onBack }) {
           </Grid>
 
           {/* Effective Balance (including carryover) */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ 
+          <Grid item xs={12} sm={6} md={3}>            <Card sx={{ 
               background: effectiveCurrentBalance >= 0 
                 ? 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)' 
                 : 'linear-gradient(135deg, #f44336 0%, #c62828 100%)', 
               color: 'white',
               borderRadius: 4,
-              boxShadow: effectiveCurrentBalance >= 0 
-                ? '0 12px 24px rgba(76,175,80,0.3)' 
-                : '0 12px 24px rgba(244,67,54,0.3)',
               transition: 'all 0.3s ease',
               '&:hover': {
-                transform: 'translateY(-5px)',
-                boxShadow: effectiveCurrentBalance >= 0 
-                  ? '0 20px 40px rgba(76,175,80,0.4)' 
-                  : '0 20px 40px rgba(244,67,54,0.4)'
+                transform: 'translateY(-5px)'
               }
             }}>
               <CardContent sx={{ textAlign: 'center', py: 3 }}>
@@ -543,11 +523,9 @@ function BudgetDashboard({ onBack }) {
                 borderRadius: 6,
                 backgroundColor: 'rgba(156,39,176,0.1)',
                 '& .MuiLinearProgress-bar': {
-                  borderRadius: 6,
-                  background: currentMonthUsage > 80 
+                  borderRadius: 6,                  background: currentMonthUsage > 80 
                     ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)'
-                    : 'linear-gradient(135deg, #9c27b0 0%, #673ab7 100%)',
-                  boxShadow: '0 2px 8px rgba(156,39,176,0.3)'
+                    : 'linear-gradient(135deg, #9c27b0 0%, #673ab7 100%)'
                 }
               }}
             />
@@ -570,9 +548,7 @@ function BudgetDashboard({ onBack }) {
         )}{/* Event Details Table */}
         <Paper sx={{ 
           p: { xs: 2, sm: 3 }, 
-          borderRadius: 4, 
-          background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
-          boxShadow: '0 8px 20px rgba(0,0,0,0.1)' 
+          borderRadius: 4,          background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
         }}>          <Typography variant="h6" sx={{ 
             fontWeight: 700, 
             mb: 3, 
@@ -676,12 +652,10 @@ function BudgetDashboard({ onBack }) {
           open={budgetDialog.open} 
           onClose={() => setBudgetDialog({ open: false, month: '', budget: '' })}
           maxWidth="sm"
-          fullWidth
-          PaperProps={{
+          fullWidth          PaperProps={{
             sx: {
               borderRadius: 4,
               background: 'linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)',
-              boxShadow: '0 20px 40px rgba(156,39,176,0.3)',
               direction: 'rtl'
             }
           }}
@@ -772,9 +746,7 @@ function BudgetDashboard({ onBack }) {
           fullWidth
           PaperProps={{
             sx: {
-              borderRadius: 4,
-              background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
-              boxShadow: '0 20px 40px rgba(25,118,210,0.3)',
+              borderRadius: 4,              background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
               direction: 'rtl'
             }
           }}

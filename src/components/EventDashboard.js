@@ -36,24 +36,19 @@ import {
   CalendarMonth as CalendarIcon,
   Event as EventIcon,
   LocationOn as LocationIcon,
-  Group as GroupIcon,  AttachMoney as MoneyIcon,
-  Upload as UploadIcon,
+  Group as GroupIcon,  AttachMoney as MoneyIcon,  Upload as UploadIcon,
   PictureAsPdf as PictureAsPdfIcon,
   TableView as TableViewIcon
 } from '@mui/icons-material';
 import EventForm from './EventForm';
-import ParticipantDialog from './ParticipantDialog';
 import NewEventForm from './NewEventForm';
 import BudgetDashboard from './BudgetDashboard';
 import { useEvents } from '../context/EventsContext';
 
 function EventDashboard() {
   const navigate = useNavigate();
-  const { events, addEvent, updateEvent, deleteEvent } = useEvents();
-  const [openEventForm, setOpenEventForm] = useState(false);
+  const { events, addEvent, updateEvent, deleteEvent } = useEvents();  const [openEventForm, setOpenEventForm] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [openParticipants, setOpenParticipants] = useState(false);
-  const [selectedEventParticipants, setSelectedEventParticipants] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
   const [openNewEventForm, setOpenNewEventForm] = useState(false);
   const [openBudgetForm, setOpenBudgetForm] = useState(false);
@@ -162,25 +157,7 @@ function EventDashboard() {
     await deleteEvent(eventId);
     setSnackbar({ open: true, message: 'האירוע נמחק בהצלחה' });
   };
-
-  const handleParticipantUpdate = async (eventId, participant) => {
-    // Update the participants array for the event
-    const event = events.find(e => e.id === eventId);
-    if (!event) return;
-    let updatedParticipants = Array.isArray(event.participants) ? [...event.participants] : [];
-    // Handle delete
-    if (participant.delete) {
-      updatedParticipants = updatedParticipants.filter(p => p.phone !== participant.phone);
-    } else {
-      const idx = updatedParticipants.findIndex(p => p.phone === participant.phone);
-      if (idx > -1) {
-        updatedParticipants[idx] = { ...updatedParticipants[idx], ...participant };
-      } else {
-        updatedParticipants.push(participant);
-      }
-    }
-    await updateEvent(eventId, { participants: updatedParticipants });
-  };  const sendEventReminders = (event) => {
+  const sendEventReminders = (event) => {
     event.participants.forEach(participant => {
       if (participant.confirmed) {
         window.open(`https://wa.me/${participant.phone}`, '_blank');
@@ -359,19 +336,18 @@ function EventDashboard() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,154,86,0.1) 0%, transparent 50%)',
-          pointerEvents: 'none'
+          background: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,154,86,0.1) 0%, transparent 50%)',          pointerEvents: 'none'
         },
         // Add CSS animations
         '@keyframes pulse': {
           '0%': {
-            boxShadow: '0 0 0 0 rgba(76,175,80,0.7)'
+            transform: 'scale(1)'
           },
           '70%': {
-            boxShadow: '0 0 0 10px rgba(76,175,80,0)'
+            transform: 'scale(1.05)'
           },
           '100%': {
-            boxShadow: '0 0 0 0 rgba(76,175,80,0)'
+            transform: 'scale(1)'
           }
         },
         '@keyframes shimmer': {
@@ -414,18 +390,14 @@ function EventDashboard() {
                 fontWeight: 700,
                 borderRadius: 4,
                 px: { xs: 2, sm: 4 },
-                py: { xs: 1, sm: 1.5 },
-                background: 'rgba(255,255,255,0.95)',
+                py: { xs: 1, sm: 1.5 },                background: 'rgba(255,255,255,0.95)',
                 color: '#c2416b',
                 border: '2px solid rgba(255,255,255,0.3)',
                 backdropFilter: 'blur(10px)',
-                boxShadow: '0 8px 25px rgba(255,255,255,0.2)',
                 transition: 'all 0.3s ease',
                 fontSize: { xs: '0.875rem', sm: '1rem' },
-                minWidth: { xs: 'auto', sm: 'auto' },
-                '&:hover': {
+                minWidth: { xs: 'auto', sm: 'auto' },                '&:hover': {
                   transform: 'translateY(-3px)',
-                  boxShadow: '0 15px 35px rgba(255,255,255,0.3)',
                   background: 'rgba(255,255,255,1)',
                   borderColor: '#c2416b'
                 }
@@ -439,22 +411,18 @@ function EventDashboard() {
                 fontWeight: 700,
                 borderRadius: 4,
                 px: { xs: 2, sm: 4 },
-                py: { xs: 1, sm: 1.5 },
-                background: 'rgba(255,255,255,0.95)',
+                py: { xs: 1, sm: 1.5 },                background: 'rgba(255,255,255,0.95)',
                 color: '#d32f2f',
                 border: '2px solid rgba(255,255,255,0.3)',
                 backdropFilter: 'blur(10px)',
-                boxShadow: '0 8px 25px rgba(255,255,255,0.2)',
                 transition: 'all 0.3s ease',
                 fontSize: { xs: '0.875rem', sm: '1rem' },
-                minWidth: { xs: 'auto', sm: 'auto' },
-                '&:hover': {
+                minWidth: { xs: 'auto', sm: 'auto' },                '&:hover': {
                   transform: 'translateY(-3px)',
-                  boxShadow: '0 15px 35px rgba(211,47,47,0.3)',
                   background: 'rgba(255,255,255,1)',
                   borderColor: '#d32f2f',
                   color: '#d32f2f'
-                }              }}            >
+                }}}            >
               התנתק
             </Button>
           </Box>
@@ -471,15 +439,11 @@ function EventDashboard() {
             color="primary" 
             onClick={() => setOpenNewEventForm(true)}
             size={window.innerWidth < 600 ? 'medium' : 'large'}
-            sx={{
-              background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
-              boxShadow: '0 12px 30px rgba(255,154,86,0.4)',
+            sx={{              background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               width: { xs: 48, sm: 56 },
-              height: { xs: 48, sm: 56 },
-              '&:hover': {
+              height: { xs: 48, sm: 56 },              '&:hover': {
                 transform: 'scale(1.15) rotate(90deg)',
-                boxShadow: '0 20px 50px rgba(255,154,86,0.6)',
                 background: 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)'
               }
             }}
@@ -495,9 +459,7 @@ function EventDashboard() {
         backdropFilter: 'blur(20px)',
         borderRadius: { xs: 3, sm: 4 },
         p: { xs: 2, sm: 3 },
-        mb: { xs: 3, sm: 4 },
-        boxShadow: '0 16px 40px rgba(0,0,0,0.1)',
-        border: '1px solid rgba(255,255,255,0.3)'
+        mb: { xs: 3, sm: 4 },        border: '1px solid rgba(255,255,255,0.3)'
       }}>
         <Box sx={{ 
           display: 'flex', 
@@ -632,11 +594,9 @@ function EventDashboard() {
                   px: 3,
                   py: 1,
                   fontWeight: 600,
-                  fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                  '&:hover': {
+                  fontSize: { xs: '0.8rem', sm: '0.9rem' },                  '&:hover': {
                     background: 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)',
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 8px 25px rgba(255,154,86,0.4)'
+                    transform: 'translateY(-2px)'
                   }
                 }}
               >
@@ -651,13 +611,11 @@ function EventDashboard() {
         display: 'flex',
         justifyContent: 'center',
         px: { xs: 1, sm: 0 }
-      }}>
-        <Paper sx={{
+      }}>        <Paper sx={{
           background: 'rgba(255,255,255,0.95)',
           backdropFilter: 'blur(20px)',
           borderRadius: { xs: 3, sm: 5 },
           p: 1,
-          boxShadow: '0 16px 40px rgba(0,0,0,0.1)',
           border: '1px solid rgba(255,255,255,0.3)',
           width: { xs: '100%', sm: 'auto' }
         }}>
@@ -665,13 +623,11 @@ function EventDashboard() {
             value={currentView} 
             onChange={(e, newValue) => setCurrentView(newValue)}
             variant={window.innerWidth < 600 ? 'fullWidth' : 'standard'}
-            sx={{
-              '& .MuiTabs-indicator': {
+            sx={{              '& .MuiTabs-indicator': {
                 background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
                 height: 4,
-                borderRadius: 2,
-                boxShadow: '0 4px 12px rgba(255,154,86,0.3)'
-              },              '& .MuiTab-root': {
+                borderRadius: 2
+              },'& .MuiTab-root': {
                 minHeight: { xs: 50, sm: 60 },
                 fontWeight: 700,
                 fontSize: { xs: '0.875rem', sm: '1rem' },
@@ -714,10 +670,8 @@ function EventDashboard() {
           component={Paper}
           sx={{
             background: 'rgba(255,255,255,0.95)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: 4,
+            backdropFilter: 'blur(20px)',            borderRadius: 4,
             overflow: { xs: 'auto', md: 'visible' },
-            boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
             border: '1px solid rgba(255,255,255,0.3)',
             maxWidth: '100%'
           }}
@@ -747,14 +701,12 @@ function EventDashboard() {
                     borderTopRightRadius: 16
                   }
                 }
-              }}>
-                <TableCell>שם האירוע</TableCell>
+              }}>                <TableCell>שם האירוע</TableCell>
                 <TableCell>תאריך</TableCell>
                 <TableCell>מיקום</TableCell>
                 <TableCell>מחיר</TableCell>
                 <TableCell>סבסוד</TableCell>
                 <TableCell>תקציב בהמתנה</TableCell>
-                <TableCell>משתתפים</TableCell>
                 <TableCell>פעולות</TableCell>
               </TableRow>
             </TableHead>
@@ -888,39 +840,7 @@ function EventDashboard() {
                       }}>
                         -
                       </Typography>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() => {
-                        setSelectedEventParticipants(event);
-                        setOpenParticipants(true);
-                      }}
-                      sx={{
-                        borderRadius: 3,
-                        fontWeight: 700,
-                        fontSize: { xs: '0.7rem', sm: '0.75rem' },
-                        background: 'rgba(255,255,255,0.8)',
-                        borderColor: '#ff9a56',
-                        color: '#c2416b',
-                        px: { xs: 1, sm: 2 },
-                        py: { xs: 0.5, sm: 1 },
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
-                          color: 'white',
-                          borderColor: 'transparent',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 8px 20px rgba(255,154,86,0.3)'
-                        }
-                      }}
-                      startIcon={<GroupIcon sx={{ fontSize: '1rem' }} />}
-                    >
-                      {event.participants?.length || 0}
-                    </Button>
-                  </TableCell>
+                    )}                  </TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 0.5 }}>
                       <IconButton 
@@ -933,12 +853,10 @@ function EventDashboard() {
                           color: '#1976d2',
                           width: { xs: 32, sm: 40 },
                           height: { xs: 32, sm: 40 },
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
+                          transition: 'all 0.3s ease',                          '&:hover': {
                             background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
                             color: 'white',
-                            transform: 'scale(1.1)',
-                            boxShadow: '0 6px 20px rgba(25,118,210,0.3)'
+                            transform: 'scale(1.1)'
                           }
                         }}
                       >
@@ -951,12 +869,10 @@ function EventDashboard() {
                           color: '#d32f2f',
                           width: { xs: 32, sm: 40 },
                           height: { xs: 32, sm: 40 },
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
+                          transition: 'all 0.3s ease',                          '&:hover': {
                             background: 'linear-gradient(135deg, #d32f2f 0%, #f44336 100%)',
                             color: 'white',
-                            transform: 'scale(1.1)',
-                            boxShadow: '0 6px 20px rgba(211,47,47,0.3)'
+                            transform: 'scale(1.1)'
                           }
                         }}
                       >
@@ -969,12 +885,10 @@ function EventDashboard() {
                           color: '#25d366',
                           width: { xs: 32, sm: 40 },
                           height: { xs: 32, sm: 40 },
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
+                          transition: 'all 0.3s ease',                          '&:hover': {
                             background: 'linear-gradient(135deg, #25d366 0%, #128c7e 100%)',
                             color: 'white',
-                            transform: 'scale(1.1)',
-                            boxShadow: '0 6px 20px rgba(37,211,102,0.3)'
+                            transform: 'scale(1.1)'
                           }
                         }}
                       >
@@ -991,10 +905,8 @@ function EventDashboard() {
       {currentView === 1 && (
         <Box sx={{ 
           background: 'rgba(255,255,255,0.95)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: 4,
+          backdropFilter: 'blur(20px)',          borderRadius: 4,
           p: { xs: 2, sm: 3 },
-          boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
           border: '1px solid rgba(255,255,255,0.3)'
         }}>
           {/* Premium Calendar Header */}
@@ -1005,11 +917,9 @@ function EventDashboard() {
             mb: 3,
             background: 'linear-gradient(135deg, #ff9a56 0%, #c2416b 100%)',
             borderRadius: 4,
-            p: { xs: 1.5, sm: 2 },
-            color: 'white',
+            p: { xs: 1.5, sm: 2 },            color: 'white',
             flexDirection: { xs: 'column', sm: 'row' },
-            gap: { xs: 2, sm: 0 },
-            boxShadow: '0 8px 25px rgba(255,154,86,0.3)'
+            gap: { xs: 2, sm: 0 }
           }}>            <Button 
               onClick={() => navigateMonth(-1)}
               sx={{ 
@@ -1068,8 +978,7 @@ function EventDashboard() {
                   color: 'white',
                   borderRadius: 3,                  mb: 1,
                   fontSize: { xs: '0.8rem', sm: '1.2rem' },
-                  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  boxShadow: '0 4px 12px rgba(255,154,86,0.3)'
+                  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                 }}>
                   {day}
                 </Box>
@@ -1092,14 +1001,10 @@ function EventDashboard() {
                       : dayEvents.length > 0 
                         ? 'linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)'
                         : 'rgba(255,255,255,0.9)',
-                    color: (isToday || dayEvents.length > 0) ? 'white' : '#2d3748',
-                    borderRadius: 3,
+                    color: (isToday || dayEvents.length > 0) ? 'white' : '#2d3748',                    borderRadius: 3,
                     border: '1px solid rgba(255,154,86,0.1)',
-                    backdropFilter: 'blur(10px)',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                    '&:hover': {
+                    backdropFilter: 'blur(10px)',                    '&:hover': {
                       transform: { xs: 'scale(1.02)', sm: 'scale(1.05) translateY(-2px)' },
-                      boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
                       background: isToday
                         ? 'linear-gradient(135deg, #ff8a3d 0%, #d1537a 100%)'
                         : dayEvents.length > 0 
@@ -1183,23 +1088,11 @@ function EventDashboard() {
             })}
           </Grid>
         </Box>
-      )}
-
-      <EventForm
+      )}      <EventForm
         open={openEventForm}
         onClose={() => setOpenEventForm(false)}
         onSubmit={selectedEvent ? handleUpdateEvent : handleAddEvent}
         event={selectedEvent}
-      />
-
-      <ParticipantDialog
-        open={openParticipants}
-        onClose={() => {
-          setOpenParticipants(false);
-          setSelectedEventParticipants(null);
-        }}
-        event={selectedEventParticipants}
-        onParticipantUpdate={handleParticipantUpdate}
       />
 
       <NewEventForm
@@ -1220,19 +1113,15 @@ function EventDashboard() {
               background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
               color: 'white',
               fontWeight: 700,
-              fontSize: { xs: '0.95rem', sm: '1rem' },
-              borderRadius: 4,
+              fontSize: { xs: '0.95rem', sm: '1rem' },              borderRadius: 4,
               px: { xs: 3, sm: 4 },
               py: { xs: 1.5, sm: 1.75 },
-              boxShadow: '0 8px 20px rgba(37,99,235,0.3)',
               textTransform: 'none',
               fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
               transition: 'all 0.3s ease',
-              border: '1px solid rgba(255,255,255,0.1)',
-              '&:hover': {
+              border: '1px solid rgba(255,255,255,0.1)',              '&:hover': {
                 background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)',
-                transform: 'translateY(-2px)',
-                boxShadow: '0 12px 30px rgba(37,99,235,0.4)'
+                transform: 'translateY(-2px)'
               },
               '&:active': {
                 transform: 'translateY(-1px)'
@@ -1250,11 +1139,9 @@ function EventDashboard() {
         open={calendarDialog.open} 
         onClose={() => setCalendarDialog({ open: false, date: null })}
         maxWidth="md"
-        fullWidth        PaperProps={{
-          sx: {
+        fullWidth        PaperProps={{          sx: {
             borderRadius: 4,
             background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
-            boxShadow: '0 20px 60px rgba(25,118,210,0.3)',
             direction: 'rtl'
           }
         }}
@@ -1435,11 +1322,9 @@ function EventDashboard() {
       <Menu
         anchorEl={exportMenu}
         open={Boolean(exportMenu)}
-        onClose={() => setExportMenu(null)}
-        PaperProps={{
+        onClose={() => setExportMenu(null)}        PaperProps={{
           sx: {
             borderRadius: 3,
-            boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
             minWidth: 200,
             direction: 'rtl'
           }
@@ -1474,12 +1359,10 @@ function EventDashboard() {
         open={importDialog.open}
         onClose={() => setImportDialog({ open: false, file: null, eventId: null })}
         maxWidth="sm"
-        fullWidth
-        PaperProps={{
+        fullWidth        PaperProps={{
           sx: {
             borderRadius: 4,
             background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
-            boxShadow: '0 20px 60px rgba(59,130,246,0.3)',
             direction: 'rtl'
           }
         }}
